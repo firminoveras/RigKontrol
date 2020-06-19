@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingStart="10dp"
+    android:paddingTop="15dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="20dp"
+    tools:ignore="HardcodedText">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_button_text"
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="SliderGrid"
+            android:src="#511b1e" />
+
+        <ImageView
+            android:id="@+id/Slider_Progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="SliderGrid"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:src="#dc0035" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="SliderGrid"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_bg_slider_grid"
+            android:tint="#3d3d3d" />
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/K_Description_BG"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_button_text"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/K_Config_Icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            android:src="@drawable/ic_config"
+            android:tint="@color/light_foreground"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/K_Description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:text="Tuner"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

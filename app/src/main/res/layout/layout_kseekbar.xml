@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_toolbar_item"
+    android:backgroundTint="#303030"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/K_Seek_Name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="center"
+        android:text="@string/in"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:typeface="monospace" />
+
+    <com.jaygoo.widget.RangeSeekBar
+        android:id="@+id/K_Seek_SeekBar"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+
+        app:rsb_gravity="center"
+
+        app:rsb_indicator_show_mode="alwaysHide"
+        app:rsb_max="127"
+        app:rsb_min="0"
+        app:rsb_mode="single"
+
+        app:rsb_progress_drawable="@drawable/ic_bg_seek_active"
+        app:rsb_progress_drawable_default="@drawable/ic_bg_seek_disactive"
+        app:rsb_progress_height="45dp"
+
+
+
+        app:rsb_thumb_drawable="@drawable/ic_seek_indicator"
+        app:rsb_thumb_height="45dp"
+        app:rsb_thumb_width="20dp" />
+
+</LinearLayout>

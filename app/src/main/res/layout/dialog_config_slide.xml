@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_button_text"
+    android:backgroundTint="#454545"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/Config_Slide_Name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_button_text"
+        android:backgroundTint="#ffffff"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:inputType="text"
+        android:maxLength="15"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:text="@string/kontrol"
+        android:textColor="@color/bg_black"
+        android:importantForAutofill="no"
+        tools:ignore="LabelFor" />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bg_button_text"
+        android:backgroundTint="@color/bg_black"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="3"
+            android:background="@drawable/bg_button_holdmode_off_disactive"
+            android:backgroundTint="@color/dark_foreground"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:text="@string/component_number"
+            android:textColor="@color/light_foreground"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/Config_Slide_ComponentMinus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_without_corners"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/minus"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/Config_Slide_ComponentNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:text="@string/zero"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/Config_Slide_ComponentPlus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_holdmode_on_disactive"
+            android:text="@string/plus"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/Config_Slide_OK"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginEnd="2dp"
+        android:background="@drawable/bg_button_ok"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/aplicar"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        tools:ignore="ButtonStyle" />
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#cecece</color>
+    <color name="text_inactive">#272727</color>
+    <color name="bg_light_gray">#4E4E4E</color>
+    <color name="bg_dark_gray">#383838</color>
+    <color name="bg_black">#000000</color>
+
+    <color name="light_foreground">#faaf2f</color>
+    <color name="dark_foreground">#45351b</color>
+    <color name="disabled_foreground">#3F3016</color>
+</resources>
