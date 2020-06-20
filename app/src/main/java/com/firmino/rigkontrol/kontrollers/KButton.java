@@ -120,6 +120,7 @@ public class KButton extends FrameLayout {
             mDescriptionLayout.setBackground(getResources().getDrawable(event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_button_text_selected : isEnabled ? R.drawable.bg_button_text_enabled : R.drawable.bg_button_text, null));
             mDescription.setVisibility(event.getAction() == MotionEvent.ACTION_DOWN ? GONE : VISIBLE);
             mConfigIcon.setVisibility(event.getAction() == MotionEvent.ACTION_DOWN ? VISIBLE : GONE);
+            performClick();
             return false;
         });
         mDescription.setOnLongClickListener(v -> {

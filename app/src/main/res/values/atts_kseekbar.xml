@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="KSeekBar">
+        <attr name="k_text" format="string" />
+        <attr name="k_min" format="integer" />
+        <attr name="k_max" format="integer" />
+        <attr name="k_mvalue" format="integer" />
+    </declare-styleable>
+</resources>
