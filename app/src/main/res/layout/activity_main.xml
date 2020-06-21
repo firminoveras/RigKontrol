@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -105,6 +105,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
+                app:k_control_num="127"
                 app:k_max="127"
                 app:k_min="0"
                 app:k_text="IN" />
@@ -118,6 +119,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
+                app:k_control_num="126"
                 app:k_max="127"
                 app:k_min="0"
                 app:k_text="OUT" />
@@ -219,7 +221,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="0"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="5"
+                    app:k_button_description="5"/>
 
                 <com.firmino.rigkontrol.kontrollers.KButton
                     android:id="@+id/Main_BT6"
@@ -229,7 +233,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="1"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="6"
+                    app:k_button_description="6"/>
 
                 <com.firmino.rigkontrol.kontrollers.KButton
                     android:id="@+id/Main_BT7"
@@ -239,7 +245,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="2"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="7"
+                    app:k_button_description="7"/>
 
                 <com.firmino.rigkontrol.kontrollers.KButton
                     android:id="@+id/Main_BT8"
@@ -249,7 +257,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="3"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="8"
+                    app:k_button_description="8"/>
 
                 <com.firmino.rigkontrol.kontrollers.KButton
                     android:id="@+id/Main_BT_Pedal_Down"
@@ -259,7 +269,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="4"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="9"
+                    app:k_button_description="9"/>
 
                 <com.firmino.rigkontrol.kontrollers.KButton
                     android:id="@+id/Main_BT1"
@@ -269,7 +281,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="0"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="1"
+                    app:k_button_description="1"/>
 
                 <com.firmino.rigkontrol.kontrollers.KButton
                     android:id="@+id/Main_BT2"
@@ -279,7 +293,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="1"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="2"
+                    app:k_button_description="2"/>
 
                 <com.firmino.rigkontrol.kontrollers.KButton
                     android:id="@+id/Main_BT3"
@@ -289,7 +305,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="2"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="3"
+                    app:k_button_description="3"/>
 
                 <com.firmino.rigkontrol.kontrollers.KButton
                     android:id="@+id/Main_BT4"
@@ -299,7 +317,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="3"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_button_control_num="4"
+                    app:k_button_description="4"/>
 
                 <com.firmino.rigkontrol.kontrollers.KSlider
                     android:id="@+id/Main_Slider"
@@ -309,7 +329,9 @@
                     android:layout_rowWeight="1"
                     android:layout_column="4"
                     android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
+                    android:layout_gravity="fill"
+                    app:k_slider_control_num="0"
+                    app:k_slider_description="0"/>
 
                 <Space
                     android:layout_width="0dp"

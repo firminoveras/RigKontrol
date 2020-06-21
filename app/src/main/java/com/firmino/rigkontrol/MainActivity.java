@@ -47,11 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.Main_BT8),
         };
 
-
         MidiKontroller.midiConnect(1,this);
-
-
-
         mPedal.setOnPedalValueChangeListener((pedal, value) -> {
             mSlider.setProgress(value);
             if (value > 120 && !mButtonPedal.isButtonEnabled()) {
@@ -60,15 +56,11 @@ public class MainActivity extends AppCompatActivity {
                 mButtonPedal.kontrollerButtonUp();
             }
         });
-
         mButtonPedal.setPedalDownIcon(true);
-
         mExpandButton.setOnClickListener(v -> {
             for (KButton b : mButton) b.kontrollerInvertExpanded();
             mButtonPedal.kontrollerInvertExpanded();
             mSlider.setExpanded(!mSlider.isExpanded());
         });
-
-
     }
 }

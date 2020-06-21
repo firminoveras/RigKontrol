@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="KButton">
+        <attr name="k_button_off_value" format="integer"/>
+        <attr name="k_button_on_value" format="integer"/>
+        <attr name="k_button_control_num" format="integer"/>
+        <attr name="k_button_is_toggled" format="boolean"/>
+        <attr name="k_button_description" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="KSeekBar">
+        <attr name="k_text" format="string" />
+        <attr name="k_min" format="integer" />
+        <attr name="k_max" format="integer" />
+        <attr name="k_mvalue" format="integer" />
+        <attr name="k_control_num" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="KSlider">
+        <attr name="k_slider_description" format="string"/>
+        <attr name="k_slider_control_num" format="integer"/>
+    </declare-styleable>
+
+</resources>
