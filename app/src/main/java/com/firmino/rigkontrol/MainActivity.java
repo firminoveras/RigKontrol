@@ -10,15 +10,19 @@ import com.firmino.rigkontrol.kontrollers.KButton;
 import com.firmino.rigkontrol.kontrollers.KPedal;
 import com.firmino.rigkontrol.kontrollers.KSeekBar;
 import com.firmino.rigkontrol.kontrollers.KSlider;
+import com.firmino.rigkontrol.midi.MidiKontroller;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView mExpandButton;
+    //TODO: adicionar uma SplashScreen;
+
+    ImageView mExpandButton, mUSB;
     KSlider mSlider;
     KPedal mPedal;
     KButton[] mButton;
     KButton mButtonPedal;
     KSeekBar mVolumeIn, mVolumeOut;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mSlider = findViewById(R.id.Main_Slider);
         mPedal = findViewById(R.id.Main_Pedal);
         mButtonPedal = findViewById(R.id.Main_BT_Pedal_Down);
+        mUSB = findViewById(R.id.Main_USB);
         mButton = new KButton[]{
                 findViewById(R.id.Main_BT1),
                 findViewById(R.id.Main_BT2),
@@ -41,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.Main_BT7),
                 findViewById(R.id.Main_BT8),
         };
+
+
+        MidiKontroller.midiConnect(1,this);
+
+
 
         mPedal.setOnPedalValueChangeListener((pedal, value) -> {
             mSlider.setProgress(value);

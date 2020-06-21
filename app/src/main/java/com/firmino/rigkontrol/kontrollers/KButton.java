@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.firmino.rigkontrol.R;
+import com.firmino.rigkontrol.midi.MidiKontroller;
 import com.jaygoo.widget.RangeSeekBar;
 
 public class KButton extends FrameLayout {
@@ -150,6 +151,7 @@ public class KButton extends FrameLayout {
         isEnabled = !isEnabled;
         mButton.setImageDrawable(mContext.getDrawable(isEnabled ? R.drawable.ic_button_on : R.drawable.ic_button_off));
         mDescriptionLayout.setBackground(getResources().getDrawable(isEnabled ? R.drawable.bg_button_text_enabled : R.drawable.bg_button_text, null));
+        MidiKontroller.midiSendControlChange(mComponentNumber, isEnabled ? mValueEnabled: mValueDisabled);
     }
 
     public void kontrollerInvertExpanded() {

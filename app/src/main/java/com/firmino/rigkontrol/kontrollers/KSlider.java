@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.firmino.rigkontrol.R;
+import com.firmino.rigkontrol.midi.MidiKontroller;
 
 public class KSlider extends LinearLayout {
 
@@ -96,6 +97,7 @@ public class KSlider extends LinearLayout {
     public void setProgress(int progress) {
         mValue = progress * (-mSlider.getWidth()) / 127 + mSlider.getWidth();
         mSlider.setPadding(mSlider.getPaddingLeft(), mSlider.getPaddingTop(), mValue, mSlider.getPaddingBottom());
+        MidiKontroller.midiSendControlChange(mComponentNumber, progress);
     }
 
     public boolean isExpanded() {

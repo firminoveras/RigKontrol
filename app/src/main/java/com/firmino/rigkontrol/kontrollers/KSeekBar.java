@@ -8,6 +8,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.firmino.rigkontrol.R;
+import com.firmino.rigkontrol.midi.MidiKontroller;
 
 public class KSeekBar extends LinearLayout {
 
@@ -47,6 +48,8 @@ public class KSeekBar extends LinearLayout {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mChangeValueListener.onKSeekBarValueChangeListener(KSeekBar.this, progress);
+                //TODO: Fazer cada um ter um component number diferente ja por padrao
+                //MidiKontroller.midiSendControlChange(mComponentNumber, isEnabled ? mValueEnabled: mValueDisabled);
             }
 
             @Override
