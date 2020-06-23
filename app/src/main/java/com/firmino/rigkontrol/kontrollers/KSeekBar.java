@@ -2,6 +2,7 @@ package com.firmino.rigkontrol.kontrollers;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -12,51 +13,43 @@ import com.firmino.rigkontrol.midi.MidiKontroller;
 
 public class KSeekBar extends LinearLayout {
 
-    private Context mContext;
     private TextView mDescription;
     private SeekBar mSeekBar;
     private int mControlNumber;
-    OnKSeekBarValueChangeListener mChangeValueListener;
+    private OnKSeekBarValueChangeListener mChangeValueListener;
 
     public KSeekBar(Context context) {
         super(context);
-        init(context);
-        mDescription.setText("");
-        mSeekBar.setMin(0);
-        mSeekBar.setMax(127);
-        mSeekBar.setProgress(50);
-        mControlNumber = 127;
+        init();
+        kontrollerSetup("", 0, 127, 50, 127);
     }
 
     public KSeekBar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
-        try {
-            TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.KSeekBar, 0, 0);
-            mDescription.setText(ta.getString(R.styleable.KSeekBar_k_text));
-            mSeekBar.setMin(ta.getInt(R.styleable.KSeekBar_k_min, 0));
-            mSeekBar.setMax(ta.getInt(R.styleable.KSeekBar_k_max, 127));
-            mSeekBar.setProgress(ta.getInt(R.styleable.KSeekBar_k_mvalue, 50));
-            mControlNumber = ta.getInt(R.styleable.KSeekBar_k_control_num, 127);
-            ta.recycle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        init();
+        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.KSeekBar, 0, 0);
+        kontrollerSetup(
+                ta.getString(R.styleable.KSeekBar_k_seekbar_description),
+                ta.getInt(R.styleable.KSeekBar_k_seekbar_control_num, 127),
+                ta.getInt(R.styleable.KSeekBar_k_seekbar_min, 0),
+                ta.getInt(R.styleable.KSeekBar_k_seekbar_max, 127),
+                ta.getInt(R.styleable.KSeekBar_k_seekbar_progress, 50)
+        );
+        ta.recycle();
     }
 
-
-    private void init(Context context) {
-        mContext = context;
-        inflate(mContext, R.layout.layout_kseekbar, this);
+    private void init() {
+        inflate(this.getContext(), R.layout.layout_kseekbar, this);
         mDescription = findViewById(R.id.K_Seek_Name);
         mSeekBar = findViewById(R.id.K_Seek_Seekbar);
         mChangeValueListener = (seekBar, value) -> {
         };
+
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mChangeValueListener.onKSeekBarValueChangeListener(KSeekBar.this, progress);
-                MidiKontroller.midiSendControlChange(mControlNumber, progress);
+                MidiKontroller.sendControlChange(mControlNumber, progress);
             }
 
             @Override
@@ -71,6 +64,13 @@ public class KSeekBar extends LinearLayout {
         });
     }
 
+    public void kontrollerSetup(String description, int controlNumber, int min, int max, int progress) {
+        mDescription.setText(description);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) mSeekBar.setMin(min);
+        mSeekBar.setMax(max);
+        mSeekBar.setProgress(progress);
+        mControlNumber = controlNumber;
+    }
 
     public void setValue(int value) {
         mSeekBar.setProgress(value);

@@ -14,8 +14,7 @@ import com.firmino.rigkontrol.R;
 
 public class KPedal extends LinearLayout implements View.OnTouchListener {
 
-    private OnPedalValueChangeListener valueChange;
-    private final Context mContext;
+    private OnPedalValueChangeListener onPedalValueChangeListener;
     private FrameLayout mPedal;
     private ImageView mPedalShadow;
     private float mOldRawY;
@@ -23,31 +22,23 @@ public class KPedal extends LinearLayout implements View.OnTouchListener {
 
     public KPedal(Context context) {
         super(context);
-        this.mContext = context;
         init();
     }
 
     public KPedal(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.mContext = context;
-        init();
-    }
-
-    public KPedal(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.mContext = context;
         init();
     }
 
     void init() {
-        inflate(mContext, R.layout.layout_kpedal, this);
+        inflate(this.getContext(), R.layout.layout_kpedal, this);
         mPedal = findViewById(R.id.K_Pedal);
         mPedalShadow = findViewById(R.id.K_Pedal_Shadow);
         mOldRawY = 0;
         mValue = 0;
         mOldValue = 0;
         setOnTouchListener(this);
-        valueChange = (pedal, value) -> {
+        onPedalValueChangeListener = (pedal, value) -> {
         };
     }
 
@@ -60,7 +51,8 @@ public class KPedal extends LinearLayout implements View.OnTouchListener {
                 else if (mValue < 0) mValue = 0;
                 mPedalShadow.setAlpha(((float) mValue) / 127);
                 mPedal.setPadding(mPedal.getPaddingLeft(), mValue / 2, mPedal.getPaddingEnd(), mValue / 5);
-                if (mOldValue != mValue) valueChange.onPedalChangeListener(this, 127 - mValue);
+                if (mOldValue != mValue)
+                    onPedalValueChangeListener.onPedalChangeListener(this, 127 - mValue);
                 mOldValue = mValue;
                 mOldRawY = (event.getRawY() / 2);
                 break;
@@ -71,9 +63,9 @@ public class KPedal extends LinearLayout implements View.OnTouchListener {
         return true;
     }
 
-
-    public void setOnPedalValueChangeListener(OnPedalValueChangeListener l) {
-        valueChange = l;
+    public void setOnPedalValueChangeListener(OnPedalValueChangeListener listener) {
+        onPedalValueChangeListener = listener;
     }
+
 }
 

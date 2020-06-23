@@ -105,10 +105,10 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                app:k_control_num="127"
-                app:k_max="127"
-                app:k_min="0"
-                app:k_text="IN" />
+                app:k_seekbar_control_num="127"
+                app:k_seekbar_max="127"
+                app:k_seekbar_min="0"
+                app:k_seekbar_description="IN" />
 
             <com.firmino.rigkontrol.kontrollers.KSeekBar
                 android:id="@+id/Main_VolumeOut"
@@ -119,10 +119,10 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                app:k_control_num="126"
-                app:k_max="127"
-                app:k_min="0"
-                app:k_text="OUT" />
+                app:k_seekbar_control_num="126"
+                app:k_seekbar_max="127"
+                app:k_seekbar_min="0"
+                app:k_seekbar_description="OUT" />
 
             <LinearLayout
                 android:layout_width="0dp"

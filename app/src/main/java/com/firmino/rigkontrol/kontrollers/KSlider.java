@@ -3,7 +3,6 @@ package com.firmino.rigkontrol.kontrollers;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -27,36 +26,35 @@ public class KSlider extends LinearLayout {
 
     private TextView mDescription;
     private ImageView mConfigIcon, mSlider;
-    private Context mContext;
     private LinearLayout mDescriptionLayout;
     private boolean isExpanded;
     private int mComponentNumber, mValue;
 
     public KSlider(@NonNull Context context) {
         super(context);
-        init(context);
-        mComponentNumber = 0;
-        mDescription.setText("0");
+        init();
+        kontrollerSetup("0", 0);
     }
 
     public KSlider(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
-        try{
-            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.KSlider,0,0);
-            mComponentNumber = ta.getInt(R.styleable.KSlider_k_slider_control_num, 0);
-            mDescription.setText(ta.getString(R.styleable.KSlider_k_slider_description));
-            ta.recycle();
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+        init();
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.KSlider, 0, 0);
+        kontrollerSetup(
+                ta.getString(R.styleable.KSlider_k_slider_description),
+                ta.getInt(R.styleable.KSlider_k_slider_control_num, 0)
+        );
+        ta.recycle();
     }
 
+    public void kontrollerSetup(String description, int componentNumber) {
+        mComponentNumber = componentNumber;
+        mDescription.setText(description);
+    }
 
     @SuppressLint("ClickableViewAccessibility")
-    public void init(Context context) {
-        mContext = context;
-        inflate(mContext, R.layout.layout_pedal_indicator, this);
+    public void init() {
+        inflate(this.getContext(), R.layout.layout_pedal_indicator, this);
         mConfigIcon = findViewById(R.id.K_Config_Icon);
         mDescription = findViewById(R.id.K_Description);
         mDescriptionLayout = findViewById(R.id.K_Description_BG);
@@ -78,8 +76,8 @@ public class KSlider extends LinearLayout {
     }
 
     private void showConfigs() {
-        final AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
-        View mDialogContent = LayoutInflater.from(mContext).inflate(R.layout.dialog_config_slide, null);
+        final AlertDialog.Builder mDialog = new AlertDialog.Builder(this.getContext());
+        View mDialogContent = LayoutInflater.from(this.getContext()).inflate(R.layout.dialog_config_slide, null);
         mDialog.setView(mDialogContent);
         final AlertDialog dialog = mDialog.show();
         final TextView dialog_Name = mDialogContent.findViewById(R.id.Config_Slide_Name);
@@ -107,7 +105,7 @@ public class KSlider extends LinearLayout {
     public void setProgress(int progress) {
         mValue = progress * (-mSlider.getWidth()) / 127 + mSlider.getWidth();
         mSlider.setPadding(mSlider.getPaddingLeft(), mSlider.getPaddingTop(), mValue, mSlider.getPaddingBottom());
-        MidiKontroller.midiSendControlChange(mComponentNumber, progress);
+        MidiKontroller.sendControlChange(mComponentNumber, progress);
     }
 
     public boolean isExpanded() {
