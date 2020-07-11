@@ -14,37 +14,50 @@ public class MidiKontroller {
     public static final int ERRO_NOT_CONNECTED = 0;
     public static final int ERRO_IO_EXCEPTION = 1;
 
-    private static MidiManager sMidi;
-    private static int sChannel;
-    private static MidiInputPort sMidiPort;
-    private static OnMidiMessageSendListener sOnMidiMessageSendListener;
+    private MidiManager sMidi;
+    private boolean isConnected = false;
+    private int sChannel;
+    private MidiInputPort sMidiPort;
+    private OnMidiMessageSendListener sOnMidiMessageSendListener;
+    private Context mContext;
 
-    public static void connect(int channel, Context context) {
-        if (sMidi == null) {
-            sMidi = (MidiManager) context.getSystemService(Context.MIDI_SERVICE);
-            sChannel = channel;
-            if (sMidi != null) {
-                try {
-                    sMidi.openDevice(sMidi.getDevices()[0], device -> sMidiPort = device.openInputPort(0), new Handler(Looper.getMainLooper()));
-                } catch (Exception ex) {
-                    Toast.makeText(context, "Não foi possivel conectar ao midi", Toast.LENGTH_SHORT).show();
-                }
+    public MidiKontroller(Context context) {
+        sMidi = (MidiManager) context.getSystemService(Context.MIDI_SERVICE);
+        mContext = context;
+    }
+
+    public MidiManager getMidi() {
+        return sMidi;
+    }
+
+    public void connect(int channel) {
+        disconnect();
+        sChannel = channel;
+        if (sMidi != null) {
+            try {
+                sMidi.openDevice(sMidi.getDevices()[0], device -> sMidiPort = device.openInputPort(0), new Handler(Looper.getMainLooper()));
+                isConnected = true;
+            } catch (Exception ex) {
+                Toast.makeText(mContext, "Não foi possivel conectar ao midi", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public static void disconnect() {
-        try {
-            sMidiPort.close();
-            sMidiPort = null;
-            sMidi = null;
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void disconnect() {
+        if (isConnected()) {
+            try {
+                sMidiPort.close();
+                sMidiPort = null;
+                sMidi = null;
+                isConnected = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public static void sendControlChange(int control, int value) {
-        if (sMidi != null && sMidiPort != null) {
+    public void sendControlChange(int control, int value) {
+        if (isConnected) {
             try {
                 sMidiPort.send(new byte[]{
                         (byte) (0xB0 + (sChannel - 1)),
@@ -66,7 +79,17 @@ public class MidiKontroller {
         }
     }
 
-    public static void setOnMidiMessageSendListener(OnMidiMessageSendListener listener) {
+    public void setOnMidiMessageSendListener(OnMidiMessageSendListener listener) {
         sOnMidiMessageSendListener = listener;
+    }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public interface OnMidiMessageSendListener {
+        void onMidiMessageSendSucess(int channel, int control, int value);
+
+        void onMidiMessageSendFailed(int channel, int control, int value, int erroId);
     }
 }

@@ -67,5 +67,8 @@ public class KPedal extends LinearLayout implements View.OnTouchListener {
         onPedalValueChangeListener = listener;
     }
 
+    public interface OnPedalValueChangeListener {
+        void onPedalChangeListener(KPedal pedal, int value);
+    }
 }
 

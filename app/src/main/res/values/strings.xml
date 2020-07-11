@@ -3,7 +3,6 @@
     <string name="disconnected">DESCONECTADO</string>
     <string name="pedalanalog">PedalAnalog</string>
     <string name="separator">Separador</string>
-    <string name="expand">Expand</string>
     <string name="salvar">Salvar</string>
     <string name="in">IN</string>
     <string name="hold_mode_off">Hold Mode Off</string>
@@ -15,4 +14,16 @@
     <string name="component_number">COMPONENT NUMBER</string>
     <string name="zero">0</string>
     <string name="values">VALUES</string>
+    <string name="gate">Gate</string>
+    <string name="options">OPTIONS</string>
+    <string name="midi_channel">MIDI CHANNEL</string>
+    <string name="preset">Preset</string>
+    <string name="connect">CONNECT</string>
+    <string name="offline">Offline</string>
+    <string name="connection">CONNECTION</string>
+    <string name="usb_status">USB STATUS</string>
+    <string name="midi_status">MIDI STATUS</string>
+    <string name="INCOMPATIBLE">INCOMPATIBLE</string>
+    <string name="READY">READY</string>
+    <string name="NOT_PLUGGED">NOT PLUGGED</string>
 </resources>

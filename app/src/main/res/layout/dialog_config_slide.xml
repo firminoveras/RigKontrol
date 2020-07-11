@@ -12,8 +12,7 @@
         android:id="@+id/Config_Slide_Name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/bg_button_text"
-        android:backgroundTint="#ffffff"
+        android:background="@drawable/bg_button_pressed"
         android:fontFamily="sans-serif-condensed-medium"
         android:inputType="text"
         android:maxLength="15"
@@ -25,7 +24,6 @@
         tools:ignore="LabelFor" />
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
@@ -39,7 +37,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="2dp"
             android:layout_weight="3"
-            android:background="@drawable/bg_button_holdmode_off_disactive"
+            android:background="@drawable/bg_button_left_borderless"
             android:backgroundTint="@color/dark_foreground"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
@@ -52,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_button_without_corners"
+            android:background="@drawable/bg_button_center_borderless"
             android:fontFamily="sans-serif-condensed"
             android:text="@string/minus"
             android:textColor="#FFFFFF"
@@ -61,7 +59,7 @@
         <TextView
             android:id="@+id/Config_Slide_ComponentNumber"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
@@ -74,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_button_holdmode_on_disactive"
+            android:background="@drawable/bg_button_right_borderless"
             android:text="@string/plus"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
@@ -86,8 +84,7 @@
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginEnd="2dp"
-        android:background="@drawable/bg_button_ok"
+        android:background="@drawable/bg_button"
         android:fontFamily="sans-serif-condensed"
         android:text="@string/aplicar"
         android:textColor="#FFFFFF"

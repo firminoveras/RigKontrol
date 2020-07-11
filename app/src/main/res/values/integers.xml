@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="cc_gate_on">123</integer>
+    <integer name="cc_gate_knob">124</integer>
+    <integer name="cc_vol_in">126</integer>
+    <integer name="cc_vol_out">125</integer>
+</resources>

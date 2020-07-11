@@ -9,7 +9,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.firmino.rigkontrol.R;
-import com.firmino.rigkontrol.midi.MidiKontroller;
 
 public class KSeekBar extends LinearLayout {
 
@@ -42,14 +41,13 @@ public class KSeekBar extends LinearLayout {
         inflate(this.getContext(), R.layout.layout_kseekbar, this);
         mDescription = findViewById(R.id.K_Seek_Name);
         mSeekBar = findViewById(R.id.K_Seek_Seekbar);
-        mChangeValueListener = (seekBar, value) -> {
+        mChangeValueListener = (seekBar, value, c) -> {
         };
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mChangeValueListener.onKSeekBarValueChangeListener(KSeekBar.this, progress);
-                MidiKontroller.sendControlChange(mControlNumber, progress);
+                mChangeValueListener.onKSeekBarValueChangeListener(KSeekBar.this, progress, mControlNumber);
             }
 
             @Override
@@ -90,5 +88,9 @@ public class KSeekBar extends LinearLayout {
 
     public void setOnKSeekBarValueChangeListener(OnKSeekBarValueChangeListener l) {
         mChangeValueListener = l;
+    }
+
+    public interface OnKSeekBarValueChangeListener {
+        void onKSeekBarValueChangeListener(KSeekBar seekBar, int value, int controllerNumber);
     }
 }

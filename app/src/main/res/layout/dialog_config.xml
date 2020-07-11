@@ -13,52 +13,24 @@
         android:id="@+id/Config_Name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/bg_button_text"
-        android:backgroundTint="#ffffff"
+        android:background="@drawable/bg_button_pressed"
         android:fontFamily="sans-serif-condensed-medium"
+        android:importantForAutofill="no"
         android:inputType="text"
         android:maxLength="15"
         android:maxLines="1"
         android:padding="8dp"
         android:text="@string/kontrol"
         android:textColor="@color/bg_black"
-        android:importantForAutofill="no"
         tools:ignore="LabelFor" />
 
-    <LinearLayout
+    <com.firmino.rigkontrol.kontrollers.KStateButton
+        android:id="@+id/Config_HoldMode"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/bg_button_text"
-        android:backgroundTint="@color/bg_black"
-        android:orientation="horizontal"
-        android:padding="2dp">
-
-        <Button
-            android:id="@+id/Config_HoldOff"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_button_holdmode_off_disactive"
-            android:fontFamily="sans-serif-condensed"
-            android:text="@string/hold_mode_off"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            tools:ignore="ButtonStyle" />
-
-        <Button
-            android:id="@+id/Config_HoldOn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/bg_button_holdmode_on_active"
-            android:fontFamily="sans-serif-condensed"
-            android:text="@string/hold_mode_on"
-            android:textColor="#272727"
-            android:textSize="12sp"
-            tools:ignore="ButtonStyle" />
-    </LinearLayout>
+        app:k_statebutton_text_off="@string/hold_mode_off"
+        app:k_statebutton_text_on="@string/hold_mode_on" />
 
     <LinearLayout
 
@@ -75,7 +47,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="2dp"
             android:layout_weight="3"
-            android:background="@drawable/bg_button_holdmode_off_disactive"
+            android:background="@drawable/bg_button_left_borderless"
             android:backgroundTint="@color/dark_foreground"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
@@ -88,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_button_without_corners"
+            android:background="@drawable/bg_button_center_borderless"
             android:fontFamily="sans-serif-condensed"
             android:text="@string/minus"
             android:textColor="#FFFFFF"
@@ -97,7 +69,7 @@
         <TextView
             android:id="@+id/Config_ComponentNumber"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
@@ -110,7 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/bg_button_holdmode_on_disactive"
+            android:background="@drawable/bg_button_right_borderless"
             android:text="@string/plus"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
@@ -132,7 +104,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="2dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_button_holdmode_off_disactive"
+            android:background="@drawable/bg_button_left_borderless"
             android:backgroundTint="@color/dark_foreground"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
@@ -179,11 +151,10 @@
 
     <Button
         android:id="@+id/Config_OK"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginEnd="2dp"
-        android:background="@drawable/bg_button_ok"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bg_button"
         android:fontFamily="sans-serif-condensed"
         android:text="@string/aplicar"
         android:textColor="#FFFFFF"

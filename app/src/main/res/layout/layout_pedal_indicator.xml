@@ -8,9 +8,7 @@
     android:paddingStart="10dp"
     android:paddingTop="15dp"
     android:paddingEnd="10dp"
-    android:paddingBottom="20dp"
-    tools:ignore="HardcodedText">
-
+    android:paddingBottom="20dp">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -24,28 +22,27 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="SliderGrid"
-            android:src="#511b1e" />
+            android:src="#511b1e"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/Slider_Progress"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="SliderGrid"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:src="#dc0035" />
+            android:src="#dc0035"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="SliderGrid"
             android:scaleType="fitXY"
             android:src="@drawable/ic_bg_slider_grid"
-            android:tint="#3d3d3d" />
+            android:tint="#3d3d3d"
+            tools:ignore="ContentDescription" />
 
     </FrameLayout>
-
 
     <LinearLayout
         android:id="@+id/K_Description_BG"
@@ -72,10 +69,9 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="monospace"
             android:gravity="center"
-            android:text="Tuner"
             android:textColor="@color/white"
             android:textSize="12sp" />
-    </LinearLayout>
 
+    </LinearLayout>
 
 </LinearLayout>

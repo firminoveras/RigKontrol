@@ -5,13 +5,12 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -21,18 +20,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.firmino.rigkontrol.R;
-import com.firmino.rigkontrol.midi.MidiKontroller;
 import com.jaygoo.widget.RangeSeekBar;
 
 public class KButton extends LinearLayout {
 
-    //TODO: há um pico de memória quando o app usa o gráfico quando o usuario clica
-
     private TextView mDescription;
     private ImageView mButton, mConfigIcon, mPedalDownIcon;
     private LinearLayout mDescriptionLayout;
-    private boolean isToggleInConfig, isToggle, isOn, isDescriptionVisible;
+    private boolean isToggle, isOn, isDescriptionVisible;
     private int mControllerNumber, mValueOn, mValueOff;
+    private Drawable mImgButtonOn, mImgButtonOff;
+    private OnKButtonStateChangeListener onKButtonStateChangeListener;
 
     public KButton(@NonNull Context context) {
         super(context);
@@ -63,6 +61,12 @@ public class KButton extends LinearLayout {
         mDescription = findViewById(R.id.K_Description);
         mDescriptionLayout = findViewById(R.id.K_Description_BG);
 
+        onKButtonStateChangeListener = (button, valueOn, valueOff, isOn, controllerNumber) -> {
+
+        };
+
+        mImgButtonOn = getResources().getDrawable(R.drawable.ic_button_on, null);
+        mImgButtonOff = getResources().getDrawable(R.drawable.ic_button_off, null);
 
         mButton.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
@@ -84,28 +88,34 @@ public class KButton extends LinearLayout {
             return false;
         });
 
-
         mDescription.setOnLongClickListener(v -> {
             showConfigsDialog();
             return true;
         });
-
     }
 
     private void showConfigsDialog() {
-        isToggleInConfig = false;
         View mDialogContent = LayoutInflater.from(this.getContext()).inflate(R.layout.dialog_config, null);
         final AlertDialog.Builder mDialog = new AlertDialog.Builder(this.getContext());
+        mDialog.setCancelable(false);
         mDialog.setView(mDialogContent);
         AlertDialog dialog = mDialog.show();
 
-        TextView dialog_Name = mDialogContent.findViewById(R.id.Config_Name);
         TextView dialog_ComponentNumber = mDialogContent.findViewById(R.id.Config_ComponentNumber);
-        Button dialog_btHoldOn = mDialogContent.findViewById(R.id.Config_HoldOn);
-        Button dialog_btHoldOff = mDialogContent.findViewById(R.id.Config_HoldOff);
-        RangeSeekBar dialog_seekBar = mDialogContent.findViewById(R.id.Config_Values);
-
         dialog_ComponentNumber.setText(String.valueOf(mControllerNumber));
+
+        TextView dialog_Name = mDialogContent.findViewById(R.id.Config_Name);
+        dialog_Name.setText(mDescription.getText());
+
+        RangeSeekBar dialog_seekBar = mDialogContent.findViewById(R.id.Config_Values);
+        dialog_seekBar.getRightSeekBar().setThumbDrawableId(R.drawable.ic_range_close);
+        dialog_seekBar.setProgress(dialog_seekBar.getMinProgress(), dialog_seekBar.getMaxProgress());
+        dialog_seekBar.setIndicatorTextDecimalFormat("0");
+        dialog_seekBar.setProgress(mValueOff, mValueOn);
+
+        KStateButton dialog_holdMode = mDialogContent.findViewById(R.id.Config_HoldMode);
+        dialog_holdMode.setOn(isToggle);
+        dialog_holdMode.setOnKStateButtonChangeListener((kStateButton, isOn) -> isToggle = isOn);
 
         mDialogContent.findViewById(R.id.Config_ComponentMinus).setOnClickListener(l -> {
             if (Integer.parseInt(dialog_ComponentNumber.getText().toString()) > 0)
@@ -115,42 +125,17 @@ public class KButton extends LinearLayout {
             if (Integer.parseInt(dialog_ComponentNumber.getText().toString()) < 120)
                 dialog_ComponentNumber.setText(String.valueOf(Integer.parseInt(dialog_ComponentNumber.getText().toString()) + 1));
         });
+
         mDialogContent.findViewById(R.id.Config_OK).setOnClickListener(l -> {
             kontrollerSetup(
                     dialog_Name.getText().toString(),
                     Integer.parseInt(dialog_ComponentNumber.getText().toString()),
                     (int) dialog_seekBar.getRightSeekBar().getProgress(),
                     (int) dialog_seekBar.getLeftSeekBar().getProgress(),
-                    isToggleInConfig
+                    isToggle
             );
             dialog.dismiss();
         });
-
-        dialog_seekBar.getRightSeekBar().setThumbDrawableId(R.drawable.ic_range_close);
-        dialog_seekBar.setProgress(dialog_seekBar.getMinProgress(), dialog_seekBar.getMaxProgress());
-        dialog_seekBar.setIndicatorTextDecimalFormat("0");
-        dialog_seekBar.setProgress(mValueOff, mValueOn);
-
-        dialog_Name.setText(mDescription.getText());
-
-        dialog_btHoldOn.setOnClickListener(l -> {
-            isToggleInConfig = true;
-            dialog_btHoldOn.setBackground(getResources().getDrawable(R.drawable.bg_button_holdmode_on_active, null));
-            dialog_btHoldOn.setTextColor(getResources().getColor(R.color.text_inactive, null));
-            dialog_btHoldOff.setBackground(getResources().getDrawable(R.drawable.bg_button_holdmode_off_disactive, null));
-            dialog_btHoldOff.setTextColor(getResources().getColor(R.color.white, null));
-        });
-        dialog_btHoldOff.setOnClickListener(l -> {
-            isToggleInConfig = false;
-            dialog_btHoldOn.setBackground(getResources().getDrawable(R.drawable.bg_button_holdmode_on_disactive, null));
-            dialog_btHoldOn.setTextColor(getResources().getColor(R.color.white, null));
-            dialog_btHoldOff.setBackground(getResources().getDrawable(R.drawable.bg_button_holdmode_off_active, null));
-            dialog_btHoldOff.setTextColor(getResources().getColor(R.color.text_inactive, null));
-        });
-        dialog_btHoldOn.setBackground(getResources().getDrawable(isToggle ? R.drawable.bg_button_holdmode_on_active : R.drawable.bg_button_holdmode_on_disactive, null));
-        dialog_btHoldOff.setBackground(getResources().getDrawable(isToggle ? R.drawable.bg_button_holdmode_off_disactive : R.drawable.bg_button_holdmode_off_active, null));
-        dialog_btHoldOn.setTextColor(getResources().getColor(isToggle ? R.color.text_inactive : R.color.white, null));
-        dialog_btHoldOff.setTextColor(getResources().getColor(isToggle ? R.color.white : R.color.text_inactive, null));
     }
 
     public void kontrollerSetup(String description, int controlNumber, int valueOn, int valueOff, boolean isToggledOn) {
@@ -164,17 +149,19 @@ public class KButton extends LinearLayout {
     public void kontrollerButtonUp() {
         if (!isToggle) {
             isOn = false;
-            mButton.setImageResource(R.drawable.ic_button_off);
+            mButton.setImageDrawable(mImgButtonOff);
             mDescriptionLayout.setBackground(getResources().getDrawable(R.drawable.bg_button_text, null));
-            MidiKontroller.sendControlChange(mControllerNumber, mValueOff);
+            //MidiKontroller.sendControlChange(mControllerNumber, mValueOff);
+            this.onKButtonStateChangeListener.onKButtonStateChangeListener(this, mValueOn, mValueOff, isOn, mControllerNumber);
         }
     }
 
     public void kontrollerButtonDown() {
         isOn = !isOn;
-        mButton.setImageResource(isOn ? R.drawable.ic_button_on : R.drawable.ic_button_off);
+        mButton.setImageDrawable(isOn ? mImgButtonOn : mImgButtonOff);
         mDescriptionLayout.setBackground(getResources().getDrawable(isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_button_text, null));
-        MidiKontroller.sendControlChange(mControllerNumber, isOn ? mValueOn : mValueOff);
+        //MidiKontroller.sendControlChange(mControllerNumber, isOn ? mValueOn : mValueOff);
+        this.onKButtonStateChangeListener.onKButtonStateChangeListener(this, mValueOn, mValueOff, isOn, mControllerNumber);
     }
 
     public void kontrollerInvertExpanded() {
@@ -201,4 +188,11 @@ public class KButton extends LinearLayout {
         return isOn;
     }
 
+    public void setOnKButtonStateChangeListener(OnKButtonStateChangeListener onKButtonStateChangeListener) {
+        this.onKButtonStateChangeListener = onKButtonStateChangeListener;
+    }
+
+    public interface OnKButtonStateChangeListener {
+        void onKButtonStateChangeListener(KButton button, int valueOn, int valueOff, boolean isOn, int controllerNumber);
+    }
 }

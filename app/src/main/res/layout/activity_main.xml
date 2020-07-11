@@ -1,130 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_light_gray"
-    android:orientation="vertical"
     tools:context=".MainActivity"
     tools:ignore="Overdraw">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/bg_toolbar"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_icon"
-            tools:ignore="ContentDescription" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_toolbar"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
 
-            <FrameLayout
+            <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1.5"
-                android:background="@drawable/bg_button_text"
-                android:backgroundTint="#181818">
+                android:layout_weight=".3"
+                android:padding="7dp"
+                android:src="@drawable/ic_icon"
+                tools:ignore="ContentDescription" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="@string/app_name"
-                    android:textAllCaps="false"
-                    android:textColor="@color/light_foreground"
-                    android:textSize="18sp"
-                    android:typeface="monospace" />
-
-                <Button
-
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/bg_button_text"
-                    android:backgroundTint="@color/disabled_foreground"
-                    android:text="@string/salvar"
-                    android:textColor="@color/light_foreground"
-                    android:textSize="12sp" />
-
-                <LinearLayout
-                    android:layout_width="40dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_margin="2dp"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginBottom="1dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bt_preset_up"
-                        android:drawableTop="@android:drawable/arrow_up_float" />
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bt_preset_down"
-                        android:drawableBottom="@android:drawable/arrow_down_float" />
-
-                </LinearLayout>
-
-            </FrameLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:gravity="center_vertical"
+                android:text="@string/app_name"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="24sp" />
 
             <com.firmino.rigkontrol.kontrollers.KSeekBar
                 android:id="@+id/Main_VolumeIn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                app:k_seekbar_control_num="127"
+                android:layout_weight=".8"
+                app:k_seekbar_control_num="@integer/cc_vol_in"
+                app:k_seekbar_description="IN"
                 app:k_seekbar_max="127"
-                app:k_seekbar_min="0"
-                app:k_seekbar_description="IN" />
+                app:k_seekbar_min="0" />
+
+            <com.firmino.rigkontrol.kontrollers.KGate
+                android:id="@+id/Main_Gate"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="0.6" />
 
             <com.firmino.rigkontrol.kontrollers.KSeekBar
                 android:id="@+id/Main_VolumeOut"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                app:k_seekbar_control_num="126"
+                android:layout_weight=".8"
+                app:k_seekbar_control_num="@integer/cc_vol_out"
+                app:k_seekbar_description="OUT"
                 app:k_seekbar_max="127"
-                app:k_seekbar_min="0"
-                app:k_seekbar_description="OUT" />
+                app:k_seekbar_min="0" />
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/Main_Show_Configs"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
@@ -132,233 +86,199 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight=".5"
-                android:background="@drawable/bg_toolbar_item"
-                android:backgroundTint="#303030"
-                android:orientation="horizontal">
+                android:background="@drawable/bg_button"
+                android:padding="5dp"
+                android:src="@drawable/ic_config"
+                android:tint="@color/white"
+                tools:ignore="ContentDescription" />
 
-                <ImageView
-                    android:layout_margin="5dp"
-                    android:id="@+id/Main_USB"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_usb"
-                    tools:ignore="ContentDescription" />
+            <ImageView
+                android:id="@+id/Main_Exit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight=".5"
+                android:background="@drawable/bg_button"
+                android:padding="3dp"
+                android:src="@android:drawable/ic_lock_power_off"
+                android:tint="@color/white"
+                tools:ignore="ContentDescription" />
 
-            </LinearLayout>
+
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/Main_OptionsLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                tools:ignore="Suspicious0dp">
+
+                <include layout="@layout/layout_options" />
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/bg_little_rounded_square"
+                    android:backgroundTint="#3D3D3D"
+                    android:gravity="center_vertical">
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_text"
+                        android:backgroundTint="#121212">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center_vertical"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/app_name"
+                            android:textAllCaps="false"
+                            android:textColor="@color/light_foreground"
+                            android:textSize="18sp"
+                            android:typeface="monospace" />
+
+                        <Button
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginEnd="50dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/bg_button_text"
+                            android:backgroundTint="@color/disabled_foreground"
+                            android:text="@string/salvar"
+                            android:textColor="@color/light_foreground"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:layout_margin="2dp"
+                            android:background="@drawable/bg_button_right_borderless"
+                            android:padding="10dp"
+                            android:src="@android:drawable/arrow_down_float"
+                            tools:ignore="ContentDescription" />
+
+                    </FrameLayout>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight=".1"
+                        android:background="@drawable/bg_button" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight=".2"
+                        android:background="@drawable/bg_button_left"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/preset"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        tools:ignore="ButtonStyle" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight=".2"
+                        android:background="@drawable/bg_button_right"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="@string/preset"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        tools:ignore="ButtonStyle" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="25dp"
+                    android:background="@drawable/bg_little_rounded_square"
+                    android:backgroundTint="#3D3D3D"
+                    android:padding="5dp">
+
+                    <com.firmino.rigkontrol.kontrollers.Kontroller
+                        android:id="@+id/Main_Kontroller"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="50dp"
         android:src="@drawable/bg_toolbar_shadow"
         tools:ignore="ContentDescription" />
 
     <LinearLayout
+        android:id="@+id/Main_StatusBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="25dp"
-        android:background="@drawable/bg_pedal_container"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_height="20dp"
+        android:layout_gravity="bottom"
+        android:background="@color/bg_dark_gray"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="@drawable/bg_pedal_toolbar">
+        <ImageView
+            android:id="@+id/Main_Status_Image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:padding="3dp"
+            tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                android:src="@drawable/ic_led_off"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="35dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:gravity="center_vertical"
-                android:text="@string/disconnected"
-                android:textColor="#6c6c6c" />
-
-            <ImageView
-                android:id="@+id/Main_Bt_Expand"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="10dp"
-                android:background="@android:drawable/ic_menu_view"
-                android:contentDescription="@string/expand" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/Main_Status_Text"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_pedal">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_gravity="center_vertical"
-                android:contentDescription="@string/separator"
-                android:src="@drawable/bg_separator" />
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:columnCount="6"
-                android:rowCount="3">
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT5"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="0"
-                    android:layout_rowWeight="1"
-                    android:layout_column="0"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="5"
-                    app:k_button_description="5"/>
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT6"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="0"
-                    android:layout_rowWeight="1"
-                    android:layout_column="1"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="6"
-                    app:k_button_description="6"/>
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT7"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="0"
-                    android:layout_rowWeight="1"
-                    android:layout_column="2"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="7"
-                    app:k_button_description="7"/>
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT8"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="0"
-                    android:layout_rowWeight="1"
-                    android:layout_column="3"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="8"
-                    app:k_button_description="8"/>
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT_Pedal_Down"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="0"
-                    android:layout_rowWeight="1"
-                    android:layout_column="4"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="9"
-                    app:k_button_description="9"/>
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT1"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="2"
-                    android:layout_rowWeight="1"
-                    android:layout_column="0"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="1"
-                    app:k_button_description="1"/>
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT2"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="2"
-                    android:layout_rowWeight="1"
-                    android:layout_column="1"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="2"
-                    app:k_button_description="2"/>
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT3"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="2"
-                    android:layout_rowWeight="1"
-                    android:layout_column="2"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="3"
-                    app:k_button_description="3"/>
-
-                <com.firmino.rigkontrol.kontrollers.KButton
-                    android:id="@+id/Main_BT4"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="2"
-                    android:layout_rowWeight="1"
-                    android:layout_column="3"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_button_control_num="4"
-                    app:k_button_description="4"/>
-
-                <com.firmino.rigkontrol.kontrollers.KSlider
-                    android:id="@+id/Main_Slider"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="2"
-                    android:layout_rowWeight="1"
-                    android:layout_column="4"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill"
-                    app:k_slider_control_num="0"
-                    app:k_slider_description="0"/>
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="1"
-                    android:layout_rowWeight=".1"
-                    android:layout_column="0"
-                    android:layout_columnSpan="5"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
-
-                <com.firmino.rigkontrol.kontrollers.KPedal
-                    android:id="@+id/Main_Pedal"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_row="0"
-                    android:layout_rowSpan="3"
-                    android:layout_rowWeight="1"
-                    android:layout_column="5"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="fill" />
-
-
-            </GridLayout>
-        </FrameLayout>
-
+            android:layout_marginStart="5dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:typeface="monospace" />
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

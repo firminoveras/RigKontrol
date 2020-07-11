@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -20,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.firmino.rigkontrol.R;
-import com.firmino.rigkontrol.midi.MidiKontroller;
 
 public class KSlider extends LinearLayout {
 
@@ -28,7 +26,8 @@ public class KSlider extends LinearLayout {
     private ImageView mConfigIcon, mSlider;
     private LinearLayout mDescriptionLayout;
     private boolean isExpanded;
-    private int mComponentNumber, mValue;
+    private int mControllerNumber, mValue;
+    private OnKSliderProgressChangeListener onKSliderProgressChangeListener;
 
     public KSlider(@NonNull Context context) {
         super(context);
@@ -48,7 +47,7 @@ public class KSlider extends LinearLayout {
     }
 
     public void kontrollerSetup(String description, int componentNumber) {
-        mComponentNumber = componentNumber;
+        mControllerNumber = componentNumber;
         mDescription.setText(description);
     }
 
@@ -61,6 +60,9 @@ public class KSlider extends LinearLayout {
         mSlider = findViewById(R.id.Slider_Progress);
         mValue = 0;
         isExpanded = false;
+        onKSliderProgressChangeListener = (kSlider, progress, controllerNumber) -> {
+
+        };
 
         mDescription.setOnTouchListener((v, event) -> {
             mDescriptionLayout.setBackground(getResources().getDrawable(event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_button_text_selected : R.drawable.bg_button_text, null));
@@ -79,33 +81,31 @@ public class KSlider extends LinearLayout {
         final AlertDialog.Builder mDialog = new AlertDialog.Builder(this.getContext());
         View mDialogContent = LayoutInflater.from(this.getContext()).inflate(R.layout.dialog_config_slide, null);
         mDialog.setView(mDialogContent);
-        final AlertDialog dialog = mDialog.show();
-        final TextView dialog_Name = mDialogContent.findViewById(R.id.Config_Slide_Name);
-        final TextView dialog_ComponentNumber = mDialogContent.findViewById(R.id.Config_Slide_ComponentNumber);
-        final Button dialog_ComponentMinus = mDialogContent.findViewById(R.id.Config_Slide_ComponentMinus);
-        final Button dialog_ComponentPlus = mDialogContent.findViewById(R.id.Config_Slide_ComponentPlus);
-        final Button dialog_btApply = mDialogContent.findViewById(R.id.Config_Slide_OK);
-        dialog_ComponentMinus.setOnClickListener(l -> {
+        AlertDialog dialog = mDialog.show();
+        TextView dialog_Name = mDialogContent.findViewById(R.id.Config_Slide_Name);
+        TextView dialog_ComponentNumber = mDialogContent.findViewById(R.id.Config_Slide_ComponentNumber);
+        mDialogContent.findViewById(R.id.Config_Slide_ComponentMinus).setOnClickListener(l -> {
             if (Integer.parseInt(dialog_ComponentNumber.getText().toString()) > 0)
                 dialog_ComponentNumber.setText(String.valueOf(Integer.parseInt(dialog_ComponentNumber.getText().toString()) - 1));
         });
-        dialog_ComponentPlus.setOnClickListener(l -> {
+        mDialogContent.findViewById(R.id.Config_Slide_ComponentPlus).setOnClickListener(l -> {
             if (Integer.parseInt(dialog_ComponentNumber.getText().toString()) < 127)
                 dialog_ComponentNumber.setText(String.valueOf(Integer.parseInt(dialog_ComponentNumber.getText().toString()) + 1));
         });
-        dialog_btApply.setOnClickListener(l -> {
+        mDialogContent.findViewById(R.id.Config_Slide_OK).setOnClickListener(l -> {
             mDescription.setText(dialog_Name.getText());
-            mComponentNumber = Integer.parseInt(dialog_ComponentNumber.getText().toString());
+            mControllerNumber = Integer.parseInt(dialog_ComponentNumber.getText().toString());
             dialog.hide();
         });
         dialog_Name.setText(mDescription.getText());
-        dialog_ComponentNumber.setText(String.valueOf(mComponentNumber));
+        dialog_ComponentNumber.setText(String.valueOf(mControllerNumber));
     }
 
     public void setProgress(int progress) {
         mValue = progress * (-mSlider.getWidth()) / 127 + mSlider.getWidth();
         mSlider.setPadding(mSlider.getPaddingLeft(), mSlider.getPaddingTop(), mValue, mSlider.getPaddingBottom());
-        MidiKontroller.sendControlChange(mComponentNumber, progress);
+        //MidiKontroller.sendControlChange(mComponentNumber, progress);
+        onKSliderProgressChangeListener.onKSliderProgressChangeListener(this, progress, mControllerNumber);
     }
 
     public boolean isExpanded() {
@@ -120,4 +120,11 @@ public class KSlider extends LinearLayout {
         anim.start();
     }
 
+    public void setOnKSliderProgressChangeListener(OnKSliderProgressChangeListener onKSliderProgressChangeListener) {
+        this.onKSliderProgressChangeListener = onKSliderProgressChangeListener;
+    }
+
+    public interface OnKSliderProgressChangeListener {
+        void onKSliderProgressChangeListener(KSlider kSlider, int progress, int controllerNumber);
+    }
 }
