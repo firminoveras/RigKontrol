@@ -2,6 +2,7 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimary">@color/bg_dark_gray</item>
         <item name="colorPrimaryDark">@color/bg_light_gray</item>
         <item name="colorAccent">@color/light_foreground</item>

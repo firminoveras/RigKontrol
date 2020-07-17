@@ -38,22 +38,22 @@ public class KGate extends FrameLayout {
         mDrawableGateOff = getResources().getDrawable(R.drawable.bg_gate_button_off, null);
         onKGateListener = new OnKGateListener() {
             @Override
-            public void onKGateEnabledListener(KGate kGate, boolean isOn, int controllerNumber) {
+            public void onKGateEnabledListener(boolean isOn, int controllerNumber) {
 
             }
 
             @Override
-            public void onKGateValueChangeListener(KGate kGate, int progress, int controllerNumber) {
+            public void onKGateValueChangeListener(int progress, int controllerNumber) {
 
             }
         };
         mButton.setOnClickListener(l -> {
             isOn = !isOn;
-            onKGateListener.onKGateEnabledListener(this, isOn, getResources().getInteger(R.integer.cc_gate_on));
+            onKGateListener.onKGateEnabledListener(isOn, getResources().getInteger(R.integer.cc_gate_on));
             l.setBackground(isOn ? mDrawableGateOn : mDrawableGateOff);
             ((Button) l).setTextColor(getResources().getColor(isOn ? R.color.light_foreground : R.color.dark_foreground, null));
         });
-        mKnob.setOnStateChanged(state -> onKGateListener.onKGateValueChangeListener(this, state, getResources().getInteger(R.integer.cc_gate_knob)));
+        mKnob.setOnStateChanged(state -> onKGateListener.onKGateValueChangeListener(state, getResources().getInteger(R.integer.cc_gate_knob)));
     }
 
     public void setOnKGateListener(OnKGateListener onKGateListener) {
@@ -62,9 +62,9 @@ public class KGate extends FrameLayout {
 
     public interface OnKGateListener {
 
-        void onKGateEnabledListener(KGate kGate, boolean isOn, int controllerNumber);
+        void onKGateEnabledListener(boolean isOn, int controllerNumber);
 
-        void onKGateValueChangeListener(KGate kGate, int progress, int controllerNumber);
+        void onKGateValueChangeListener(int progress, int controllerNumber);
 
     }
 }

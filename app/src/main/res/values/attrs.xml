@@ -23,6 +23,7 @@
 
     <declare-styleable name="KStateButton">
         <attr name="k_statebutton_text_on" format="string" />
+        <attr name="k_statebutton_is_on" format="boolean" />
         <attr name="k_statebutton_text_off" format="string" />
     </declare-styleable>
 

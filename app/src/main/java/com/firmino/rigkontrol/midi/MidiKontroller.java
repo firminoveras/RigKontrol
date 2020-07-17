@@ -5,7 +5,6 @@ import android.media.midi.MidiInputPort;
 import android.media.midi.MidiManager;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -14,44 +13,52 @@ public class MidiKontroller {
     public static final int ERRO_NOT_CONNECTED = 0;
     public static final int ERRO_IO_EXCEPTION = 1;
 
-    private MidiManager sMidi;
+    public static final int MIDI_CONNECTION_SUCESS = 0;
+    public static final int MIDI_CONNECTION_ERRO = 1;
+    public static final int MIDI_DISCONNECTION_SUCESS = 2;
+    public static final int MIDI_DISCONNECTION_ERRO = 3;
+
+    private final MidiManager mMidi;
     private boolean isConnected = false;
-    private int sChannel;
-    private MidiInputPort sMidiPort;
-    private OnMidiMessageSendListener sOnMidiMessageSendListener;
-    private Context mContext;
+    private int mChannel;
+    private MidiInputPort mMidiPort;
+    private OnMidiMessageSendListener mOnMidiMessageSendListener;
+    private OnMidiConnectionStatusChangedListener mOnMidiConnectionStatusChangedListener;
 
     public MidiKontroller(Context context) {
-        sMidi = (MidiManager) context.getSystemService(Context.MIDI_SERVICE);
-        mContext = context;
+        mMidi = (MidiManager) context.getSystemService(Context.MIDI_SERVICE);
     }
 
     public MidiManager getMidi() {
-        return sMidi;
+        return mMidi;
     }
 
-    public void connect(int channel) {
+    public boolean connect(int channel) {
         disconnect();
-        sChannel = channel;
-        if (sMidi != null) {
+        mChannel = channel;
+        if (mMidi != null) {
             try {
-                sMidi.openDevice(sMidi.getDevices()[0], device -> sMidiPort = device.openInputPort(0), new Handler(Looper.getMainLooper()));
+                mMidi.openDevice(mMidi.getDevices()[0], device -> mMidiPort = device.openInputPort(0), new Handler(Looper.getMainLooper()));
                 isConnected = true;
-            } catch (Exception ex) {
-                Toast.makeText(mContext, "Não foi possivel conectar ao midi", Toast.LENGTH_SHORT).show();
+                mOnMidiConnectionStatusChangedListener.onMidiConnectionChanged(true, MIDI_CONNECTION_SUCESS);
+            }catch (Exception ex){
+                mOnMidiConnectionStatusChangedListener.onMidiConnectionChanged(false, MIDI_CONNECTION_ERRO);
             }
+        } else {
+            mOnMidiConnectionStatusChangedListener.onMidiConnectionChanged(false, MIDI_CONNECTION_ERRO);
         }
+        return isConnected;
     }
 
     public void disconnect() {
         if (isConnected()) {
             try {
-                sMidiPort.close();
-                sMidiPort = null;
-                sMidi = null;
+                mMidiPort.close();
+                mMidiPort = null;
                 isConnected = false;
+                mOnMidiConnectionStatusChangedListener.onMidiConnectionChanged(false, MIDI_DISCONNECTION_SUCESS);
             } catch (IOException e) {
-                e.printStackTrace();
+                mOnMidiConnectionStatusChangedListener.onMidiConnectionChanged(false, MIDI_DISCONNECTION_ERRO);
             }
         }
     }
@@ -59,28 +66,32 @@ public class MidiKontroller {
     public void sendControlChange(int control, int value) {
         if (isConnected) {
             try {
-                sMidiPort.send(new byte[]{
-                        (byte) (0xB0 + (sChannel - 1)),
+                mMidiPort.send(new byte[]{
+                        (byte) (0xB0 + (mChannel - 1)),
                         (byte) control,
                         (byte) value
                 }, 0, 3);
-                if (sOnMidiMessageSendListener != null) {
-                    sOnMidiMessageSendListener.onMidiMessageSendSucess(sChannel, control, value);
+                if (mOnMidiMessageSendListener != null) {
+                    mOnMidiMessageSendListener.onMidiMessageSendSucess(mChannel, control, value);
                 }
             } catch (IOException e) {
-                if (sOnMidiMessageSendListener != null) {
-                    sOnMidiMessageSendListener.onMidiMessageSendFailed(sChannel, control, value, ERRO_IO_EXCEPTION);
+                if (mOnMidiMessageSendListener != null) {
+                    mOnMidiMessageSendListener.onMidiMessageSendFailed(mChannel, control, value, ERRO_IO_EXCEPTION);
                 }
             }
         } else {
-            if (sOnMidiMessageSendListener != null) {
-                sOnMidiMessageSendListener.onMidiMessageSendFailed(sChannel, control, value, ERRO_NOT_CONNECTED);
+            if (mOnMidiMessageSendListener != null) {
+                mOnMidiMessageSendListener.onMidiMessageSendFailed(mChannel, control, value, ERRO_NOT_CONNECTED);
             }
         }
     }
 
     public void setOnMidiMessageSendListener(OnMidiMessageSendListener listener) {
-        sOnMidiMessageSendListener = listener;
+        mOnMidiMessageSendListener = listener;
+    }
+
+    public void setOnMidiConnectionChangedListener(OnMidiConnectionStatusChangedListener listener) {
+        mOnMidiConnectionStatusChangedListener = listener;
     }
 
     public boolean isConnected() {
@@ -89,7 +100,10 @@ public class MidiKontroller {
 
     public interface OnMidiMessageSendListener {
         void onMidiMessageSendSucess(int channel, int control, int value);
-
         void onMidiMessageSendFailed(int channel, int control, int value, int erroId);
+    }
+
+    public interface OnMidiConnectionStatusChangedListener {
+        void onMidiConnectionChanged(boolean isConnected, int flag);
     }
 }

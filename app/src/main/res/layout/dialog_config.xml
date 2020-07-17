@@ -137,7 +137,6 @@
             app:rsb_min="0"
             app:rsb_mode="range"
 
-
             app:rsb_progress_drawable="@drawable/bg_range_fg"
             app:rsb_progress_drawable_default="@drawable/bg_range_bg"
             app:rsb_progress_height="10dp"
@@ -145,8 +144,6 @@
             app:rsb_thumb_drawable="@drawable/ic_range_op"
             app:rsb_thumb_height="10dp"
             app:rsb_thumb_width="10dp" />
-
-
     </LinearLayout>
 
     <Button

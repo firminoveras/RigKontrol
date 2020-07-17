@@ -27,7 +27,9 @@ public class KStateButton extends LinearLayout {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.KStateButton, 0, 0);
         mButtonOn.setText(ta.getString(R.styleable.KStateButton_k_statebutton_text_on));
         mButtonOff.setText(ta.getString(R.styleable.KStateButton_k_statebutton_text_off));
+        isOn = ta.getBoolean(R.styleable.KStateButton_k_statebutton_is_on, false);
         ta.recycle();
+        refresh();
     }
 
     private void init() {
@@ -37,18 +39,20 @@ public class KStateButton extends LinearLayout {
         onKStateButtonChangeListener = (kStateButton, isOn) -> {
 
         };
-        isOn = false;
         mButtonOn.setOnClickListener(l -> {
-            isOn = true;
-            onKStateButtonChangeListener.onKStateButtonChangeListener(this, true);
-            refresh();
+            if(!isOn) {
+                isOn = true;
+                onKStateButtonChangeListener.onKStateButtonChangeListener(this, true);
+                refresh();
+            }
         });
         mButtonOff.setOnClickListener(l -> {
-            isOn = false;
-            onKStateButtonChangeListener.onKStateButtonChangeListener(this, false);
-            refresh();
+            if(isOn) {
+                isOn = false;
+                onKStateButtonChangeListener.onKStateButtonChangeListener(this, false);
+                refresh();
+            }
         });
-
     }
 
     private void refresh() {

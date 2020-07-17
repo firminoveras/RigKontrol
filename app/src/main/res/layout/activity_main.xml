@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/lay"
+    android:id="@+id/Main_Layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_light_gray"
@@ -221,6 +221,7 @@
                         android:textColor="#FFFFFF"
                         android:textSize="12sp"
                         tools:ignore="ButtonStyle" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -262,6 +263,7 @@
         android:paddingStart="25dp"
         android:paddingEnd="25dp">
 
+
         <ImageView
             android:id="@+id/Main_Status_Image"
             android:layout_width="20dp"
@@ -271,9 +273,39 @@
 
         <TextView
             android:id="@+id/Main_Status_Text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:typeface="monospace" />
+
+        <ImageView
+            android:id="@+id/Main_Connection_Status_Image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:padding="3dp"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/Main_Connection_Status_Text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/Main_Status_Geral_Text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
             android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center_vertical"
             android:textColor="@color/white"

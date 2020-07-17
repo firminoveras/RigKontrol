@@ -19,6 +19,7 @@ public class KPedal extends LinearLayout implements View.OnTouchListener {
     private ImageView mPedalShadow;
     private float mOldRawY;
     private int mValue, mOldValue;
+    private float mSensivity = 1.0f;
 
     public KPedal(Context context) {
         super(context);
@@ -46,7 +47,7 @@ public class KPedal extends LinearLayout implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
-                mValue += (event.getRawY() / 2) - mOldRawY;
+                mValue += ((event.getRawY() / 2) - mOldRawY) * mSensivity;
                 if (mValue > 127) mValue = 127;
                 else if (mValue < 0) mValue = 0;
                 mPedalShadow.setAlpha(((float) mValue) / 127);
@@ -65,6 +66,10 @@ public class KPedal extends LinearLayout implements View.OnTouchListener {
 
     public void setOnPedalValueChangeListener(OnPedalValueChangeListener listener) {
         onPedalValueChangeListener = listener;
+    }
+
+    public void setSensivity(float mSensivity) {
+        if (mSensivity > 0 && mSensivity <= 2) this.mSensivity = mSensivity;
     }
 
     public interface OnPedalValueChangeListener {
