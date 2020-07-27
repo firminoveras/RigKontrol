@@ -1,27 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="400dp"
+    android:id="@+id/Connection_Main"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_dialog"
-    android:backgroundTint="#454545"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="15dp">
 
-    <EditText
-        android:id="@+id/Config_Slide_Name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/bg_button_pressed"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:inputType="text"
-        android:maxLength="15"
-        android:maxLines="1"
-        android:padding="8dp"
-        android:text="@string/kontrol"
-        android:textColor="@color/bg_black"
-        android:importantForAutofill="no"
-        tools:ignore="LabelFor" />
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:drawableStart="@drawable/ic_usb"
+            android:drawablePadding="5dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:importantForAutofill="no"
+            android:maxLength="15"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="@string/connection"
+            android:textColor="@color/bg_dark_gray"
+            tools:ignore="LabelFor" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bg_dialog"
+        android:backgroundTint="@color/bg_black"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_left_borderless"
+            android:backgroundTint="@color/dark_foreground"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:text="@string/usb_status"
+            android:textColor="@color/light_foreground"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/Connection_USB_Status"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,12 +82,12 @@
             android:backgroundTint="@color/dark_foreground"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
-            android:text="@string/component_number"
+            android:text="@string/midi_channel"
             android:textColor="@color/light_foreground"
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/Config_Slide_ComponentMinus"
+            android:id="@+id/Connection_Channel_Down"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -57,18 +98,18 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/Config_Slide_ComponentNumber"
+            android:id="@+id/Connection_Channel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
-            android:text="@string/zero"
+            android:text="@string/one"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/Config_Slide_ComponentPlus"
+            android:id="@+id/Connection_Channel_Up"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -80,14 +121,13 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/Config_Slide_OK"
-        android:layout_marginTop="5dp"
+        android:id="@+id/Connection_Connect"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/bg_button"
-        android:fontFamily="sans-serif-condensed"
-        android:text="@string/aplicar"
+        android:text="@string/connect"
         android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        tools:ignore="ButtonStyle" />
+        android:textSize="12sp" />
+
 </LinearLayout>

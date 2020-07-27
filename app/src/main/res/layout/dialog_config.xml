@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="400dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_button_text"
+    android:background="@drawable/bg_dialog"
     android:backgroundTint="#454545"
     android:orientation="vertical"
     android:padding="10dp">
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/bg_button_text"
+        android:background="@drawable/bg_dialog"
         android:backgroundTint="@color/bg_black"
         android:orientation="horizontal"
         android:padding="2dp">
@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/bg_button_text"
+        android:background="@drawable/bg_dialog"
         android:backgroundTint="@color/bg_black"
         android:orientation="horizontal"
         android:padding="2dp">

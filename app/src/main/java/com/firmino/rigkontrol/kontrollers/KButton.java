@@ -82,7 +82,7 @@ public class KButton extends LinearLayout {
         });
 
         mDescription.setOnTouchListener((v, event) -> {
-            mDescriptionLayout.setBackground(getResources().getDrawable(event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_button_text_selected : isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_button_text, null));
+            mDescriptionLayout.setBackground(getResources().getDrawable(event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_button_text_selected : isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_dialog, null));
             mDescription.setVisibility(event.getAction() == MotionEvent.ACTION_DOWN ? GONE : VISIBLE);
             mConfigIcon.setVisibility(event.getAction() == MotionEvent.ACTION_DOWN ? VISIBLE : GONE);
             return false;
@@ -150,7 +150,7 @@ public class KButton extends LinearLayout {
         if (!isToggle) {
             isOn = false;
             mButton.setImageDrawable(mImgButtonOff);
-            mDescriptionLayout.setBackground(getResources().getDrawable(R.drawable.bg_button_text, null));
+            mDescriptionLayout.setBackground(getResources().getDrawable(R.drawable.bg_dialog, null));
             //MidiKontroller.sendControlChange(mControllerNumber, mValueOff);
             this.onKButtonStateChangeListener.onKButtonStateChangeListener(this, mValueOn, mValueOff, isOn, mControllerNumber);
         }
@@ -159,7 +159,7 @@ public class KButton extends LinearLayout {
     public void kontrollerButtonDown() {
         isOn = !isOn;
         mButton.setImageDrawable(isOn ? mImgButtonOn : mImgButtonOff);
-        mDescriptionLayout.setBackground(getResources().getDrawable(isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_button_text, null));
+        mDescriptionLayout.setBackground(getResources().getDrawable(isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_dialog, null));
         //MidiKontroller.sendControlChange(mControllerNumber, isOn ? mValueOn : mValueOff);
         this.onKButtonStateChangeListener.onKButtonStateChangeListener(this, mValueOn, mValueOff, isOn, mControllerNumber);
     }

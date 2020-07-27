@@ -1,9 +1,9 @@
 package com.firmino.rigkontrol;
 
 import android.animation.ValueAnimator;
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +31,11 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    //TODO: Slashscreen
+    //TODO: Salvar e Carregar presets
+    //TODO: Live mode
+    //TODO: Next and Previous preset
+
     //Title
     private KGate mTitleGateKnob;
     private ImageView mTitleShowConfigButton;
@@ -40,11 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private KSeekBar mTitleVolumeInSeekBar;
 
     //Options
-    private Button mOptionsChannelUpButton;
-    private Button mOptionsChannelDownButton;
     private Button mOptionsConnectButton;
-    private TextView mOptionsUsbStatusText;
-    private TextView mOptionsChannelText;
     private KStateButton mOptionsShowStatusBar;
     private KStateButton mOptionsShowExtendedButtons;
     private LinearLayout mOptionsLayout;
@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mStatusBarLayout;
 
     //Proprietes
-    private boolean isOptionsVisible;
-    private int mChannel = 1;
+    private boolean isOptionsVisible, isConnected = false;
+    boolean hasMidiSupport;
     private Drawable mDrawableStatusSucess;
     private Drawable mDrawableStatusFail;
     private MidiKontroller mMidi;
@@ -78,90 +78,54 @@ public class MainActivity extends AppCompatActivity {
         mTitleVolumeInSeekBar = findViewById(R.id.Main_VolumeIn);
         mTitleVolumeOutSeekBar = findViewById(R.id.Main_VolumeOut);
         mTitleGateKnob = findViewById(R.id.Main_Gate);
+        mOptionsConnectButton = findViewById(R.id.Options_Connect);
         mOptionsShowExtendedButtons = findViewById(R.id.Options_ExpandButtons);
         mOptionsShowStatusBar = findViewById(R.id.Options_ShowStatusBar);
-        mOptionsConnectButton = findViewById(R.id.Options_connect);
-        mOptionsChannelText = findViewById(R.id.Options_ch);
-        mOptionsChannelUpButton = findViewById(R.id.Options_ch_up);
-        mOptionsChannelDownButton = findViewById(R.id.Options_ch_down);
-        mOptionsUsbStatusText = findViewById(R.id.Options_USB_Status);
         mOptionsLayout = findViewById(R.id.Main_OptionsLayout);
         mKontroller = findViewById(R.id.Main_Kontroller);
         isOptionsVisible = false;
-
-        mTitleExitButton.setOnClickListener(view -> {
-            new ConfirmationAlert("WARNING", getString(R.string.close_warning), MainActivity.this) {
-                @Override
-                public void onConfirmClick() {
-                    MainActivity.this.finish();
-                }
-
-                @Override
-                public void onCancelClick() {
-
-                }
-            };
-        });
-
-        mOptionsChannelDownButton.setOnClickListener(view -> {
-            if (mChannel > 1 && !mMidi.isConnected()) mChannel--;
-            mOptionsChannelText.setText(String.valueOf(mChannel));
-        });
-        mOptionsChannelUpButton.setOnClickListener(view -> {
-            if (mChannel < 16 && !mMidi.isConnected()) mChannel++;
-            mOptionsChannelText.setText(String.valueOf(mChannel));
-        });
-        mOptionsShowExtendedButtons.setOnKStateButtonChangeListener((kStateButton, isOn) -> mKontroller.setExpandedMode(isOn));
-        mOptionsShowStatusBar.setOnKStateButtonChangeListener((kStateButton, isOn) -> this.setStatusBarVisible(isOn));
-
         mDrawableStatusSucess = getResources().getDrawable(R.drawable.ic_sucess, null);
         mDrawableStatusFail = getResources().getDrawable(R.drawable.ic_erro, null);
+        hasMidiSupport = getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI);
 
-        mTitleShowConfigButton.setOnClickListener(l -> {
-            setOptionsVisible(!isOptionsVisible);
-            l.setBackground(getDrawable(this.isOptionsVisible ? R.drawable.bg_button_pressed : R.drawable.bg_button));
-            ((ImageView) l).setImageTintList(ColorStateList.valueOf(getResources().getColor(this.isOptionsVisible ? R.color.bg_dark_gray : R.color.white, null)));
+        mTitleExitButton.setOnClickListener(view -> new ConfirmationAlert("WARNING", getString(R.string.close_warning), MainActivity.this) {
+            @Override
+            public void onConfirmClick() {
+                MainActivity.this.finish();
+            }
+
+            @Override
+            public void onCancelClick() {
+
+            }
         });
 
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
+        mTitleShowConfigButton.setOnClickListener(l -> setOptionsVisible(!isOptionsVisible));
+
+        if (hasMidiSupport) {
             mMidi = new MidiKontroller(this);
-            updateUsbStatus();
-            mMidi.getMidi().registerDeviceCallback(new MidiManager.DeviceCallback() {
-
+            mOptionsConnectButton.setOnClickListener(v -> showConnectionDialog());
+            mMidi.setOnMidiMessageSendListener(new MidiKontroller.OnMidiMessageSendListener() {
                 @Override
-                public void onDeviceAdded(MidiDeviceInfo device) {
-                    updateUsbStatus();
+                public void onMidiMessageSendSucess(int channel, int control, int value) {
+                    mStatusImage.setImageDrawable(mDrawableStatusSucess);
+                    mStatusKontrollersText.setText(String.format(Locale.getDefault(), "Enviado: [ CC = %03d | VL = %03d ] -> CH%02d", control, value, channel));
                 }
 
                 @Override
-                public void onDeviceRemoved(MidiDeviceInfo device) {
-                    mMidi.disconnect();
-                    updateConnectButton(false);
-                    updateUsbStatus();
+                public void onMidiMessageSendFailed(int channel, int control, int value, int erroId) {
+                    mStatusImage.setImageDrawable(mDrawableStatusFail);
+                    mStatusKontrollersText.setText(String.format(Locale.getDefault(), "Falhado: [ CC = %03d | VL = %03d ] -> CH%02d (%s)", control, value, channel, erroId == MidiKontroller.ERRO_NOT_CONNECTED ? "Sem conexão" : "Erro de IO"));
                 }
-            }, new Handler());
+            });
             mMidi.setOnMidiConnectionChangedListener(this::connectionChanged);
-            mOptionsConnectButton.setOnClickListener(view -> connect());
+            mKontroller.setOnConnectLedClickListener(this::showConnectionDialog);
         } else {
-            mOptionsUsbStatusText.setText(R.string.INCOMPATIBLE);
-            mOptionsConnectButton.setText(R.string.usb_not_campatible);
-            setConnectionOptionsEnabled(false);
+            mOptionsConnectButton.setText(R.string.not_midi_suported);
         }
 
-        mMidi.setOnMidiMessageSendListener(new MidiKontroller.OnMidiMessageSendListener() {
-            @Override
-            public void onMidiMessageSendSucess(int channel, int control, int value) {
-                mStatusImage.setImageDrawable(mDrawableStatusSucess);
-                mStatusKontrollersText.setText(String.format(Locale.getDefault(), "Enviado: [ CC = %03d | VL = %03d ] -> CH%02d", control, value, channel));
-            }
-
-            @Override
-            public void onMidiMessageSendFailed(int channel, int control, int value, int erroId) {
-                mStatusImage.setImageDrawable(mDrawableStatusFail);
-                mStatusKontrollersText.setText(String.format(Locale.getDefault(), "Falhado: [ CC = %03d | VL = %03d ] -> CH%02d (%s)", control, value, channel, erroId == MidiKontroller.ERRO_NOT_CONNECTED ? "Sem conexão" : "Erro de IO"));
-            }
-        });
-
+        for (KButton b : mKontroller.getButtons())
+            b.setOnKButtonStateChangeListener((button, valueOn, valueOff, isOn, controllerNumber) -> mMidi.sendControlChange(controllerNumber, isOn ? valueOn : valueOff));
         mTitleGateKnob.setOnKGateListener(new KGate.OnKGateListener() {
             @Override
             public void onKGateEnabledListener(boolean isOn, int controllerNumber) {
@@ -177,44 +141,85 @@ public class MainActivity extends AppCompatActivity {
         mTitleVolumeOutSeekBar.setOnKSeekBarValueChangeListener((seekBar, value, controllerNumber) -> mMidi.sendControlChange(controllerNumber, value));
         mKontroller.getButtonPedal().setOnKButtonStateChangeListener((button, valueOn, valueOff, isOn, controllerNumber) -> mMidi.sendControlChange(controllerNumber, isOn ? valueOn : valueOff));
         mKontroller.getSlider().setOnKSliderProgressChangeListener((kSlider, progress, controllerNumber) -> mMidi.sendControlChange(controllerNumber, progress));
-        for (KButton b : mKontroller.getButtons()) {
-            b.setOnKButtonStateChangeListener((button, valueOn, valueOff, isOn, controllerNumber) -> mMidi.sendControlChange(controllerNumber, isOn ? valueOn : valueOff));
-        }
-
-
-        ((SeekBar) findViewById(R.id.Options_PedalSensivity)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                float sensivity = (float) i / 100;
-                if (sensivity < 0.1f) sensivity = 0.1f;
-                mKontroller.getPedal().setSensivity(sensivity);
-                addStatusGeral("Sensivity: " + sensivity);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+        setupOptionsPanel();
     }
 
     @Override
     public void onBackPressed() {
     }
 
-    private void connect() {
-        if (mMidi.isConnected()) {
-            mMidi.disconnect();
-            updateConnectButton(false);
+    private void showConnectionDialog() {
+        if (isConnected) {
+            disconnect();
         } else {
-            if (mMidi.connect(mChannel)) {
-                updateConnectButton(true);
-            }
+            setOptionsVisible(false);
+            View alertContent = getLayoutInflater().inflate(R.layout.dialog_connect, findViewById(R.id.Connection_Main));
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setView(alertContent);
+            Dialog dialog = alert.show();
+            TextView usbStatus = alertContent.findViewById(R.id.Connection_USB_Status);
+            TextView channel = alertContent.findViewById(R.id.Connection_Channel);
+            Button chUp = alertContent.findViewById(R.id.Connection_Channel_Up);
+            Button chDown = alertContent.findViewById(R.id.Connection_Channel_Down);
+            Button connect = alertContent.findViewById(R.id.Connection_Connect);
+            usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? "Connected" : "Not Connected");
+            connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+            mMidi.getMidi().registerDeviceCallback(new MidiManager.DeviceCallback() {
+                @Override
+                public void onDeviceAdded(MidiDeviceInfo device) {
+                    super.onDeviceAdded(device);
+                    usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? "Connected" : "Not Connected");
+                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+                }
+
+                @Override
+                public void onDeviceRemoved(MidiDeviceInfo device) {
+                    super.onDeviceRemoved(device);
+                    usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? "Connected" : "Not Connected");
+                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+                }
+            }, new Handler());
+            chDown.setOnClickListener(v -> {
+                if (Integer.parseInt(channel.getText().toString()) > 1)
+                    channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) - 1));
+            });
+            chUp.setOnClickListener(v -> {
+                if (Integer.parseInt(channel.getText().toString()) < 16)
+                    channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) + 1));
+            });
+            connect.setOnClickListener(view -> {
+                if (mMidi.getMidi().getDevices().length > 0 && Integer.parseInt(channel.getText().toString()) >= 1 && Integer.parseInt(channel.getText().toString()) <= 16) {
+                    connect(Integer.parseInt(channel.getText().toString()));
+                    dialog.dismiss();
+                }
+            });
+        }
+
+    }
+
+    private void disconnect() {
+        mMidi.disconnect();
+        isConnected = false;
+        mOptionsConnectButton.setText(R.string.offline);
+        mOptionsConnectButton.setBackground(getDrawable(R.drawable.bg_button));
+        mOptionsConnectButton.setTextColor(getColor(R.color.white));
+    }
+
+    private void connect(int channel) {
+        if (mMidi.connect(channel)) {
+            isConnected = true;
+            mOptionsConnectButton.setText(R.string.online);
+            mOptionsConnectButton.setBackground(getDrawable(R.drawable.bg_button_pressed));
+            mOptionsConnectButton.setTextColor(getColor(R.color.bg_dark_gray));
+            mMidi.getMidi().registerDeviceCallback(new MidiManager.DeviceCallback() {
+                @Override
+                public void onDeviceRemoved(MidiDeviceInfo device) {
+                    super.onDeviceRemoved(device);
+                    disconnect();
+                }
+            }, new Handler());
+        } else {
+            disconnect();
         }
     }
 
@@ -237,24 +242,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ((ImageView) findViewById(R.id.Main_Connection_Status_Image)).setImageDrawable((flag == MidiKontroller.MIDI_CONNECTION_ERRO || flag == MidiKontroller.MIDI_DISCONNECTION_ERRO) ? mDrawableStatusFail : mDrawableStatusSucess);
         mStatusConnectionText.setText(String.format("%s: %s", isConnected ? "CONNECTED" : "NOT CONNECTED", status));
-    }
-
-    private void updateConnectButton(boolean connected) {
-        mOptionsConnectButton.setBackground(getResources().getDrawable(connected ? R.drawable.bg_button_right_borderless_pressed : R.drawable.bg_button_right_borderless, null));
-        mOptionsConnectButton.setText(connected ? "ONLINE" : "OFFLINE");
-        mOptionsConnectButton.setTextColor(connected ? getResources().getColor(R.color.bg_dark_gray, null) : Color.WHITE);
-    }
-
-    private void updateUsbStatus() {
-        boolean active = mMidi.getMidi().getDevices().length > 0;
-        mOptionsUsbStatusText.setText(active ? R.string.READY : R.string.NOT_PLUGGED);
-        setConnectionOptionsEnabled(active);
-    }
-
-    private void setConnectionOptionsEnabled(boolean enabled) {
-        mOptionsConnectButton.setEnabled(enabled);
-        mOptionsChannelDownButton.setEnabled(enabled);
-        mOptionsChannelUpButton.setEnabled(enabled);
+        MessageAlert.create(this, (flag == MidiKontroller.MIDI_CONNECTION_ERRO || flag == MidiKontroller.MIDI_DISCONNECTION_ERRO) ? MessageAlert.TYPE_ERRO : MessageAlert.TYPE_SUCESS, status);
     }
 
     private void setStatusBarVisible(boolean visible) {
@@ -270,17 +258,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setOptionsVisible(boolean visible) {
-        isOptionsVisible = visible;
-        mKontroller.setPedalVisible(!visible);
-        int max = (int) (300 * getResources().getDisplayMetrics().density);
-        ValueAnimator anim = ValueAnimator.ofInt(visible ? 0 : max, visible ? max : 0);
-        anim.setDuration(300);
-        anim.addUpdateListener(animation -> {
-            ViewGroup.LayoutParams l = mOptionsLayout.getLayoutParams();
-            l.width = (int) animation.getAnimatedValue();
-            mOptionsLayout.setLayoutParams(l);
-        });
-        anim.start();
+        if (visible != isOptionsVisible) {
+            isOptionsVisible = visible;
+            mTitleShowConfigButton.setBackground(getDrawable(this.isOptionsVisible ? R.drawable.bg_button_pressed : R.drawable.bg_button));
+            mTitleShowConfigButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(this.isOptionsVisible ? R.color.bg_dark_gray : R.color.white, null)));
+            mKontroller.setPedalVisible(!visible);
+            int max = (int) (300 * getResources().getDisplayMetrics().density);
+            ValueAnimator anim = ValueAnimator.ofInt(visible ? 0 : max, visible ? max : 0);
+            anim.setDuration(300);
+            anim.addUpdateListener(animation -> {
+                ViewGroup.LayoutParams l = mOptionsLayout.getLayoutParams();
+                l.width = (int) animation.getAnimatedValue();
+                mOptionsLayout.setLayoutParams(l);
+            });
+            anim.start();
+        }
     }
 
     public void addStatusGeral(String status) {
@@ -288,4 +280,38 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> ((TextView) findViewById(R.id.Main_Status_Geral_Text)).setText(""), 5000);
     }
 
+    private void setupOptionsPanel() {
+        /*
+        mOptionsChannelDownButton.setOnClickListener(view -> {
+            if (mChannel > 1 && !mMidi.isConnected()) mChannel--;
+            mOptionsChannelText.setText(String.valueOf(mChannel));
+        });
+        mOptionsChannelUpButton.setOnClickListener(view -> {
+            if (mChannel < 16 && !mMidi.isConnected()) mChannel++;
+            mOptionsChannelText.setText(String.valueOf(mChannel));
+        });
+
+         */
+        mOptionsShowExtendedButtons.setOnKStateButtonChangeListener((kStateButton, isOn) -> mKontroller.setExpandedMode(isOn));
+        mOptionsShowStatusBar.setOnKStateButtonChangeListener((kStateButton, isOn) -> this.setStatusBarVisible(isOn));
+        ((SeekBar) findViewById(R.id.Options_PedalSensivity)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                float sensivity = (float) i / 100;
+                if (sensivity < 0.1f) sensivity = 0.1f;
+                mKontroller.getPedal().setSensivity(sensivity);
+                addStatusGeral("Sensivity: " + sensivity);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
 }

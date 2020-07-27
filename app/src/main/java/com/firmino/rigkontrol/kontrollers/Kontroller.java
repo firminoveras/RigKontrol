@@ -18,6 +18,7 @@ public class Kontroller extends LinearLayout {
     private KButton[] mButton;
     private KButton mButtonPedal;
     private Drawable mLedOn, mLedOff;
+    private OnConnectLedClickListener onConnectLedClickListener;
 
     public Kontroller(Context context) {
         super(context);
@@ -44,6 +45,10 @@ public class Kontroller extends LinearLayout {
                 findViewById(R.id.Main_BT7),
                 findViewById(R.id.Main_BT8),
         };
+        onConnectLedClickListener = () -> {
+
+        };
+        findViewById(R.id.Kontroller_Led_Status).setOnClickListener(v -> onConnectLedClickListener.onConnectedLedClick());
         mLedOn = getResources().getDrawable(R.drawable.ic_led_on, null);
         mLedOff = getResources().getDrawable(R.drawable.ic_led_off, null);
         mPedal.setOnPedalValueChangeListener((pedal, value) -> {
@@ -57,7 +62,7 @@ public class Kontroller extends LinearLayout {
         mButtonPedal.setPedalDownIconVisible(true);
     }
 
-    public void setExpandedMode(boolean extended){
+    public void setExpandedMode(boolean extended) {
         for (KButton b : mButton) b.setDescriptionVisible(!extended);
         mButtonPedal.setDescriptionVisible(!extended);
         mSlider.setExpanded(!extended);
@@ -87,8 +92,12 @@ public class Kontroller extends LinearLayout {
         mPedal.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setConnectionLedOn(boolean isOn){
-        ((ImageView)findViewById(R.id.Kontroller_Led)).setImageDrawable(isOn? mLedOn : mLedOff);
-        ((TextView)findViewById(R.id.Kontroller_Led_Status)).setText(isOn ? "CONNECTED" : "DISCONNECTED");
+    public void setConnectionLedOn(boolean isOn) {
+        ((ImageView) findViewById(R.id.Kontroller_Led)).setImageDrawable(isOn ? mLedOn : mLedOff);
+        ((TextView) findViewById(R.id.Kontroller_Led_Status)).setText(isOn ? "CONNECTED" : "DISCONNECTED");
+    }
+
+    public void setOnConnectLedClickListener(OnConnectLedClickListener onConnectLedClickListener) {
+        this.onConnectLedClickListener = onConnectLedClickListener;
     }
 }

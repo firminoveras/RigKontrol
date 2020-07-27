@@ -27,6 +27,22 @@ public class MidiKontroller {
 
     public MidiKontroller(Context context) {
         mMidi = (MidiManager) context.getSystemService(Context.MIDI_SERVICE);
+        mOnMidiConnectionStatusChangedListener = (isConnected, flag) -> {
+
+        };
+
+        mOnMidiMessageSendListener = new OnMidiMessageSendListener() {
+            @Override
+            public void onMidiMessageSendSucess(int channel, int control, int value) {
+
+            }
+
+            @Override
+            public void onMidiMessageSendFailed(int channel, int control, int value, int erroId) {
+
+            }
+        };
+
     }
 
     public MidiManager getMidi() {
@@ -41,7 +57,7 @@ public class MidiKontroller {
                 mMidi.openDevice(mMidi.getDevices()[0], device -> mMidiPort = device.openInputPort(0), new Handler(Looper.getMainLooper()));
                 isConnected = true;
                 mOnMidiConnectionStatusChangedListener.onMidiConnectionChanged(true, MIDI_CONNECTION_SUCESS);
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 mOnMidiConnectionStatusChangedListener.onMidiConnectionChanged(false, MIDI_CONNECTION_ERRO);
             }
         } else {
@@ -100,6 +116,7 @@ public class MidiKontroller {
 
     public interface OnMidiMessageSendListener {
         void onMidiMessageSendSucess(int channel, int control, int value);
+
         void onMidiMessageSendFailed(int channel, int control, int value, int erroId);
     }
 
