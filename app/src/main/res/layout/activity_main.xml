@@ -77,7 +77,7 @@
                 app:k_seekbar_max="127"
                 app:k_seekbar_min="0" />
 
-            <ImageView
+            <com.firmino.rigkontrol.ktools.KImageButton
                 android:id="@+id/Main_Show_Configs"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -86,13 +86,12 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight=".5"
-                android:background="@drawable/bg_button"
                 android:padding="5dp"
                 android:src="@drawable/ic_config"
-                android:tint="@color/white"
+                app:k_is_toggled="true"
                 tools:ignore="ContentDescription" />
 
-            <ImageView
+            <com.firmino.rigkontrol.ktools.KImageButton
                 android:id="@+id/Main_Exit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -101,10 +100,8 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight=".5"
-                android:background="@drawable/bg_button"
                 android:padding="3dp"
                 android:src="@android:drawable/ic_lock_power_off"
-                android:tint="@color/white"
                 tools:ignore="ContentDescription" />
 
 
@@ -187,58 +184,87 @@
 
                     </FrameLayout>
 
-                    <Button
+                    <com.firmino.rigkontrol.kontrollers.KStateButton
+                        android:id="@+id/Tool_KontrollerVisible"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:layout_weight=".1"
-                        android:background="@drawable/bg_button" />
+                        android:background="@drawable/bg_button"
+                        app:k_statebutton_is_on="true"
+                        app:k_statebutton_text_off="RACKS"
+                        app:k_statebutton_text_on="KONTROLLER" />
 
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_weight=".2"
-                        android:background="@drawable/bg_button_left"
-                        android:fontFamily="sans-serif-condensed"
-                        android:text="@string/preset"
-                        android:textColor="#FFFFFF"
-                        android:textSize="12sp"
-                        tools:ignore="ButtonStyle" />
-
-                    <Button
+                    <com.firmino.rigkontrol.ktools.KImageButton
+                        android:id="@+id/Tool_Previous_Preset"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginTop="5dp"
                         android:layout_marginEnd="5dp"
                         android:layout_marginBottom="5dp"
                         android:layout_weight=".2"
-                        android:background="@drawable/bg_button_right"
-                        android:fontFamily="sans-serif-condensed"
-                        android:text="@string/preset"
-                        android:textColor="#FFFFFF"
-                        android:textSize="12sp"
-                        tools:ignore="ButtonStyle" />
+                        android:src="@drawable/ic_left"
+                        tools:ignore="ContentDescription" />
+
+                    <com.firmino.rigkontrol.ktools.KImageButton
+                        android:id="@+id/Tool_Next_Preset"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight=".2"
+                        android:src="@drawable/ic_right"
+                        tools:ignore="ContentDescription" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/Container_Main"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="25dp"
-                    android:background="@drawable/bg_little_rounded_square"
-                    android:backgroundTint="#3D3D3D"
-                    android:padding="5dp">
+                    android:background="@drawable/bg_container"
+                    android:orientation="vertical"
+                    android:padding="3dp">
 
-                    <com.firmino.rigkontrol.kontrollers.Kontroller
-                        android:id="@+id/Main_Kontroller"
+                    <ScrollView
+                        android:id="@+id/Container_Racks"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="0dp"
+                        android:background="@drawable/bg_container_intern"
+                        android:padding="5dp"
+                        tools:ignore="Suspicious0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="80dp"
+                                android:background="@drawable/bg_toolbar" />
+                        </LinearLayout>
+                    </ScrollView>
+
+                    <LinearLayout
+                        android:id="@+id/Container_Kontroller"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_container_intern"
+                        android:padding="5dp">
+
+                        <com.firmino.rigkontrol.kontrollers.Kontroller
+                            android:id="@+id/Main_Kontroller"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+
 
                 </LinearLayout>
             </LinearLayout>

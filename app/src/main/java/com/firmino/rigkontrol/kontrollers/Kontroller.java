@@ -1,8 +1,12 @@
 package com.firmino.rigkontrol.kontrollers;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,7 +22,9 @@ public class Kontroller extends LinearLayout {
     private KButton[] mButton;
     private KButton mButtonPedal;
     private Drawable mLedOn, mLedOff;
+    private FrameLayout mFrame;
     private OnConnectLedClickListener onConnectLedClickListener;
+    private boolean isVisible = true;
 
     public Kontroller(Context context) {
         super(context);
@@ -32,6 +38,7 @@ public class Kontroller extends LinearLayout {
 
     private void init() {
         inflate(getContext(), R.layout.layout_krig_controller, this);
+        mFrame = findViewById(R.id.Kontroller_Frame);
         mSlider = findViewById(R.id.Main_Slider);
         mPedal = findViewById(R.id.Main_Pedal);
         mButtonPedal = findViewById(R.id.Main_BT_Pedal_Down);
@@ -89,7 +96,14 @@ public class Kontroller extends LinearLayout {
     }
 
     public void setPedalVisible(boolean visible) {
-        mPedal.setVisibility(visible ? VISIBLE : GONE);
+        ValueAnimator anim = ValueAnimator.ofFloat(visible ? 1.5f : 1, visible ? 1 : 1.5f);
+        anim.addUpdateListener(animator -> {
+            GridLayout.LayoutParams layoutParams = (GridLayout.LayoutParams) mPedal.getLayoutParams();
+            layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, (float) animator.getAnimatedValue());
+            mPedal.setLayoutParams(layoutParams);
+        });
+        anim.setDuration(getResources().getInteger(R.integer.animation_duration_options));
+        anim.start();
     }
 
     public void setConnectionLedOn(boolean isOn) {
@@ -100,4 +114,5 @@ public class Kontroller extends LinearLayout {
     public void setOnConnectLedClickListener(OnConnectLedClickListener onConnectLedClickListener) {
         this.onConnectLedClickListener = onConnectLedClickListener;
     }
+
 }

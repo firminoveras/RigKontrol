@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import com.firmino.rigkontrol.R;
 import com.jaygoo.widget.RangeSeekBar;
 
+import java.util.Objects;
+
 public class KButton extends LinearLayout {
 
     private TextView mDescription;
@@ -100,6 +102,7 @@ public class KButton extends LinearLayout {
         mDialog.setCancelable(false);
         mDialog.setView(mDialogContent);
         AlertDialog dialog = mDialog.show();
+        Objects.requireNonNull(dialog.getWindow()).setLayout((int) (400 * getResources().getDisplayMetrics().density), -2);
 
         TextView dialog_ComponentNumber = mDialogContent.findViewById(R.id.Config_ComponentNumber);
         dialog_ComponentNumber.setText(String.valueOf(mControllerNumber));

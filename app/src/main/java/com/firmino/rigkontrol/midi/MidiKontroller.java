@@ -10,6 +10,9 @@ import java.io.IOException;
 
 public class MidiKontroller {
 
+    public static final int OFF = 0;
+    public static final int ON = 127;
+
     public static final int ERRO_NOT_CONNECTED = 0;
     public static final int ERRO_IO_EXCEPTION = 1;
 

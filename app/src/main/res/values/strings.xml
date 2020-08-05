@@ -17,23 +17,17 @@
     <string name="gate">Gate</string>
     <string name="options">OPTIONS</string>
     <string name="midi_channel">MIDI CHANNEL</string>
-    <string name="preset">Preset</string>
     <string name="connect">CONNECT</string>
     <string name="offline">Offline</string>
     <string name="connection">CONNECTION</string>
     <string name="usb_status">USB STATUS</string>
-    <string name="INCOMPATIBLE">INCOMPATIBLE</string>
-    <string name="READY">READY</string>
-    <string name="NOT_PLUGGED">NOT PLUGGED</string>
     <string name="one">1</string>
     <string name="kontroller">KONTROLLER</string>
     <string name="pedal_sensivity">PEDAL SENSIVITY</string>
-    <string name="usb_not_campatible">N/A USB</string>
     <string name="warning">WARNING</string>
-    <string name="cancel">CANCEL</string>
-    <string name="confirm">CONFIRM</string>
+    <string name="cancel">NO</string>
+    <string name="confirm">YES</string>
     <string name="close_warning">Exiting the application without saving changes will result in the loss of all unsaved data. Do you really want to close the Rig Kontroller?</string>
-    <string name="midi_status">MIDI STATUS</string>
     <string name="not_midi_suported">Not Supported</string>
     <string name="online">ONLINE</string>
 </resources>

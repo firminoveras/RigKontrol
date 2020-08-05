@@ -3,7 +3,6 @@ package com.firmino.rigkontrol;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
@@ -14,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -25,16 +25,16 @@ import com.firmino.rigkontrol.kontrollers.KGate;
 import com.firmino.rigkontrol.kontrollers.KSeekBar;
 import com.firmino.rigkontrol.kontrollers.KStateButton;
 import com.firmino.rigkontrol.kontrollers.Kontroller;
+import com.firmino.rigkontrol.ktools.ConfirmationAlert;
 import com.firmino.rigkontrol.midi.MidiKontroller;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO: Slashscreen
+    //TODO: Splashscreen
     //TODO: Salvar e Carregar presets
-    //TODO: Live mode
-    //TODO: Next and Previous preset
 
     //Title
     private KGate mTitleGateKnob;
@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
     private KStateButton mOptionsShowExtendedButtons;
     private LinearLayout mOptionsLayout;
 
+    //Toolbox
+    private ImageView mToolNextPresetButton;
+    private ImageView mToolPrevPresetButton;
+    private KStateButton mToolKontrollerVisibleStateButton;
+
     //Status
     private ImageView mStatusImage;
     private TextView mStatusKontrollersText;
@@ -56,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mStatusBarLayout;
 
     //Proprietes
-    private boolean isOptionsVisible, isConnected = false;
+    private boolean isConnected = false;
     boolean hasMidiSupport;
     private Drawable mDrawableStatusSucess;
     private Drawable mDrawableStatusFail;
@@ -69,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         findViewById(R.id.Main_Layout).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
+        mToolKontrollerVisibleStateButton = findViewById(R.id.Tool_KontrollerVisible);
+        mToolNextPresetButton = findViewById(R.id.Tool_Next_Preset);
+        mToolPrevPresetButton = findViewById(R.id.Tool_Previous_Preset);
         mStatusConnectionText = findViewById(R.id.Main_Connection_Status_Text);
         mStatusBarLayout = findViewById(R.id.Main_StatusBar);
         mStatusKontrollersText = findViewById(R.id.Main_Status_Text);
@@ -83,9 +91,8 @@ public class MainActivity extends AppCompatActivity {
         mOptionsShowStatusBar = findViewById(R.id.Options_ShowStatusBar);
         mOptionsLayout = findViewById(R.id.Main_OptionsLayout);
         mKontroller = findViewById(R.id.Main_Kontroller);
-        isOptionsVisible = false;
         mDrawableStatusSucess = getResources().getDrawable(R.drawable.ic_sucess, null);
-        mDrawableStatusFail = getResources().getDrawable(R.drawable.ic_erro, null);
+        mDrawableStatusFail = getResources().getDrawable(R.drawable.ic_fail, null);
         hasMidiSupport = getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI);
 
         mTitleExitButton.setOnClickListener(view -> new ConfirmationAlert("WARNING", getString(R.string.close_warning), MainActivity.this) {
@@ -100,7 +107,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mTitleShowConfigButton.setOnClickListener(l -> setOptionsVisible(!isOptionsVisible));
+        mToolKontrollerVisibleStateButton.setOnKStateButtonChangeListener((kStateButton, isOn) -> {
+            LinearLayout main = findViewById(R.id.Container_Main);
+            ScrollView racks = findViewById(R.id.Container_Racks);
+            LinearLayout kontroller = findViewById(R.id.Container_Kontroller);
+
+            int maxHeight = main.getHeight() - (main.getPaddingTop() * 2);
+            int titleHeight = maxHeight - (int) (40 * getResources().getDisplayMetrics().density);
+
+            ViewGroup.LayoutParams layoutParams = kontroller.getLayoutParams();
+            layoutParams.height = maxHeight;
+            kontroller.setLayoutParams(layoutParams);
+
+            ValueAnimator anim = ValueAnimator.ofInt(isOn ? titleHeight : 0, isOn ? 0 : titleHeight);
+            anim.addUpdateListener(valueAnimator -> {
+                ViewGroup.LayoutParams layoutParamsRacks = racks.getLayoutParams();
+                layoutParamsRacks.height = (int) valueAnimator.getAnimatedValue();
+                racks.setLayoutParams(layoutParamsRacks);
+            });
+            anim.setDuration(300);
+            anim.start();
+        });
+
+        mTitleShowConfigButton.setOnClickListener(l -> setOptionsVisible());
 
         if (hasMidiSupport) {
             mMidi = new MidiKontroller(this);
@@ -129,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         mTitleGateKnob.setOnKGateListener(new KGate.OnKGateListener() {
             @Override
             public void onKGateEnabledListener(boolean isOn, int controllerNumber) {
-                mMidi.sendControlChange(controllerNumber, isOn ? 127 : 0);
+                mMidi.sendControlChange(controllerNumber, isOn ? MidiKontroller.ON : MidiKontroller.OFF);
             }
 
             @Override
@@ -137,10 +166,13 @@ public class MainActivity extends AppCompatActivity {
                 mMidi.sendControlChange(controllerNumber, progress);
             }
         });
+        mToolNextPresetButton.setOnClickListener(v -> mMidi.sendControlChange(getResources().getInteger(R.integer.cc_next_preset), MidiKontroller.ON));
+        mToolPrevPresetButton.setOnClickListener(v -> mMidi.sendControlChange(getResources().getInteger(R.integer.cc_prev_preset), MidiKontroller.ON));
         mTitleVolumeInSeekBar.setOnKSeekBarValueChangeListener((seekBar, value, controllerNumber) -> mMidi.sendControlChange(controllerNumber, value));
         mTitleVolumeOutSeekBar.setOnKSeekBarValueChangeListener((seekBar, value, controllerNumber) -> mMidi.sendControlChange(controllerNumber, value));
         mKontroller.getButtonPedal().setOnKButtonStateChangeListener((button, valueOn, valueOff, isOn, controllerNumber) -> mMidi.sendControlChange(controllerNumber, isOn ? valueOn : valueOff));
         mKontroller.getSlider().setOnKSliderProgressChangeListener((kSlider, progress, controllerNumber) -> mMidi.sendControlChange(controllerNumber, progress));
+
         setupOptionsPanel();
     }
 
@@ -152,11 +184,12 @@ public class MainActivity extends AppCompatActivity {
         if (isConnected) {
             disconnect();
         } else {
-            setOptionsVisible(false);
+            //mTitleShowConfigButton.performClick();
             View alertContent = getLayoutInflater().inflate(R.layout.dialog_connect, findViewById(R.id.Connection_Main));
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setView(alertContent);
             Dialog dialog = alert.show();
+            Objects.requireNonNull(dialog.getWindow()).setLayout((int) (300 * getResources().getDisplayMetrics().density), -2);
             TextView usbStatus = alertContent.findViewById(R.id.Connection_USB_Status);
             TextView channel = alertContent.findViewById(R.id.Connection_Channel);
             Button chUp = alertContent.findViewById(R.id.Connection_Channel_Up);
@@ -194,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
     private void disconnect() {
@@ -248,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
     private void setStatusBarVisible(boolean visible) {
         int max = (int) (20 * getResources().getDisplayMetrics().density);
         ValueAnimator anim = ValueAnimator.ofInt(visible ? 0 : max, visible ? max : 0);
-        anim.setDuration(300);
+        anim.setDuration(getResources().getInteger(R.integer.animation_duration_options));
         anim.addUpdateListener(animation -> {
             ViewGroup.LayoutParams l = mStatusBarLayout.getLayoutParams();
             l.height = (int) animation.getAnimatedValue();
@@ -257,22 +289,17 @@ public class MainActivity extends AppCompatActivity {
         anim.start();
     }
 
-    private void setOptionsVisible(boolean visible) {
-        if (visible != isOptionsVisible) {
-            isOptionsVisible = visible;
-            mTitleShowConfigButton.setBackground(getDrawable(this.isOptionsVisible ? R.drawable.bg_button_pressed : R.drawable.bg_button));
-            mTitleShowConfigButton.setImageTintList(ColorStateList.valueOf(getResources().getColor(this.isOptionsVisible ? R.color.bg_dark_gray : R.color.white, null)));
-            mKontroller.setPedalVisible(!visible);
-            int max = (int) (300 * getResources().getDisplayMetrics().density);
-            ValueAnimator anim = ValueAnimator.ofInt(visible ? 0 : max, visible ? max : 0);
-            anim.setDuration(300);
-            anim.addUpdateListener(animation -> {
-                ViewGroup.LayoutParams l = mOptionsLayout.getLayoutParams();
-                l.width = (int) animation.getAnimatedValue();
-                mOptionsLayout.setLayoutParams(l);
-            });
-            anim.start();
-        }
+    private void setOptionsVisible() {
+        mKontroller.setPedalVisible(!mTitleShowConfigButton.isPressed());
+        int max = (int) (300 * getResources().getDisplayMetrics().density);
+        ValueAnimator anim = ValueAnimator.ofInt(mTitleShowConfigButton.isPressed() ? 0 : max, mTitleShowConfigButton.isPressed() ? max : 0);
+        anim.setDuration(300);
+        anim.addUpdateListener(animation -> {
+            ViewGroup.LayoutParams l = mOptionsLayout.getLayoutParams();
+            l.width = (int) animation.getAnimatedValue();
+            mOptionsLayout.setLayoutParams(l);
+        });
+        anim.start();
     }
 
     public void addStatusGeral(String status) {

@@ -10,8 +10,8 @@
                 android:endColor="#1c1c1c"
                 android:angle="270" />
             <corners
-                android:topLeftRadius="10dp"
-                android:topRightRadius="10dp" />
+                android:topLeftRadius="4dp"
+                android:topRightRadius="4dp" />
         </shape>
     </item>
     <item>
@@ -21,8 +21,8 @@
                 android:endColor="#2c2c2c"
                 android:angle="270" />
             <corners
-                android:topLeftRadius="10dp"
-                android:topRightRadius="10dp" />
+                android:topLeftRadius="4dp"
+                android:topRightRadius="4dp" />
         </shape>
     </item>
 </layer-list>

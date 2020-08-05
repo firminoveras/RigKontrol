@@ -27,4 +27,8 @@
         <attr name="k_statebutton_text_off" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="KImageButton">
+        <attr name="k_is_toggled" format="boolean"/>
+    </declare-styleable>
+
 </resources>

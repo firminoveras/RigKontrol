@@ -62,7 +62,7 @@
             android:background="@drawable/bg_button_left_borderless"
             android:fontFamily="sans-serif-black"
             android:text="@string/cancel"
-            android:textColor="#FF5252"
+            android:textColor="@color/white"
             android:textSize="14sp"
             tools:ignore="ButtonStyle" />
 
@@ -74,7 +74,7 @@
             android:background="@drawable/bg_button_right_borderless"
             android:fontFamily="sans-serif-black"
             android:text="@string/confirm"
-            android:textColor="#8BC34A"
+            android:textColor="@color/white"
             android:textSize="14sp"
             tools:ignore="ButtonStyle" />
 

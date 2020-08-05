@@ -1,9 +1,11 @@
-package com.firmino.rigkontrol;
+package com.firmino.rigkontrol.ktools;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
+
+import com.firmino.rigkontrol.R;
 
 import java.util.Objects;
 
