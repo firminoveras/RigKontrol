@@ -32,21 +32,21 @@ public class KSlider extends LinearLayout {
     public KSlider(@NonNull Context context) {
         super(context);
         init();
-        kontrollerSetup("0", 0);
+        setup("0", 0);
     }
 
     public KSlider(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.KSlider, 0, 0);
-        kontrollerSetup(
+        setup(
                 ta.getString(R.styleable.KSlider_k_slider_description),
                 ta.getInt(R.styleable.KSlider_k_slider_control_num, 0)
         );
         ta.recycle();
     }
 
-    public void kontrollerSetup(String description, int componentNumber) {
+    public void setup(String description, int componentNumber) {
         mControllerNumber = componentNumber;
         mDescription.setText(description);
     }
@@ -124,7 +124,16 @@ public class KSlider extends LinearLayout {
         this.onKSliderProgressChangeListener = onKSliderProgressChangeListener;
     }
 
+    public String getDesciption() {
+        return mDescription.getText().toString();
+    }
+
     public interface OnKSliderProgressChangeListener {
         void onKSliderProgressChangeListener(KSlider kSlider, int progress, int controllerNumber);
     }
+
+    public int getControllerNumber() {
+        return mControllerNumber;
+    }
+
 }

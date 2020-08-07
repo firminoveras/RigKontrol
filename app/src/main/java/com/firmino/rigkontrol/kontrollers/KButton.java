@@ -26,6 +26,26 @@ import java.util.Objects;
 
 public class KButton extends LinearLayout {
 
+    public String getKDescription() {
+        return mDescription.getText().toString();
+    }
+
+    public boolean isToggle() {
+        return isToggle;
+    }
+
+    public int getKControllerNumber() {
+        return mControllerNumber;
+    }
+
+    public int getKValueOn() {
+        return mValueOn;
+    }
+
+    public int getKValueOff() {
+        return mValueOff;
+    }
+
     private TextView mDescription;
     private ImageView mButton, mConfigIcon, mPedalDownIcon;
     private LinearLayout mDescriptionLayout;
@@ -36,7 +56,7 @@ public class KButton extends LinearLayout {
 
     public KButton(@NonNull Context context) {
         super(context);
-        kontrollerSetup("0", 0, 127, 0, false);
+        setup("0", 0, 127, 0, false);
         init();
     }
 
@@ -44,7 +64,7 @@ public class KButton extends LinearLayout {
         super(context, attrs);
         init();
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.KButton, 0, 0);
-        kontrollerSetup(
+        setup(
                 ta.getString(R.styleable.KButton_k_button_description),
                 ta.getInt(R.styleable.KButton_k_button_control_num, 0),
                 ta.getInt(R.styleable.KButton_k_button_on_value, 127),
@@ -130,7 +150,7 @@ public class KButton extends LinearLayout {
         });
 
         mDialogContent.findViewById(R.id.Config_OK).setOnClickListener(l -> {
-            kontrollerSetup(
+            setup(
                     dialog_Name.getText().toString(),
                     Integer.parseInt(dialog_ComponentNumber.getText().toString()),
                     (int) dialog_seekBar.getRightSeekBar().getProgress(),
@@ -141,7 +161,7 @@ public class KButton extends LinearLayout {
         });
     }
 
-    public void kontrollerSetup(String description, int controlNumber, int valueOn, int valueOff, boolean isToggledOn) {
+    public void setup(String description, int controlNumber, int valueOn, int valueOff, boolean isToggledOn) {
         mDescription.setText(description);
         mControllerNumber = controlNumber;
         mValueOn = valueOn;

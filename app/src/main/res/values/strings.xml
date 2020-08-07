@@ -30,4 +30,21 @@
     <string name="close_warning">Exiting the application without saving changes will result in the loss of all unsaved data. Do you really want to close the Rig Kontroller?</string>
     <string name="not_midi_suported">Not Supported</string>
     <string name="online">ONLINE</string>
+    <string name="loading">Loading</string>
+    <string name="erro_permission">Cant procced without READ and WRITE permition. Closing in 5 sec.</string>
+    <string name="premission_granted">Permissions Granted</string>
+    <string name="check_dirs">Checking Directories</string>
+    <string name="untitled">Untitled</string>
+    <string name="preset_rename">PRESET RENAME</string>
+    <string name="rename">RENAME</string>
+    <string name="cant_make_preset_directory">Cant make Preset save directory. Closing in 5 secs.</string>
+    <string name="loading_sucessfully">Loading Sucessfully</string>
+    <string name="open_preset">OPEN PRESET</string>
+    <string name="saved_sucess">Preset saved sucessfully.</string>
+    <string name="directory_not_found">Directory not found.</string>
+    <string name="erro_save_preset">Can\'t save the setup.</string>
+    <string name="save_canceled">Save process canceled.</string>
+    <string name="save_replace">There is already a Preset with this name, do you want to replace it?</string>
+    <string name="save_preset">Save the current Preset?</string>
+    <string name="save_preset_title">Saving a Preset</string>
 </resources>

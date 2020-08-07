@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/Open_Preset_Main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_button"
+    android:backgroundTint="@color/bg_dark_gray"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_button_pressed"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:drawableStart="@drawable/ic_folder"
+            android:drawablePadding="5dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:importantForAutofill="no"
+            android:maxLength="15"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="@string/open_preset"
+            android:textColor="@color/bg_dark_gray" />
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/Open_Preset_ListView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/bg_button"
+        android:backgroundTint="@color/bg_black"
+        android:padding="5dp"/>
+
+
+</LinearLayout>

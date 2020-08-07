@@ -9,9 +9,12 @@ import com.firmino.rigkontrol.R;
 
 import java.util.Objects;
 
-public abstract class ConfirmationAlert implements ConfirmationAlertListener {
+public abstract class ConfirmationAlert implements OnConfirmationAlertConfirm {
+
+    private OnConfirmationAlertCancel onConfirmationAlertCancel;
 
     public ConfirmationAlert(String title, String message, Context context) {
+        onConfirmationAlertCancel = () -> {};
         View alertContent = View.inflate(context, R.layout.dialog_confirmation_message, null);
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
@@ -24,7 +27,7 @@ public abstract class ConfirmationAlert implements ConfirmationAlertListener {
         ((TextView) alertContent.findViewById(R.id.Alert_Confirmation_Message)).setText(message);
 
         alertContent.findViewById(R.id.Alert_Confirmation_Cancel).setOnClickListener(v -> {
-            onCancelClick();
+            onConfirmationAlertCancel.onCancelClick();
             dialog.dismiss();
         });
 
@@ -35,10 +38,13 @@ public abstract class ConfirmationAlert implements ConfirmationAlertListener {
 
     }
 
+
+    public void setOnConfirmationAlertCancel(OnConfirmationAlertCancel onConfirmationAlertCancel) {
+        this.onConfirmationAlertCancel = onConfirmationAlertCancel;
+    }
 }
 
-interface ConfirmationAlertListener {
+interface OnConfirmationAlertConfirm {
     void onConfirmClick();
-
-    void onCancelClick();
 }
+

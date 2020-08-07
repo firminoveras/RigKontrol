@@ -16,8 +16,14 @@ import it.beppi.knoblibrary.Knob;
 public class KGate extends FrameLayout {
 
     private Drawable mDrawableGateOn, mDrawableGateOff;
-    private boolean isOn;
-    private OnKGateListener onKGateListener;
+    private boolean isOn = false;
+    private Knob mKnob;
+    private Button mButton;
+
+    private OnKGateEnabledListener onKGateEnabledListener = (isOn, controllerNumber) -> {
+    };
+    private OnKGateValueChangeListener onKGateValueChangeListener = (progress, controllerNumber) -> {
+    };
 
     public KGate(@NonNull Context context) {
         super(context);
@@ -31,40 +37,53 @@ public class KGate extends FrameLayout {
 
     private void init() {
         inflate(getContext(), R.layout.layout_kgate, this);
-        Knob mKnob = findViewById(R.id.Gate_Knob);
-        Button mButton = findViewById(R.id.Gate_Button);
-        isOn = false;
+        mKnob = findViewById(R.id.Gate_Knob);
+        mButton = findViewById(R.id.Gate_Button);
         mDrawableGateOn = getResources().getDrawable(R.drawable.bg_gate_button_on, null);
         mDrawableGateOff = getResources().getDrawable(R.drawable.bg_gate_button_off, null);
-        onKGateListener = new OnKGateListener() {
-            @Override
-            public void onKGateEnabledListener(boolean isOn, int controllerNumber) {
-
-            }
-
-            @Override
-            public void onKGateValueChangeListener(int progress, int controllerNumber) {
-
-            }
-        };
         mButton.setOnClickListener(l -> {
             isOn = !isOn;
-            onKGateListener.onKGateEnabledListener(isOn, getResources().getInteger(R.integer.cc_gate_on));
-            l.setBackground(isOn ? mDrawableGateOn : mDrawableGateOff);
-            ((Button) l).setTextColor(getResources().getColor(isOn ? R.color.light_foreground : R.color.dark_foreground, null));
+            onKGateEnabledListener.onKGateEnabledListener(isOn, getResources().getInteger(R.integer.cc_gate_on));
+            updateGateButtonDrawable();
         });
-        mKnob.setOnStateChanged(state -> onKGateListener.onKGateValueChangeListener(state, getResources().getInteger(R.integer.cc_gate_knob)));
+        mKnob.setOnStateChanged(state -> onKGateValueChangeListener.onKGateValueChangeListener(state, getResources().getInteger(R.integer.cc_gate_knob)));
     }
 
-    public void setOnKGateListener(OnKGateListener onKGateListener) {
-        this.onKGateListener = onKGateListener;
+    private void updateGateButtonDrawable() {
+        mButton.setBackground(isOn ? mDrawableGateOn : mDrawableGateOff);
+        mButton.setTextColor(getResources().getColor(isOn ? R.color.light_foreground : R.color.dark_foreground, null));
     }
 
-    public interface OnKGateListener {
+    public void setValue(int value) {
+        if (mKnob != null) mKnob.setState(value);
+    }
 
+    public int getValue() {
+        return (mKnob != null) ? mKnob.getState() : 0;
+    }
+
+    public boolean isOn() {
+        return isOn;
+    }
+
+    public void setOn(boolean on) {
+        this.isOn = on;
+        updateGateButtonDrawable();
+    }
+
+    public void setOnKGateEnabledListener(OnKGateEnabledListener onKGateEnabledListener) {
+        this.onKGateEnabledListener = onKGateEnabledListener;
+    }
+
+    public void setOnKGateValueChangeListener(OnKGateValueChangeListener onKGateValueChangeListener) {
+        this.onKGateValueChangeListener = onKGateValueChangeListener;
+    }
+
+    public interface OnKGateEnabledListener {
         void onKGateEnabledListener(boolean isOn, int controllerNumber);
+    }
 
+    public interface OnKGateValueChangeListener {
         void onKGateValueChangeListener(int progress, int controllerNumber);
-
     }
 }
