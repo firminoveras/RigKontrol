@@ -31,6 +31,7 @@ import com.firmino.rigkontrol.kontrollers.KSeekBar;
 import com.firmino.rigkontrol.kontrollers.KStateButton;
 import com.firmino.rigkontrol.kontrollers.Kontroller;
 import com.firmino.rigkontrol.ktools.ConfirmationAlert;
+import com.firmino.rigkontrol.ktools.MessageAlert;
 import com.firmino.rigkontrol.midi.MidiKontroller;
 import com.firmino.rigkontrol.presets.PresetItem;
 import com.firmino.rigkontrol.presets.PresetListAdapter;
@@ -57,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     //Title
     private KGate mTitleGateKnob;
     private ImageView mTitleShowConfigButton;
-    private ImageView mTitleExitButton;
     private KSeekBar mTitleVolumeOutSeekBar;
     private KSeekBar mTitleVolumeInSeekBar;
 
@@ -68,12 +68,9 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mOptionsLayout;
 
     //Toolbox
-    private ImageView mToolOpenSetupButton;
     private TextView mToolPresetName;
-    private Button mToolSavePresetButton;
     private ImageView mToolNextPresetButton;
     private ImageView mToolPrevPresetButton;
-    private KStateButton mToolKontrollerVisibleStateButton;
 
     //Status
     private ImageView mStatusImage;
@@ -99,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         mStatusBarLayout = findViewById(R.id.Main_StatusBar);
         mStatusKontrollersText = findViewById(R.id.Main_Status_Text);
         mStatusImage = findViewById(R.id.Main_Status_Image);
-        mTitleExitButton = findViewById(R.id.Main_Exit);
         mTitleShowConfigButton = findViewById(R.id.Main_Show_Configs);
         mTitleVolumeInSeekBar = findViewById(R.id.Main_VolumeIn);
         mTitleVolumeOutSeekBar = findViewById(R.id.Main_VolumeOut);
@@ -111,29 +107,28 @@ public class MainActivity extends AppCompatActivity {
         mKontroller = findViewById(R.id.Main_Kontroller);
         mDrawableStatusSucess = getResources().getDrawable(R.drawable.ic_sucess, null);
         mDrawableStatusFail = getResources().getDrawable(R.drawable.ic_fail, null);
-        mToolOpenSetupButton = findViewById(R.id.Tool_OpenPreset);
         mToolPresetName = findViewById(R.id.Tool_Preset_Title);
-        mToolSavePresetButton = findViewById(R.id.Tool_Save_Preset_Button);
-        mToolKontrollerVisibleStateButton = findViewById(R.id.Tool_KontrollerVisible);
         mToolNextPresetButton = findViewById(R.id.Tool_Next_Preset);
         mToolPrevPresetButton = findViewById(R.id.Tool_Previous_Preset);
         hasMidiSupport = getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI);
 
-        mTitleExitButton.setOnClickListener(view -> showCloseApplicationDialog());
+        findViewById(R.id.Tool_Clear_Preset).setOnClickListener(v -> clearPreset());
+        findViewById(R.id.Main_Exit).setOnClickListener(view -> showExitAppDialog());
         mTitleShowConfigButton.setOnClickListener(l -> setOptionsVisible());
-        mToolOpenSetupButton.setOnClickListener(v -> showOpenSetupDialog());
+        findViewById(R.id.Tool_OpenPreset).setOnClickListener(v -> showOpenSetupDialog());
         mToolPresetName.setOnClickListener(v -> showEditPresetNameDialog());
-        mToolSavePresetButton.setOnClickListener(v -> savePreset());
-        mToolKontrollerVisibleStateButton.setOnKStateButtonChangeListener((kStateButton, isOn) -> setLiveModeOn(isOn));
+        findViewById(R.id.Tool_Save_Preset_Button).setOnClickListener(v -> savePreset());
+        ((KStateButton) findViewById(R.id.Tool_KontrollerVisible)).setOnKStateButtonChangeListener((kStateButton, isOn) -> setLiveModeOn(isOn));
 
         setupMidi();
         setupOptionsPanel();
         loadPreferences();
     }
 
+
     @Override
     public void onBackPressed() {
-        showCloseApplicationDialog();
+        showExitAppDialog();
     }
 
     private void setupMidi() {
@@ -144,13 +139,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onMidiMessageSendSucess(int channel, int control, int value) {
                     mStatusImage.setImageDrawable(mDrawableStatusSucess);
-                    mStatusKontrollersText.setText(String.format(Locale.getDefault(), "Enviado: [ CC = %03d | VL = %03d ] -> CH%02d", control, value, channel));
+                    mStatusKontrollersText.setText(String.format(Locale.getDefault(), getString(R.string.status_send), control, value, channel));
                 }
 
                 @Override
                 public void onMidiMessageSendFailed(int channel, int control, int value, int erroId) {
                     mStatusImage.setImageDrawable(mDrawableStatusFail);
-                    mStatusKontrollersText.setText(String.format(Locale.getDefault(), "Falhado: [ CC = %03d | VL = %03d ] -> CH%02d (%s)", control, value, channel, erroId == MidiKontroller.ERRO_NOT_CONNECTED ? "Sem conexão" : "Erro de IO"));
+                    mStatusKontrollersText.setText(String.format(Locale.getDefault(), getString(R.string.status_erro), control, value, channel, erroId == MidiKontroller.ERRO_NOT_CONNECTED ? "Sem conexão" : "Erro de IO"));
                 }
             });
             mMidi.setOnMidiConnectionChangedListener(this::connectionChanged);
@@ -170,7 +165,31 @@ public class MainActivity extends AppCompatActivity {
             b.setOnKButtonStateChangeListener((button, valueOn, valueOff, isOn, controllerNumber) -> mMidi.sendControlChange(controllerNumber, isOn ? valueOn : valueOff));
     }
 
-    private void setLiveModeOn(boolean isOn) {
+    private void setupOptionsPanel() {
+        mOptionsShowExtendedButtons.setOnKStateButtonChangeListener((kStateButton, isOn) -> mKontroller.setExpandedMode(isOn));
+        mOptionsShowStatusBar.setOnKStateButtonChangeListener((kStateButton, isOn) -> this.setStatusBarVisible(isOn));
+        ((SeekBar) findViewById(R.id.Options_PedalSensivity)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                float sensivity = (float) i / 100;
+                if (sensivity < 0.1f) sensivity = 0.1f;
+                mKontroller.getPedal().setSensivity(sensivity);
+                addStatusGeral(getString(R.string.sensivity) + ": " + sensivity);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void setLiveModeOn(boolean on) {
         LinearLayout main = findViewById(R.id.Container_Main);
         ScrollView racks = findViewById(R.id.Container_Racks);
         LinearLayout kontroller = findViewById(R.id.Container_Kontroller);
@@ -179,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         ViewGroup.LayoutParams layoutParams = kontroller.getLayoutParams();
         layoutParams.height = maxHeight;
         kontroller.setLayoutParams(layoutParams);
-        ValueAnimator anim = ValueAnimator.ofInt(isOn ? titleHeight : 0, isOn ? 0 : titleHeight);
+        ValueAnimator anim = ValueAnimator.ofInt(on ? titleHeight : 0, on ? 0 : titleHeight);
         anim.addUpdateListener(valueAnimator -> {
             ViewGroup.LayoutParams layoutParamsRacks = racks.getLayoutParams();
             layoutParamsRacks.height = (int) valueAnimator.getAnimatedValue();
@@ -189,14 +208,36 @@ public class MainActivity extends AppCompatActivity {
         anim.start();
     }
 
-    private void showCloseApplicationDialog() {
+    private void setStatusBarVisible(boolean visible) {
+        int max = (int) (20 * getResources().getDisplayMetrics().density);
+        ValueAnimator anim = ValueAnimator.ofInt(visible ? 0 : max, visible ? max : 0);
+        anim.setDuration(getResources().getInteger(R.integer.animation_duration_options));
+        anim.addUpdateListener(animation -> {
+            ViewGroup.LayoutParams l = mStatusBarLayout.getLayoutParams();
+            l.height = (int) animation.getAnimatedValue();
+            mStatusBarLayout.setLayoutParams(l);
+        });
+        anim.start();
+    }
+
+    private void setOptionsVisible() {
+        mKontroller.setPedalVisible(!mTitleShowConfigButton.isPressed());
+        int max = (int) (300 * getResources().getDisplayMetrics().density);
+        ValueAnimator anim = ValueAnimator.ofInt(mTitleShowConfigButton.isPressed() ? 0 : max, mTitleShowConfigButton.isPressed() ? max : 0);
+        anim.setDuration(300);
+        anim.addUpdateListener(animation -> {
+            ViewGroup.LayoutParams l = mOptionsLayout.getLayoutParams();
+            l.width = (int) animation.getAnimatedValue();
+            mOptionsLayout.setLayoutParams(l);
+        });
+        anim.start();
+    }
+
+    private void showExitAppDialog() {
         new ConfirmationAlert(getString(R.string.warning), getString(R.string.close_warning), MainActivity.this) {
             @Override
             public void onConfirmClick() {
-                getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("inVolume", mTitleVolumeInSeekBar.getValue()).apply();
-                getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("outVolume", mTitleVolumeOutSeekBar.getValue()).apply();
-                getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("gateLevel", mTitleGateKnob.getValue()).apply();
-                getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putBoolean("gateOn", mTitleGateKnob.isOn()).apply();
+                savePreferences();
                 MainActivity.this.finish();
             }
         };
@@ -227,13 +268,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadPreferences() {
-        mTitleVolumeInSeekBar.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("inVolume", 100));
-        mTitleVolumeOutSeekBar.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("outVolume", 100));
-        mTitleGateKnob.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("gateLevel", 100));
-        mTitleGateKnob.setOn(getSharedPreferences("prefs", Context.MODE_PRIVATE).getBoolean("gateOn", false));
-    }
-
     private void showEditPresetNameDialog() {
         View alertContent = getLayoutInflater().inflate(R.layout.dialog_preset_name, findViewById(R.id.Preset_Name_Main));
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -246,9 +280,96 @@ public class MainActivity extends AppCompatActivity {
                 mToolPresetName.setText(((EditText) alertContent.findViewById(R.id.Preset_Name)).getText());
                 dialog.dismiss();
             } else {
-                ((EditText) alertContent.findViewById(R.id.Preset_Name)).setError("Special characters are not allowed in preset name.");
+                ((EditText) alertContent.findViewById(R.id.Preset_Name)).setError(getString(R.string.special_character));
             }
         });
+    }
+
+    private void showConnectionDialog() {
+        if (isConnected) {
+            disconnect();
+        } else {
+            View alertContent = getLayoutInflater().inflate(R.layout.dialog_connect, findViewById(R.id.Connection_Main));
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setView(alertContent);
+            Dialog dialog = alert.show();
+            Objects.requireNonNull(dialog.getWindow()).setLayout((int) (300 * getResources().getDisplayMetrics().density), -2);
+            TextView usbStatus = alertContent.findViewById(R.id.Connection_USB_Status);
+            TextView channel = alertContent.findViewById(R.id.Connection_Channel);
+            Button chUp = alertContent.findViewById(R.id.Connection_Channel_Up);
+            Button chDown = alertContent.findViewById(R.id.Connection_Channel_Down);
+            Button connect = alertContent.findViewById(R.id.Connection_Connect);
+            usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? getString(R.string.connected) : getString(R.string.not_connected));
+            connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+            mMidi.getMidi().registerDeviceCallback(new MidiManager.DeviceCallback() {
+                @Override
+                public void onDeviceAdded(MidiDeviceInfo device) {
+                    super.onDeviceAdded(device);
+                    usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? getString(R.string.connected) : getString(R.string.not_connected));
+                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+                }
+
+                @Override
+                public void onDeviceRemoved(MidiDeviceInfo device) {
+                    super.onDeviceRemoved(device);
+                    usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? getString(R.string.connected) : getString(R.string.not_connected));
+                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+                }
+            }, new Handler());
+            chDown.setOnClickListener(v -> {
+                if (Integer.parseInt(channel.getText().toString()) > 1)
+                    channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) - 1));
+            });
+            chUp.setOnClickListener(v -> {
+                if (Integer.parseInt(channel.getText().toString()) < 16)
+                    channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) + 1));
+            });
+            connect.setOnClickListener(view -> {
+                if (mMidi.getMidi().getDevices().length > 0 && Integer.parseInt(channel.getText().toString()) >= 1 && Integer.parseInt(channel.getText().toString()) <= 16) {
+                    connect(Integer.parseInt(channel.getText().toString()));
+                    dialog.dismiss();
+                }
+            });
+        }
+    }
+
+    private void savePreferences() {
+        getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("inVolume", mTitleVolumeInSeekBar.getValue()).apply();
+        getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("outVolume", mTitleVolumeOutSeekBar.getValue()).apply();
+        getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("gateLevel", mTitleGateKnob.getValue()).apply();
+        getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putBoolean("gateOn", mTitleGateKnob.isOn()).apply();
+    }
+
+    private void loadPreferences() {
+        mTitleVolumeInSeekBar.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("inVolume", 100));
+        mTitleVolumeOutSeekBar.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("outVolume", 100));
+        mTitleGateKnob.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("gateLevel", 100));
+        mTitleGateKnob.setOn(getSharedPreferences("prefs", Context.MODE_PRIVATE).getBoolean("gateOn", false));
+    }
+
+    private void clearPreset() {
+        new ConfirmationAlert(getString(R.string.warning), getString(R.string.clear_warning), this) {
+            @Override
+            public void onConfirmClick() {
+                int buttonIndex = 0;
+                for (KButton button : mKontroller.getButtons()) {
+                    button.setup(
+                            String.valueOf(buttonIndex + 1),
+                            buttonIndex + 1,
+                            MidiKontroller.ON,
+                            MidiKontroller.OFF,
+                            false
+                    );
+                    buttonIndex++;
+                }
+                mKontroller.getSlider().setup("0", 0);
+                mKontroller.getButtonPedal().setup("9", 9, MidiKontroller.ON, MidiKontroller.OFF, false);
+                mToolPresetName.setText(R.string.untitled);
+                MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.preset_cleaned));
+            }
+
+
+        };
     }
 
     private void savePreset() {
@@ -321,7 +442,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (tag.getName().toLowerCase().equals("kontroller")) {
                         if (Integer.parseInt(tag.getAttributeValue(null, "version").replace(".", "")) > Integer.parseInt(BuildConfig.VERSION_NAME.replace(".", ""))) {
-                            MessageAlert.create(this, MessageAlert.TYPE_ERRO, "Requires version " + tag.getAttributeValue(null, "version"));
+                            MessageAlert.create(this, MessageAlert.TYPE_ERRO, getString(R.string.requires_version) + tag.getAttributeValue(null, "version"));
                             break;
                         }
                         mToolPresetName.setText(tag.getAttributeValue(null, "name"));
@@ -358,73 +479,17 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 if (tag.getEventType() == XmlPullParser.END_DOCUMENT) {
-                    MessageAlert.create(this, MessageAlert.TYPE_SUCESS, "Load Sucessfull");
+                    MessageAlert.create(this, MessageAlert.TYPE_SUCESS, getString(R.string.load_sucessfull));
                     break;
                 }
                 tag.next();
             }
             is.close();
         } catch (XmlPullParserException e) {
-            MessageAlert.create(this, MessageAlert.TYPE_ERRO, "The file is corrupted");
+            MessageAlert.create(this, MessageAlert.TYPE_ERRO, getString(R.string.file_corrupt));
         } catch (IOException e) {
-            MessageAlert.create(this, MessageAlert.TYPE_ERRO, "Unknow erro");
+            MessageAlert.create(this, MessageAlert.TYPE_ERRO, getString(R.string.unknow_erro));
         }
-    }
-
-    private void showConnectionDialog() {
-        if (isConnected) {
-            disconnect();
-        } else {
-            View alertContent = getLayoutInflater().inflate(R.layout.dialog_connect, findViewById(R.id.Connection_Main));
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setView(alertContent);
-            Dialog dialog = alert.show();
-            Objects.requireNonNull(dialog.getWindow()).setLayout((int) (300 * getResources().getDisplayMetrics().density), -2);
-            TextView usbStatus = alertContent.findViewById(R.id.Connection_USB_Status);
-            TextView channel = alertContent.findViewById(R.id.Connection_Channel);
-            Button chUp = alertContent.findViewById(R.id.Connection_Channel_Up);
-            Button chDown = alertContent.findViewById(R.id.Connection_Channel_Down);
-            Button connect = alertContent.findViewById(R.id.Connection_Connect);
-            usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? "Connected" : "Not Connected");
-            connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
-            mMidi.getMidi().registerDeviceCallback(new MidiManager.DeviceCallback() {
-                @Override
-                public void onDeviceAdded(MidiDeviceInfo device) {
-                    super.onDeviceAdded(device);
-                    usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? "Connected" : "Not Connected");
-                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
-                }
-
-                @Override
-                public void onDeviceRemoved(MidiDeviceInfo device) {
-                    super.onDeviceRemoved(device);
-                    usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? "Connected" : "Not Connected");
-                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
-                }
-            }, new Handler());
-            chDown.setOnClickListener(v -> {
-                if (Integer.parseInt(channel.getText().toString()) > 1)
-                    channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) - 1));
-            });
-            chUp.setOnClickListener(v -> {
-                if (Integer.parseInt(channel.getText().toString()) < 16)
-                    channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) + 1));
-            });
-            connect.setOnClickListener(view -> {
-                if (mMidi.getMidi().getDevices().length > 0 && Integer.parseInt(channel.getText().toString()) >= 1 && Integer.parseInt(channel.getText().toString()) <= 16) {
-                    connect(Integer.parseInt(channel.getText().toString()));
-                    dialog.dismiss();
-                }
-            });
-        }
-    }
-
-    private void disconnect() {
-        mMidi.disconnect();
-        isConnected = false;
-        mOptionsConnectButton.setText(R.string.offline);
-        mOptionsConnectButton.setBackground(getDrawable(R.drawable.bg_button));
-        mOptionsConnectButton.setTextColor(getColor(R.color.white));
     }
 
     private void connect(int channel) {
@@ -445,75 +510,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void disconnect() {
+        mMidi.disconnect();
+        isConnected = false;
+        mOptionsConnectButton.setText(R.string.offline);
+        mOptionsConnectButton.setBackground(getDrawable(R.drawable.bg_button));
+        mOptionsConnectButton.setTextColor(getColor(R.color.white));
+    }
+
     private void connectionChanged(boolean isConnected, int flag) {
         mKontroller.setConnectionLedOn(isConnected);
         String status = "";
         switch (flag) {
             case MidiKontroller.MIDI_CONNECTION_ERRO:
-                status = "Connection erro.";
+                status = getString(R.string.connection_erro);
                 break;
             case MidiKontroller.MIDI_CONNECTION_SUCESS:
-                status = "Connection sucess";
+                status = getString(R.string.connection_sucess);
                 break;
             case MidiKontroller.MIDI_DISCONNECTION_ERRO:
-                status = "Disconnection erro";
+                status = getString(R.string.disconnection_erro);
                 break;
             case MidiKontroller.MIDI_DISCONNECTION_SUCESS:
-                status = "Disconnection sucess";
+                status = getString(R.string.disconnection_sucess);
                 break;
         }
         ((ImageView) findViewById(R.id.Main_Connection_Status_Image)).setImageDrawable((flag == MidiKontroller.MIDI_CONNECTION_ERRO || flag == MidiKontroller.MIDI_DISCONNECTION_ERRO) ? mDrawableStatusFail : mDrawableStatusSucess);
-        mStatusConnectionText.setText(String.format("%s: %s", isConnected ? "CONNECTED" : "NOT CONNECTED", status));
+        mStatusConnectionText.setText(String.format("%s: %s", isConnected ? getString(R.string.connected_up) : getString(R.string.not_connected_up), status));
         MessageAlert.create(this, (flag == MidiKontroller.MIDI_CONNECTION_ERRO || flag == MidiKontroller.MIDI_DISCONNECTION_ERRO) ? MessageAlert.TYPE_ERRO : MessageAlert.TYPE_SUCESS, status);
-    }
-
-    private void setStatusBarVisible(boolean visible) {
-        int max = (int) (20 * getResources().getDisplayMetrics().density);
-        ValueAnimator anim = ValueAnimator.ofInt(visible ? 0 : max, visible ? max : 0);
-        anim.setDuration(getResources().getInteger(R.integer.animation_duration_options));
-        anim.addUpdateListener(animation -> {
-            ViewGroup.LayoutParams l = mStatusBarLayout.getLayoutParams();
-            l.height = (int) animation.getAnimatedValue();
-            mStatusBarLayout.setLayoutParams(l);
-        });
-        anim.start();
-    }
-
-    private void setOptionsVisible() {
-        mKontroller.setPedalVisible(!mTitleShowConfigButton.isPressed());
-        int max = (int) (300 * getResources().getDisplayMetrics().density);
-        ValueAnimator anim = ValueAnimator.ofInt(mTitleShowConfigButton.isPressed() ? 0 : max, mTitleShowConfigButton.isPressed() ? max : 0);
-        anim.setDuration(300);
-        anim.addUpdateListener(animation -> {
-            ViewGroup.LayoutParams l = mOptionsLayout.getLayoutParams();
-            l.width = (int) animation.getAnimatedValue();
-            mOptionsLayout.setLayoutParams(l);
-        });
-        anim.start();
-    }
-
-    private void setupOptionsPanel() {
-        mOptionsShowExtendedButtons.setOnKStateButtonChangeListener((kStateButton, isOn) -> mKontroller.setExpandedMode(isOn));
-        mOptionsShowStatusBar.setOnKStateButtonChangeListener((kStateButton, isOn) -> this.setStatusBarVisible(isOn));
-        ((SeekBar) findViewById(R.id.Options_PedalSensivity)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                float sensivity = (float) i / 100;
-                if (sensivity < 0.1f) sensivity = 0.1f;
-                mKontroller.getPedal().setSensivity(sensivity);
-                addStatusGeral("Sensivity: " + sensivity);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
     }
 
     public void addStatusGeral(String status) {

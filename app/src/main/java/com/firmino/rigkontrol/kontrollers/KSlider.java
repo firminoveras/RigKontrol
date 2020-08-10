@@ -25,7 +25,6 @@ public class KSlider extends LinearLayout {
     private TextView mDescription;
     private ImageView mConfigIcon, mSlider;
     private LinearLayout mDescriptionLayout;
-    private boolean isExpanded;
     private int mControllerNumber, mValue;
     private OnKSliderProgressChangeListener onKSliderProgressChangeListener;
 
@@ -59,7 +58,6 @@ public class KSlider extends LinearLayout {
         mDescriptionLayout = findViewById(R.id.K_Description_BG);
         mSlider = findViewById(R.id.Slider_Progress);
         mValue = 0;
-        isExpanded = false;
         onKSliderProgressChangeListener = (kSlider, progress, controllerNumber) -> {
 
         };
@@ -104,16 +102,10 @@ public class KSlider extends LinearLayout {
     public void setProgress(int progress) {
         mValue = progress * (-mSlider.getWidth()) / 127 + mSlider.getWidth();
         mSlider.setPadding(mSlider.getPaddingLeft(), mSlider.getPaddingTop(), mValue, mSlider.getPaddingBottom());
-        //MidiKontroller.sendControlChange(mComponentNumber, progress);
         onKSliderProgressChangeListener.onKSliderProgressChangeListener(this, progress, mControllerNumber);
     }
 
-    public boolean isExpanded() {
-        return isExpanded;
-    }
-
     public void setExpanded(boolean isExpanded) {
-        this.isExpanded = isExpanded;
         ValueAnimator anim = ValueAnimator.ofFloat(isExpanded ? 1 : 0, isExpanded ? 0 : 1);
         anim.addUpdateListener(animation -> mDescriptionLayout.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, (Float) animation.getAnimatedValue())));
         anim.setDuration(500);

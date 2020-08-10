@@ -49,7 +49,7 @@ public class KButton extends LinearLayout {
     private TextView mDescription;
     private ImageView mButton, mConfigIcon, mPedalDownIcon;
     private LinearLayout mDescriptionLayout;
-    private boolean isToggle, isOn, isDescriptionVisible;
+    private boolean isToggle, isOn;
     private int mControllerNumber, mValueOn, mValueOff;
     private Drawable mImgButtonOn, mImgButtonOff;
     private OnKButtonStateChangeListener onKButtonStateChangeListener;
@@ -187,12 +187,7 @@ public class KButton extends LinearLayout {
         this.onKButtonStateChangeListener.onKButtonStateChangeListener(this, mValueOn, mValueOff, isOn, mControllerNumber);
     }
 
-    public void kontrollerInvertExpanded() {
-        setDescriptionVisible(!isDescriptionVisible);
-    }
-
     public void setDescriptionVisible(boolean isExpanded) {
-        this.isDescriptionVisible = isExpanded;
         ValueAnimator anim = ValueAnimator.ofFloat(isExpanded ? 1 : 0, isExpanded ? 0 : 1);
         anim.addUpdateListener(animation -> {
             mDescriptionLayout.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, (Float) animation.getAnimatedValue()));

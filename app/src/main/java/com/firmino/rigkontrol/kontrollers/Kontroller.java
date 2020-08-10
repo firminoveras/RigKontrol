@@ -4,8 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,9 +20,7 @@ public class Kontroller extends LinearLayout {
     private KButton[] mButton;
     private KButton mButtonPedal;
     private Drawable mLedOn, mLedOff;
-    private FrameLayout mFrame;
     private OnConnectLedClickListener onConnectLedClickListener;
-    private boolean isVisible = true;
 
     public Kontroller(Context context) {
         super(context);
@@ -38,7 +34,6 @@ public class Kontroller extends LinearLayout {
 
     private void init() {
         inflate(getContext(), R.layout.layout_krig_controller, this);
-        mFrame = findViewById(R.id.Kontroller_Frame);
         mSlider = findViewById(R.id.Main_Slider);
         mPedal = findViewById(R.id.Main_Pedal);
         mButtonPedal = findViewById(R.id.Main_BT_Pedal_Down);
@@ -73,10 +68,6 @@ public class Kontroller extends LinearLayout {
         for (KButton b : mButton) b.setDescriptionVisible(!extended);
         mButtonPedal.setDescriptionVisible(!extended);
         mSlider.setExpanded(!extended);
-    }
-
-    public KButton getButtonAt(int index) {
-        return mButton[index];
     }
 
     public KButton[] getButtons() {

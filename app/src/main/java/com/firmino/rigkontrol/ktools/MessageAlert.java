@@ -1,4 +1,4 @@
-package com.firmino.rigkontrol;
+package com.firmino.rigkontrol.ktools;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firmino.rigkontrol.MainActivity;
+import com.firmino.rigkontrol.R;
 
 public class MessageAlert {
     public static final int TYPE_ALERT = 0;

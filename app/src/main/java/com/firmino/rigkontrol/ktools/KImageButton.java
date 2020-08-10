@@ -42,6 +42,7 @@ public class KImageButton extends androidx.appcompat.widget.AppCompatImageView {
 
     @Override
     public boolean performClick() {
+        refresh();
         return super.performClick();
     }
 

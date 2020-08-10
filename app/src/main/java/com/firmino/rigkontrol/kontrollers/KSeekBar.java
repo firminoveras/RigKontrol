@@ -78,14 +78,6 @@ public class KSeekBar extends LinearLayout {
         return mSeekBar.getProgress();
     }
 
-    public void setText(String text) {
-        mDescription.setText(text);
-    }
-
-    public String getText() {
-        return mDescription.getText().toString();
-    }
-
     public void setOnKSeekBarValueChangeListener(OnKSeekBarValueChangeListener l) {
         mChangeValueListener = l;
     }

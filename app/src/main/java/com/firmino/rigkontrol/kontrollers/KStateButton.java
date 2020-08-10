@@ -62,20 +62,8 @@ public class KStateButton extends LinearLayout {
         mButtonOff.setTextColor(getResources().getColor(isOn ? R.color.white : R.color.text_inactive, null));
     }
 
-    public void setTextOn(String text) {
-        mButtonOn.setText(text);
-    }
-
-    public void setTextOff(String text) {
-        mButtonOff.setText(text);
-    }
-
     public void setOnKStateButtonChangeListener(OnKStateButtonChangeListener onKStateButtonChangeListener) {
         this.onKStateButtonChangeListener = onKStateButtonChangeListener;
-    }
-
-    public boolean isOn() {
-        return this.isOn;
     }
 
     public void setOn(boolean isOn){
