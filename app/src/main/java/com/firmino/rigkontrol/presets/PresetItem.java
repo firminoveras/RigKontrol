@@ -6,6 +6,8 @@ import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.firmino.rigkontrol.R;
 
 import java.io.File;
@@ -22,8 +24,8 @@ public class PresetItem extends LinearLayout {
         inflate(context, R.layout.view_preset_item, this);
         mTitle = findViewById(R.id.Preset_Title);
         mDate = findViewById(R.id.Preset_Date);
-        mBgUp = context.getDrawable(R.drawable.bg_button_unicolor);
-        mBgDown = context.getDrawable(R.drawable.bg_button_highlight);
+        mBgUp = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_unicolor , null);
+        mBgDown = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_highlight , null);
     }
 
     public void setup(File file) {

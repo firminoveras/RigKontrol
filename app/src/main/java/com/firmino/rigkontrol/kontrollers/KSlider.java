@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.firmino.rigkontrol.R;
 
@@ -63,7 +64,7 @@ public class KSlider extends LinearLayout {
         };
 
         mDescription.setOnTouchListener((v, event) -> {
-            mDescriptionLayout.setBackground(getResources().getDrawable(event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_button_text_selected : R.drawable.bg_dialog, null));
+            mDescriptionLayout.setBackground(ResourcesCompat.getDrawable(getResources(), event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_button_text_selected : R.drawable.bg_dialog, null));
             mDescription.setVisibility(event.getAction() == MotionEvent.ACTION_DOWN ? GONE : VISIBLE);
             mConfigIcon.setVisibility(event.getAction() == MotionEvent.ACTION_DOWN ? VISIBLE : GONE);
             return false;

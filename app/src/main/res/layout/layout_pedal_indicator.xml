@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,7 +40,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:src="@drawable/ic_bg_slider_grid"
-            android:tint="#3d3d3d"
+            app:tint="#3d3d3d"
             tools:ignore="ContentDescription" />
 
     </FrameLayout>
@@ -58,8 +59,8 @@
             android:layout_height="match_parent"
             android:padding="15dp"
             android:src="@drawable/ic_config"
-            android:tint="@color/light_foreground"
             android:visibility="gone"
+            app:tint="@color/light_foreground"
             tools:ignore="ContentDescription" />
 
         <TextView

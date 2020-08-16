@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingBottom="20dp"
@@ -63,7 +64,7 @@
             android:layout_height="match_parent"
             android:padding="15dp"
             android:src="@drawable/ic_config"
-            android:tint="@color/light_foreground"
+            app:tint="@color/light_foreground"
             android:visibility="gone"
             tools:ignore="ContentDescription" />
 

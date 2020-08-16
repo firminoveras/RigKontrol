@@ -1,4 +1,4 @@
-package com.firmino.rigkontrol.ktools;
+package com.firmino.rigkontrol.alerts;
 
 public interface OnConfirmationAlertCancel {
     void onCancelClick();

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rename">RENAME</string>
+    <string name="rack_name">RACK NAME</string>
+    <string name="new_rack">NEW</string>
+    <string name="rack">RACK</string>
+    <string name="init">INIT</string>
+    <string name="edit_name">edit name</string>
+    <string name="edit_color">edit color</string>
+    <string name="midi_config">midi config</string>
+    <string name="add_kontroller">add kontroller</string>
+    <string name="delete_rack">delete rack</string>
+    <string name="rack_color">RACK COLOR</string>
+    <string name="background">BACKGROUND</string>
+    <string name="foreground">FOREGROUND</string>
+    <string name="accept">accept</string>
+</resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
@@ -11,15 +12,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/bg_button_pressed"
-        android:gravity="center"
-        android:layout_marginBottom="10dp">
+        android:gravity="center">
 
         <TextView
             android:id="@+id/Alert_Confirmation_Title"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:drawableStart="@drawable/ic_warning"
             android:drawablePadding="5dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
@@ -28,21 +28,22 @@
             android:maxLines="1"
             android:padding="8dp"
             android:text="@string/warning"
-            android:textColor="@color/bg_dark_gray" />
+            android:textColor="@color/bg_dark_gray"
+            app:drawableStartCompat="@drawable/ic_warning" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/Alert_Confirmation_Message"
-        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_dialog"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="center"
         android:importantForAutofill="no"
         android:padding="8dp"
-        android:textSize="14sp"
-        android:background="@drawable/bg_dialog"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="14sp" />
 
 
     <LinearLayout

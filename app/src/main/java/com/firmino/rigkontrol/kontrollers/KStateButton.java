@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.firmino.rigkontrol.R;
 
@@ -40,14 +41,14 @@ public class KStateButton extends LinearLayout {
 
         };
         mButtonOn.setOnClickListener(l -> {
-            if(!isOn) {
+            if (!isOn) {
                 isOn = true;
                 onKStateButtonChangeListener.onKStateButtonChangeListener(this, true);
                 refresh();
             }
         });
         mButtonOff.setOnClickListener(l -> {
-            if(isOn) {
+            if (isOn) {
                 isOn = false;
                 onKStateButtonChangeListener.onKStateButtonChangeListener(this, false);
                 refresh();
@@ -56,8 +57,8 @@ public class KStateButton extends LinearLayout {
     }
 
     private void refresh() {
-        mButtonOn.setBackground(getResources().getDrawable(isOn ? R.drawable.bg_button_right_borderless_pressed : R.drawable.bg_button_right_borderless, null));
-        mButtonOff.setBackground(getResources().getDrawable(isOn ? R.drawable.bg_button_left_borderless : R.drawable.bg_button_left_borderless_pressed, null));
+        mButtonOn.setBackground(ResourcesCompat.getDrawable(getResources(), isOn ? R.drawable.bg_button_right_borderless_pressed : R.drawable.bg_button_right_borderless, null));
+        mButtonOff.setBackground(ResourcesCompat.getDrawable(getResources(), isOn ? R.drawable.bg_button_left_borderless : R.drawable.bg_button_left_borderless_pressed, null));
         mButtonOn.setTextColor(getResources().getColor(isOn ? R.color.text_inactive : R.color.white, null));
         mButtonOff.setTextColor(getResources().getColor(isOn ? R.color.white : R.color.text_inactive, null));
     }
@@ -66,7 +67,7 @@ public class KStateButton extends LinearLayout {
         this.onKStateButtonChangeListener = onKStateButtonChangeListener;
     }
 
-    public void setOn(boolean isOn){
+    public void setOn(boolean isOn) {
         this.isOn = isOn;
         refresh();
     }

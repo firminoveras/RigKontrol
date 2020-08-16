@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.firmino.rigkontrol.R;
 import com.jaygoo.widget.RangeSeekBar;
@@ -25,26 +26,6 @@ import com.jaygoo.widget.RangeSeekBar;
 import java.util.Objects;
 
 public class KButton extends LinearLayout {
-
-    public String getKDescription() {
-        return mDescription.getText().toString();
-    }
-
-    public boolean isToggle() {
-        return isToggle;
-    }
-
-    public int getKControllerNumber() {
-        return mControllerNumber;
-    }
-
-    public int getKValueOn() {
-        return mValueOn;
-    }
-
-    public int getKValueOff() {
-        return mValueOff;
-    }
 
     private TextView mDescription;
     private ImageView mButton, mConfigIcon, mPedalDownIcon;
@@ -87,8 +68,8 @@ public class KButton extends LinearLayout {
 
         };
 
-        mImgButtonOn = getResources().getDrawable(R.drawable.ic_button_on, null);
-        mImgButtonOff = getResources().getDrawable(R.drawable.ic_button_off, null);
+        mImgButtonOn = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_button_on, null);
+        mImgButtonOff = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_button_off, null);
 
         mButton.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
@@ -104,7 +85,7 @@ public class KButton extends LinearLayout {
         });
 
         mDescription.setOnTouchListener((v, event) -> {
-            mDescriptionLayout.setBackground(getResources().getDrawable(event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_button_text_selected : isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_dialog, null));
+            mDescriptionLayout.setBackground(ResourcesCompat.getDrawable(getResources(), event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_button_text_selected : isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_dialog, null));
             mDescription.setVisibility(event.getAction() == MotionEvent.ACTION_DOWN ? GONE : VISIBLE);
             mConfigIcon.setVisibility(event.getAction() == MotionEvent.ACTION_DOWN ? VISIBLE : GONE);
             return false;
@@ -173,8 +154,7 @@ public class KButton extends LinearLayout {
         if (!isToggle) {
             isOn = false;
             mButton.setImageDrawable(mImgButtonOff);
-            mDescriptionLayout.setBackground(getResources().getDrawable(R.drawable.bg_dialog, null));
-            //MidiKontroller.sendControlChange(mControllerNumber, mValueOff);
+            mDescriptionLayout.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_dialog, null));
             this.onKButtonStateChangeListener.onKButtonStateChangeListener(this, mValueOn, mValueOff, isOn, mControllerNumber);
         }
     }
@@ -182,8 +162,7 @@ public class KButton extends LinearLayout {
     public void kontrollerButtonDown() {
         isOn = !isOn;
         mButton.setImageDrawable(isOn ? mImgButtonOn : mImgButtonOff);
-        mDescriptionLayout.setBackground(getResources().getDrawable(isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_dialog, null));
-        //MidiKontroller.sendControlChange(mControllerNumber, isOn ? mValueOn : mValueOff);
+        mDescriptionLayout.setBackground(ResourcesCompat.getDrawable(getResources(),isOn ? R.drawable.bg_button_text_enabled : R.drawable.bg_dialog, null));
         this.onKButtonStateChangeListener.onKButtonStateChangeListener(this, mValueOn, mValueOff, isOn, mControllerNumber);
     }
 
@@ -204,6 +183,26 @@ public class KButton extends LinearLayout {
 
     public boolean isOn() {
         return isOn;
+    }
+
+    public String getKDescription() {
+        return mDescription.getText().toString();
+    }
+
+    public boolean isToggle() {
+        return isToggle;
+    }
+
+    public int getKControllerNumber() {
+        return mControllerNumber;
+    }
+
+    public int getKValueOn() {
+        return mValueOn;
+    }
+
+    public int getKValueOff() {
+        return mValueOff;
     }
 
     public void setOnKButtonStateChangeListener(OnKButtonStateChangeListener onKButtonStateChangeListener) {

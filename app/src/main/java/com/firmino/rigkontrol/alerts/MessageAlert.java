@@ -1,4 +1,4 @@
-package com.firmino.rigkontrol.ktools;
+package com.firmino.rigkontrol.alerts;
 
 import android.app.Activity;
 import android.content.Context;

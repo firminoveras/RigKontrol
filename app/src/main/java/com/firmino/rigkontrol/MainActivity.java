@@ -24,14 +24,16 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
+import com.firmino.racks.Rack;
 import com.firmino.rigkontrol.kontrollers.KButton;
 import com.firmino.rigkontrol.kontrollers.KGate;
 import com.firmino.rigkontrol.kontrollers.KSeekBar;
 import com.firmino.rigkontrol.kontrollers.KStateButton;
 import com.firmino.rigkontrol.kontrollers.Kontroller;
-import com.firmino.rigkontrol.ktools.ConfirmationAlert;
-import com.firmino.rigkontrol.ktools.MessageAlert;
+import com.firmino.rigkontrol.alerts.ConfirmationAlert;
+import com.firmino.rigkontrol.alerts.MessageAlert;
 import com.firmino.rigkontrol.midi.MidiKontroller;
 import com.firmino.rigkontrol.presets.PresetItem;
 import com.firmino.rigkontrol.presets.PresetListAdapter;
@@ -52,8 +54,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-
-    //TODO: poder criar um preset vazio
 
     //Title
     private KGate mTitleGateKnob;
@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout mStatusBarLayout;
 
     //Proprietes
-    private boolean isConnected = false;
-    boolean hasMidiSupport;
     private Drawable mDrawableStatusSucess;
     private Drawable mDrawableStatusFail;
     private MidiKontroller mMidi;
@@ -105,12 +103,11 @@ public class MainActivity extends AppCompatActivity {
         mOptionsShowStatusBar = findViewById(R.id.Options_ShowStatusBar);
         mOptionsLayout = findViewById(R.id.Main_OptionsLayout);
         mKontroller = findViewById(R.id.Main_Kontroller);
-        mDrawableStatusSucess = getResources().getDrawable(R.drawable.ic_sucess, null);
-        mDrawableStatusFail = getResources().getDrawable(R.drawable.ic_fail, null);
+        mDrawableStatusSucess = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_sucess, null);
+        mDrawableStatusFail = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_fail, null);
         mToolPresetName = findViewById(R.id.Tool_Preset_Title);
         mToolNextPresetButton = findViewById(R.id.Tool_Next_Preset);
         mToolPrevPresetButton = findViewById(R.id.Tool_Previous_Preset);
-        hasMidiSupport = getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI);
 
         findViewById(R.id.Tool_Clear_Preset).setOnClickListener(v -> clearPreset());
         findViewById(R.id.Main_Exit).setOnClickListener(view -> showExitAppDialog());
@@ -123,8 +120,10 @@ public class MainActivity extends AppCompatActivity {
         setupMidi();
         setupOptionsPanel();
         loadPreferences();
-    }
 
+        ((LinearLayout)findViewById(R.id.Main_Racks)).addView(new Rack(this));
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupMidi() {
-        if (hasMidiSupport) {
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_MIDI)) {
             mMidi = new MidiKontroller(this);
             mOptionsConnectButton.setOnClickListener(v -> showConnectionDialog());
             mMidi.setOnMidiMessageSendListener(new MidiKontroller.OnMidiMessageSendListener() {
@@ -171,10 +170,7 @@ public class MainActivity extends AppCompatActivity {
         ((SeekBar) findViewById(R.id.Options_PedalSensivity)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                float sensivity = (float) i / 100;
-                if (sensivity < 0.1f) sensivity = 0.1f;
-                mKontroller.getPedal().setSensivity(sensivity);
-                addStatusGeral(getString(R.string.sensivity) + ": " + sensivity);
+
             }
 
             @Override
@@ -184,7 +180,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                float sensivity = (float) seekBar.getProgress() / 100;
+                if (sensivity < 0.1f) sensivity = 0.1f;
+                mKontroller.getPedal().setSensivity(sensivity);
+                MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.set_sensibility) + sensivity);
             }
         });
     }
@@ -238,7 +237,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onConfirmClick() {
                 savePreferences();
-                MainActivity.this.finish();
+                MainActivity.this.finishAndRemoveTask();
+                System.exit(0);
             }
         };
     }
@@ -249,7 +249,6 @@ public class MainActivity extends AppCompatActivity {
         alert.setView(alertContent);
         Dialog dialog = alert.show();
         Objects.requireNonNull(dialog.getWindow()).setLayout((int) (500 * getResources().getDisplayMetrics().density), -2);
-
         ListView listView = alertContent.findViewById(R.id.Open_Preset_ListView);
         PresetListAdapter adapter = new PresetListAdapter(this);
         listView.setAdapter(adapter);
@@ -286,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showConnectionDialog() {
-        if (isConnected) {
+        if (mMidi.isConnected()) {
             disconnect();
         } else {
             View alertContent = getLayoutInflater().inflate(R.layout.dialog_connect, findViewById(R.id.Connection_Main));
@@ -367,8 +366,6 @@ public class MainActivity extends AppCompatActivity {
                 mToolPresetName.setText(R.string.untitled);
                 MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.preset_cleaned));
             }
-
-
         };
     }
 
@@ -494,9 +491,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void connect(int channel) {
         if (mMidi.connect(channel)) {
-            isConnected = true;
             mOptionsConnectButton.setText(R.string.online);
-            mOptionsConnectButton.setBackground(getDrawable(R.drawable.bg_button_pressed));
+            mOptionsConnectButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_pressed, null));
             mOptionsConnectButton.setTextColor(getColor(R.color.bg_dark_gray));
             mMidi.getMidi().registerDeviceCallback(new MidiManager.DeviceCallback() {
                 @Override
@@ -512,9 +508,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void disconnect() {
         mMidi.disconnect();
-        isConnected = false;
         mOptionsConnectButton.setText(R.string.offline);
-        mOptionsConnectButton.setBackground(getDrawable(R.drawable.bg_button));
+        mOptionsConnectButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button, null));
         mOptionsConnectButton.setTextColor(getColor(R.color.white));
     }
 
@@ -539,10 +534,4 @@ public class MainActivity extends AppCompatActivity {
         mStatusConnectionText.setText(String.format("%s: %s", isConnected ? getString(R.string.connected_up) : getString(R.string.not_connected_up), status));
         MessageAlert.create(this, (flag == MidiKontroller.MIDI_CONNECTION_ERRO || flag == MidiKontroller.MIDI_DISCONNECTION_ERRO) ? MessageAlert.TYPE_ERRO : MessageAlert.TYPE_SUCESS, status);
     }
-
-    public void addStatusGeral(String status) {
-        ((TextView) findViewById(R.id.Main_Status_Geral_Text)).setText(status);
-        new Handler().postDelayed(() -> ((TextView) findViewById(R.id.Main_Status_Geral_Text)).setText(""), 5000);
-    }
-
 }

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.firmino.rigkontrol.R;
 
@@ -51,8 +52,8 @@ public class Kontroller extends LinearLayout {
 
         };
         findViewById(R.id.Kontroller_Led_Status).setOnClickListener(v -> onConnectLedClickListener.onConnectedLedClick());
-        mLedOn = getResources().getDrawable(R.drawable.ic_led_on, null);
-        mLedOff = getResources().getDrawable(R.drawable.ic_led_off, null);
+        mLedOn = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_led_on, null);
+        mLedOff = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_led_off, null);
         mPedal.setOnPedalValueChangeListener((pedal, value) -> {
             mSlider.setProgress(value);
             if (value > 120 && !mButtonPedal.isOn()) {
@@ -104,6 +105,10 @@ public class Kontroller extends LinearLayout {
 
     public void setOnConnectLedClickListener(OnConnectLedClickListener onConnectLedClickListener) {
         this.onConnectLedClickListener = onConnectLedClickListener;
+    }
+
+    public interface OnConnectLedClickListener {
+        void onConnectedLedClick();
     }
 
 }

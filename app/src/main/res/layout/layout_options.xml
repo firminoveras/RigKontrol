@@ -26,7 +26,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:drawableStart="@drawable/ic_options"
                 android:drawablePadding="5dp"
                 android:fontFamily="sans-serif-condensed-medium"
                 android:gravity="center"
@@ -36,6 +35,7 @@
                 android:padding="8dp"
                 android:text="@string/options"
                 android:textColor="@color/bg_dark_gray"
+                app:drawableStartCompat="@drawable/ic_options"
                 tools:ignore="LabelFor" />
         </LinearLayout>
 
@@ -67,7 +67,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:drawableStart="@drawable/ic_midi"
                 android:drawablePadding="5dp"
                 android:fontFamily="sans-serif-condensed-medium"
                 android:gravity="center"
@@ -77,6 +76,7 @@
                 android:padding="8dp"
                 android:text="@string/connection"
                 android:textColor="@color/bg_dark_gray"
+                app:drawableStartCompat="@drawable/ic_midi"
                 tools:ignore="LabelFor" />
         </LinearLayout>
 
@@ -101,7 +101,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:drawableStart="@drawable/ic_pedal"
                 android:drawablePadding="5dp"
                 android:fontFamily="sans-serif-condensed-medium"
                 android:gravity="center"
@@ -111,6 +110,7 @@
                 android:padding="8dp"
                 android:text="@string/kontroller"
                 android:textColor="@color/bg_dark_gray"
+                app:drawableStartCompat="@drawable/ic_pedal"
                 tools:ignore="LabelFor" />
         </LinearLayout>
 

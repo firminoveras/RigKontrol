@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.firmino.rigkontrol.R;
 
@@ -39,8 +40,8 @@ public class KGate extends FrameLayout {
         inflate(getContext(), R.layout.layout_kgate, this);
         mKnob = findViewById(R.id.Gate_Knob);
         mButton = findViewById(R.id.Gate_Button);
-        mDrawableGateOn = getResources().getDrawable(R.drawable.bg_gate_button_on, null);
-        mDrawableGateOff = getResources().getDrawable(R.drawable.bg_gate_button_off, null);
+        mDrawableGateOn = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_gate_button_on, null);
+        mDrawableGateOff = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_gate_button_off, null);
         mButton.setOnClickListener(l -> {
             isOn = !isOn;
             onKGateEnabledListener.onKGateEnabledListener(isOn, getResources().getInteger(R.integer.cc_gate_on));
