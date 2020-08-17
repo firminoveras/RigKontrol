@@ -50,7 +50,6 @@
     <string name="untitled">Untitled</string>
     <string name="status_send"><![CDATA[Enviado: [ CC = %03d | VL = %03d ] -> CH%02d]]></string>
     <string name="status_erro"><![CDATA[Falhado: [ CC = %03d | VL = %03d ] -> CH%02d (%s)]]></string>
-    <string name="sensivity">Sensivity</string>
     <string name="special_character">Special characters are not allowed in preset name.</string>
     <string name="connected">Connected</string>
     <string name="not_connected">Not Connected</string>

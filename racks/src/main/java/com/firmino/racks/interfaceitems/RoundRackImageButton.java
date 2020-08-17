@@ -15,9 +15,7 @@ public class RoundRackImageButton extends androidx.appcompat.widget.AppCompatIma
 
     private boolean isToggle = false;
     private boolean isOn = false;
-    private OnRackButtonClicked onClicked = (view, isOn) -> {
-
-    };
+    private OnRackButtonClicked onClicked = (isOn) -> {};
 
     public RoundRackImageButton(@NonNull Context context) {
         super(context);
@@ -34,7 +32,7 @@ public class RoundRackImageButton extends androidx.appcompat.widget.AppCompatIma
     @Override
     public boolean performClick() {
         isOn = !isOn;
-        onClicked.onRackButtonClickedListener(this, isOn);
+        onClicked.onRackButtonClickedListener(isOn);
         setImageTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), isOn ? R.color.foreground : android.R.color.white, null)));
         return super.performClick();
     }

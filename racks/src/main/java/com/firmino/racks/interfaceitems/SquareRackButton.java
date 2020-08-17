@@ -25,14 +25,8 @@ public class SquareRackButton extends androidx.appcompat.widget.AppCompatButton 
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_rack_square_button_highlight, null));
-        }
-
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_rack_square_button, null));
-            performClick();
-        }
+        setBackground(ResourcesCompat.getDrawable(getResources(), event.getAction() == MotionEvent.ACTION_DOWN ? R.drawable.bg_rack_square_button_highlight : R.drawable.bg_rack_square_button, null));
+        if (event.getAction() == MotionEvent.ACTION_UP) performClick();
         return true;
     }
 }

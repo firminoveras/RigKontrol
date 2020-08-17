@@ -1,37 +1,47 @@
 package com.firmino.racks;
 
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.firmino.racks.components.Component;
+import com.firmino.racks.frags.ConfigFragmentAdapter;
+import com.firmino.racks.frags.FragmentColorsConfig;
+import com.firmino.racks.frags.FragmentMainConfig;
+import com.firmino.racks.frags.FragmentMidiConfig;
+import com.firmino.racks.frags.FragmentTitleConfig;
 import com.firmino.racks.interfaceitems.RoundRackImageButton;
-import com.firmino.racks.interfaceitems.SquareRackButton;
-
-import java.util.Objects;
 
 public class Rack extends RelativeLayout {
 
-    private Context mContext;
+    private final Context mContext;
     private RoundRackImageButton mPowerButton, mMinimizeButton, mConfigButton;
-    private LinearLayout mConfigLayout, mContainerLayout;
+    private LinearLayout mContainerLayout;
+    private ViewPager2 mConfigPager;
+    private ConfigFragmentAdapter mConfigFragAdapter;
     private FrameLayout mSaveLayout;
     private TextView mLittleTitle, mBigTitle;
-    private SquareRackButton mConfigNameButton, mConfigColorButton, mConfigMidiButton, mConfigDeleteButton, mConfigAddButton;
+    private OnRackOnListener onRackOnListener = (isOn, CC) -> {};
+    private OnRackDeleteButtonClickListener onRackDeleteButtonClickListener = () -> {};
     private boolean isMinimized = false, isConfigModeOn = false;
+    private int mControlChange = 0;
+
+    FragmentMainConfig mFragMain;
+    FragmentTitleConfig mFragTitle;
+    FragmentColorsConfig mFragColors;
+    FragmentMidiConfig mFragMidi;
 
     public Rack(Context context) {
         super(context);
@@ -47,7 +57,7 @@ public class Rack extends RelativeLayout {
 
     private void init() {
         inflate(mContext, R.layout.rack_layout, this);
-        mConfigLayout = findViewById(R.id.Rack_Config_Layout);
+        mConfigPager = findViewById(R.id.Rack_Config_Pager);
         mSaveLayout = findViewById(R.id.Rack_Save_Layout);
         mContainerLayout = findViewById(R.id.Rack_Container_Layout);
         mMinimizeButton = findViewById(R.id.Rack_MinimizeButton);
@@ -55,106 +65,53 @@ public class Rack extends RelativeLayout {
         mConfigButton = findViewById(R.id.Rack_ConfigButton);
         mLittleTitle = findViewById(R.id.Rack_Little_Title);
         mBigTitle = findViewById(R.id.Rack_Big_Title);
-        mConfigNameButton = findViewById(R.id.Rack_Config_Name);
-        mConfigColorButton = findViewById(R.id.Rack_Config_Color);
-        mConfigMidiButton = findViewById(R.id.Rack_Config_Midi);
-        mConfigDeleteButton = findViewById(R.id.Rack_Config_Delete_Rack);
-        mConfigAddButton = findViewById(R.id.Rack_Config_Add);
 
-        mConfigNameButton.setOnClickListener(v -> showEditTitleDialog());
-        mConfigColorButton.setOnClickListener(v -> showEditColorDialog());
+        mFragMain = new FragmentMainConfig();
+        mFragTitle = new FragmentTitleConfig();
+        mFragColors = new FragmentColorsConfig();
+        mFragMidi = new FragmentMidiConfig();
+
+        mConfigFragAdapter = new ConfigFragmentAdapter(((FragmentActivity) mContext));
+        mConfigFragAdapter.add(mFragMain);
+        mConfigFragAdapter.add(mFragTitle);
+        mConfigFragAdapter.add(mFragColors);
+        mConfigFragAdapter.add(mFragMidi);
+
+        mConfigPager.setAdapter(mConfigFragAdapter);
+
+        mFragMain.setOnEditNameClickListener(button -> mConfigPager.setCurrentItem(1, true));
+        mFragMain.setOnEditColorsClickListener(button -> mConfigPager.setCurrentItem(2, true));
+        mFragMain.setOnMidiConfigClickListener(button -> mConfigPager.setCurrentItem(3, true));
+        mFragMain.setOnDeleteRacklickListener(button -> onRackDeleteButtonClickListener.onRackDeleteButtonClickListener());
+        mFragMain.setOnAddClickListener(button -> {
+            //TODO: Parei aqui
+            int unity = (int) (80 * mContext.getResources().getDisplayMetrics().density);
+            if (mContainerLayout.getChildCount() < (mContainerLayout.getWidth() / unity) - 1) mContainerLayout.addView(new Component(mContext));
+        });
+
+        mFragTitle.setOnTitleBackClickListener(button -> mConfigPager.setCurrentItem(0, true));
+        mFragTitle.setOnTitleResumeListener(title -> title.setText(getRackTitle()));
+        mFragTitle.setOnTitleRenameButtonClick(this::setRackTitle);
+
+        mFragColors.setOnColorsBackClickListener(() -> mConfigPager.setCurrentItem(0, true));
+        mFragColors.setOnColorsBackgroundColorPickedListener(this::setRackBackgroundColor);
+        mFragColors.setOnColorsForegroundColorPickedListener(this::setRackForegroundColor);
+
+        mFragMidi.setOnMidiBackClickListener(() -> mConfigPager.setCurrentItem(0, true));
+        mFragMidi.setOnMidiChangeListener(cc -> mControlChange = cc);
+        mFragMidi.setOnMidiResumeListener(textView -> textView.setText(String.valueOf(mControlChange)));
+
 
         mPowerButton.setToggle(true);
-        //TODO: listener ligado e desativado
+        mPowerButton.setOnRackButtonClicked((isOn) -> onRackOnListener.onRackOnListener(isOn, mControlChange));
 
         mMinimizeButton.setToggle(false);
-        mMinimizeButton.setOnRackButtonClicked((view, isOn) -> {
+        mMinimizeButton.setOnRackButtonClicked((isOn) -> {
             if (isOn) setMinimizedMode(!isMinimized);
         });
 
         mConfigButton.setToggle(true);
-        mConfigButton.setOnRackButtonClicked((view, isOn) -> setConfigModeEnabled(isOn));
-    }
-
-    public void showEditTitleDialog() {
-        View dialogContent = inflate(mContext, R.layout.dialog_rack_edit_name, findViewById(R.id.Rack_Rename_Root));
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setView(dialogContent);
-        Dialog dialog = builder.show();
-        EditText name = dialogContent.findViewById(R.id.Rack_Rename_Text);
-        name.setText(getRackTitle());
-        dialogContent.findViewById(R.id.Rack_Rename_OK).setOnClickListener(v -> {
-            if (name.getText().toString().matches("[A-Za-z0-9 ]+")) {
-                setRackTitle(name.getText().toString());
-                dialog.dismiss();
-            } else name.setError("Invalid Characters.");
-
-        });
-    }
-
-    public void showEditColorDialog() {
-        //TODO: duas cores verdes parecidas
-        View dialogContent = inflate(mContext, R.layout.dialog_rack_edit_color, findViewById(R.id.Rack_Color_Root));
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setView(dialogContent);
-        Dialog dialog = builder.show();
-
-        LinearLayout background = dialogContent.findViewById(R.id.Colors_Background_Root);
-        LinearLayout foreground = dialogContent.findViewById(R.id.Colors_Foreground_Root);
-
-        for (int i = 0; i < background.getChildCount(); i++) {
-            if(Objects.equals(findViewById(R.id.Rack_Background).getBackgroundTintList(), background.getChildAt(i).getBackgroundTintList())){
-                ViewGroup.LayoutParams lay = background.getChildAt(i).getLayoutParams();
-                lay.height = (int) getResources().getDimension(R.dimen.big_color_circle_size);
-                lay.width = (int) getResources().getDimension(R.dimen.big_color_circle_size);
-                background.getChildAt(i).setLayoutParams(lay);
-            }
-            background.getChildAt(i).setOnClickListener(v -> {
-                ImageView colorCircle = (ImageView) v;
-                for (int index = 0; index < background.getChildCount(); index++) {
-                    ViewGroup.LayoutParams lay = background.getChildAt(index).getLayoutParams();
-                    lay.height = (int) getResources().getDimension(R.dimen.small_color_circle_size);
-                    lay.width = (int) getResources().getDimension(R.dimen.small_color_circle_size);
-                    background.getChildAt(index).setLayoutParams(lay);
-                }
-
-                ViewGroup.LayoutParams lay = colorCircle.getLayoutParams();
-                lay.height = (int) getResources().getDimension(R.dimen.big_color_circle_size);
-                lay.width = (int) getResources().getDimension(R.dimen.big_color_circle_size);
-                colorCircle.setLayoutParams(lay);
-                findViewById(R.id.Rack_Background).setBackgroundTintList(colorCircle.getBackgroundTintList());
-            });
-        }
-
-        for (int i = 0; i < foreground.getChildCount(); i++) {
-            if(Objects.equals(findViewById(R.id.Rack_InnerLayout).getBackgroundTintList(), foreground.getChildAt(i).getBackgroundTintList())){
-                ViewGroup.LayoutParams lay = foreground.getChildAt(i).getLayoutParams();
-                lay.height = (int) getResources().getDimension(R.dimen.big_color_circle_size);
-                lay.width = (int) getResources().getDimension(R.dimen.big_color_circle_size);
-                foreground.getChildAt(i).setLayoutParams(lay);
-            }
-            foreground.getChildAt(i).setOnClickListener(v -> {
-                ImageView colorCircle = (ImageView) v;
-                for (int index = 0; index < foreground.getChildCount(); index++) {
-                    ViewGroup.LayoutParams lay = foreground.getChildAt(index).getLayoutParams();
-                    lay.height = (int) getResources().getDimension(R.dimen.small_color_circle_size);
-                    lay.width = (int) getResources().getDimension(R.dimen.small_color_circle_size);
-                    foreground.getChildAt(index).setLayoutParams(lay);
-                }
-
-                ViewGroup.LayoutParams lay = colorCircle.getLayoutParams();
-                lay.height = (int) getResources().getDimension(R.dimen.big_color_circle_size);
-                lay.width = (int) getResources().getDimension(R.dimen.big_color_circle_size);
-                colorCircle.setLayoutParams(lay);
-
-                mBigTitle.setTextColor(colorCircle.getBackgroundTintList());
-                mLittleTitle.setTextColor(colorCircle.getBackgroundTintList());
-                findViewById(R.id.Rack_InnerLayout).setBackgroundTintList(colorCircle.getBackgroundTintList());
-
-            });
-        }
-
-        dialogContent.findViewById(R.id.Rack_Recolor_OK).setOnClickListener(view -> dialog.dismiss());
+        mConfigButton.setOnRackButtonClicked(this::setConfigModeEnabled);
     }
 
     public void setConfigModeEnabled(boolean enabled) {
@@ -162,9 +119,9 @@ public class Rack extends RelativeLayout {
         int maxH = (int) (getResources().getDimension(R.dimen.rack_config_height));
         ValueAnimator anim = ValueAnimator.ofInt(enabled ? 0 : maxH, enabled ? maxH : 0);
         anim.addUpdateListener(valueAnimator -> {
-            ViewGroup.LayoutParams lay = mConfigLayout.getLayoutParams();
+            ViewGroup.LayoutParams lay = mConfigPager.getLayoutParams();
             lay.height = (int) valueAnimator.getAnimatedValue();
-            mConfigLayout.setLayoutParams(lay);
+            mConfigPager.setLayoutParams(lay);
         });
         anim.setDuration(300);
         anim.start();
@@ -185,13 +142,23 @@ public class Rack extends RelativeLayout {
     }
 
     public String getRackTitle() {
-        String title = "";
+        String title;
         if (mLittleTitle.getText().length() > 0) {
             title = (String.format("%s %s", mLittleTitle.getText().toString(), mBigTitle.getText().toString()));
         } else {
             title = (mBigTitle.getText().toString());
         }
         return title;
+    }
+
+    public void setRackBackgroundColor(ColorStateList color) {
+        findViewById(R.id.Rack_Background).setBackgroundTintList(color);
+    }
+
+    public void setRackForegroundColor(ColorStateList color) {
+        mBigTitle.setTextColor(color);
+        mLittleTitle.setTextColor(color);
+        findViewById(R.id.Rack_InnerLayout).setBackgroundTintList(color);
     }
 
     public void setRackTitle(String title) {
@@ -218,5 +185,21 @@ public class Rack extends RelativeLayout {
 
     public boolean isConfigModeOn() {
         return isConfigModeOn;
+    }
+
+    public void setOnRackOnListener(OnRackOnListener onRackOnListener) {
+        this.onRackOnListener = onRackOnListener;
+    }
+
+    public void setOnRackDeleteButtonClickListener(OnRackDeleteButtonClickListener onRackDeleteButtonClickListener) {
+        this.onRackDeleteButtonClickListener = onRackDeleteButtonClickListener;
+    }
+
+    public interface OnRackOnListener {
+        void onRackOnListener(boolean isOn, int ControlChange);
+    }
+
+    public interface OnRackDeleteButtonClickListener {
+        void onRackDeleteButtonClickListener();
     }
 }

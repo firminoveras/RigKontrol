@@ -1,3 +1,4 @@
+include ':Alerts'
 include ':Racks'
 include ':app'
 rootProject.name = "Rig Kontrol"

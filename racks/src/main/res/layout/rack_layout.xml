@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rack_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="3dp"
@@ -110,125 +109,28 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:gravity="center"
                     android:id="@+id/Rack_Container_Layout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".75"
                     android:orientation="horizontal" />
 
-
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/Rack_Config_Layout"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/Rack_Config_Pager"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="50dp"
                 android:layout_marginEnd="50dp"
                 android:background="@drawable/bg_rack_config"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingStart="5dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="5dp"
-                android:paddingBottom="30dp">
-
-                <com.firmino.racks.interfaceitems.SquareRackButton
-                    android:id="@+id/Rack_Config_Name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_rack_square_button"
-                    android:drawableStart="@drawable/ic_edit_white"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="sans-serif"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="@string/edit_name"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:typeface="monospace"
-                    tools:ignore="ButtonStyle" />
-
-                <com.firmino.racks.interfaceitems.SquareRackButton
-                    android:id="@+id/Rack_Config_Color"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_rack_square_button"
-                    android:drawableStart="@drawable/ic_edit_color_white"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="sans-serif"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="@string/edit_color"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:typeface="monospace"
-                    tools:ignore="ButtonStyle" />
-
-                <com.firmino.racks.interfaceitems.SquareRackButton
-                    android:id="@+id/Rack_Config_Midi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_rack_square_button"
-                    android:drawableStart="@drawable/ic_midi_config"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="sans-serif"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="@string/midi_config"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:typeface="monospace"
-                    tools:ignore="ButtonStyle" />
-
-                <com.firmino.racks.interfaceitems.SquareRackButton
-                    android:id="@+id/Rack_Config_Delete_Rack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_rack_square_button"
-                    android:drawableStart="@drawable/ic_rack_delete"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="sans-serif"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="@string/delete_rack"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:typeface="monospace"
-                    tools:ignore="ButtonStyle" />
-
-                <com.firmino.racks.interfaceitems.SquareRackButton
-                    android:id="@+id/Rack_Config_Add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_rack_square_button"
-                    android:drawableStart="@drawable/ic_add_kontroller"
-                    android:drawablePadding="5dp"
-                    android:fontFamily="sans-serif"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="@string/add_kontroller"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:typeface="monospace"
-                    tools:ignore="ButtonStyle" />
-
-            </LinearLayout>
+                android:paddingStart="15dp"
+                android:paddingTop="15dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="25dp"/>
 
         </LinearLayout>
 
