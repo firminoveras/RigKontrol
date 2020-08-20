@@ -17,7 +17,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.firmino.racks.components.Component;
+import com.firmino.racks.components.Potentiometer;
 import com.firmino.racks.frags.ConfigFragmentAdapter;
+import com.firmino.racks.frags.FragmentAddConfig;
 import com.firmino.racks.frags.FragmentColorsConfig;
 import com.firmino.racks.frags.FragmentMainConfig;
 import com.firmino.racks.frags.FragmentMidiConfig;
@@ -42,6 +44,7 @@ public class Rack extends RelativeLayout {
     FragmentTitleConfig mFragTitle;
     FragmentColorsConfig mFragColors;
     FragmentMidiConfig mFragMidi;
+    FragmentAddConfig mFragAdd;
 
     public Rack(Context context) {
         super(context);
@@ -70,24 +73,22 @@ public class Rack extends RelativeLayout {
         mFragTitle = new FragmentTitleConfig();
         mFragColors = new FragmentColorsConfig();
         mFragMidi = new FragmentMidiConfig();
+        mFragAdd = new FragmentAddConfig();
 
         mConfigFragAdapter = new ConfigFragmentAdapter(((FragmentActivity) mContext));
         mConfigFragAdapter.add(mFragMain);
         mConfigFragAdapter.add(mFragTitle);
         mConfigFragAdapter.add(mFragColors);
         mConfigFragAdapter.add(mFragMidi);
+        mConfigFragAdapter.add(mFragAdd);
 
         mConfigPager.setAdapter(mConfigFragAdapter);
 
         mFragMain.setOnEditNameClickListener(button -> mConfigPager.setCurrentItem(1, true));
         mFragMain.setOnEditColorsClickListener(button -> mConfigPager.setCurrentItem(2, true));
         mFragMain.setOnMidiConfigClickListener(button -> mConfigPager.setCurrentItem(3, true));
+        mFragMain.setOnAddClickListener(button -> mConfigPager.setCurrentItem(4, true));
         mFragMain.setOnDeleteRacklickListener(button -> onRackDeleteButtonClickListener.onRackDeleteButtonClickListener());
-        mFragMain.setOnAddClickListener(button -> {
-            //TODO: Parei aqui
-            int unity = (int) (80 * mContext.getResources().getDisplayMetrics().density);
-            if (mContainerLayout.getChildCount() < (mContainerLayout.getWidth() / unity) - 1) mContainerLayout.addView(new Component(mContext));
-        });
 
         mFragTitle.setOnTitleBackClickListener(button -> mConfigPager.setCurrentItem(0, true));
         mFragTitle.setOnTitleResumeListener(title -> title.setText(getRackTitle()));
@@ -101,6 +102,10 @@ public class Rack extends RelativeLayout {
         mFragMidi.setOnMidiChangeListener(cc -> mControlChange = cc);
         mFragMidi.setOnMidiResumeListener(textView -> textView.setText(String.valueOf(mControlChange)));
 
+        mFragAdd.setOnAddBackButtonClickListener(() -> mConfigPager.setCurrentItem(0, true));
+        //mFragAdd.setOnAddButtonButtonClickListener(this::addNewComponent);
+        mFragAdd.setOnAddPotButtonClickListener(() -> addNewComponent(new Potentiometer(mContext)));
+        //mFragAdd.setOnAddSliderButtonClickListener(this::addNewComponent);
 
         mPowerButton.setToggle(true);
         mPowerButton.setOnRackButtonClicked((isOn) -> onRackOnListener.onRackOnListener(isOn, mControlChange));
@@ -114,8 +119,15 @@ public class Rack extends RelativeLayout {
         mConfigButton.setOnRackButtonClicked(this::setConfigModeEnabled);
     }
 
+    private void addNewComponent(Component component) {
+        if (mContainerLayout.getChildCount() < 10) mContainerLayout.addView(component);
+    }
+
     public void setConfigModeEnabled(boolean enabled) {
         isConfigModeOn = enabled;
+        for (int index = 0; index < mContainerLayout.getChildCount(); index++) {
+            ((Component) mContainerLayout.getChildAt(index)).setConfigModeEnabled(isConfigModeOn);
+        }
         int maxH = (int) (getResources().getDimension(R.dimen.rack_config_height));
         ValueAnimator anim = ValueAnimator.ofInt(enabled ? 0 : maxH, enabled ? maxH : 0);
         anim.addUpdateListener(valueAnimator -> {

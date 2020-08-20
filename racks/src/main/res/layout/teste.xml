@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <it.beppi.knoblibrary.Knob
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+
+        app:kBorderWidth="0dp"
+        app:kDefaultState="25"
+        app:kKnobDrawable="@drawable/ic_knob1"
+        app:kKnobDrawableRotates="false"
+        app:kMaxAngle="130"
+        app:kMinAngle="-130"
+        app:kNumberOfStates="129"
+        app:kSelectedStateMarkerColor="@color/bg_black"
+        app:kStateMarkersAccentColor="@color/bg_black"
+        app:kStateMarkersAccentPeriodicity="16"
+        app:kStateMarkersAccentRelativeLength=".12"
+        app:kStateMarkersColor="@android:color/transparent"
+        app:kStateMarkersRelativeLength="0"
+        app:kCircularIndicatorRelativeRadius="0"
+        app:kIndicatorColor="#1b1b1b"
+        app:kIndicatorRelativeLength=".5"
+        app:kIndicatorWidth="3dp"
+
+
+        />
+
+</LinearLayout>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+
+    <com.firmino.racks.interfaceitems.SquareRackButton
+        android:id="@+id/Rack_Config_Add_Back"
+        android:layout_marginEnd="10dp"
+        android:layout_weight=".25"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_rack_square_button"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/configs"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:drawableStart="@drawable/ic_back"
+        android:paddingStart="6dp"
+        android:paddingEnd="10dp"
+        android:textSize="12sp"
+        tools:ignore="ButtonStyle" />
+
+    <LinearLayout
+        android:layout_weight=".5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_rack_square_button_pressed"
+        android:gravity="center"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:drawablePadding="5dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:importantForAutofill="no"
+            android:maxLength="15"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="@string/add_kontroller"
+            android:textColor="@color/bg_gray"
+            app:drawableStartCompat="@drawable/ic_add_kontroller_black"
+            tools:ignore="LabelFor" />
+    </LinearLayout>
+
+
+
+    <com.firmino.racks.interfaceitems.SquareRackButton
+        android:id="@+id/Rack_Config_Add_Pot"
+        android:layout_weight=".66"
+        android:layout_marginEnd="10dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_rack_square_button"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/new_potentiometer"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:drawableStart="@drawable/ic_add_pot"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textSize="12sp"
+        tools:ignore="ButtonStyle" />
+
+    <com.firmino.racks.interfaceitems.SquareRackButton
+        android:id="@+id/Rack_Config_Add_Button"
+        android:layout_weight=".66"
+        android:layout_width="0dp"
+        android:layout_marginEnd="10dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_rack_square_button"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/new_button"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:drawableStart="@drawable/ic_add_button"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textSize="12sp"
+        tools:ignore="ButtonStyle" />
+
+    <com.firmino.racks.interfaceitems.SquareRackButton
+        android:id="@+id/Rack_Config_Add_Slider"
+        android:layout_weight=".66"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_rack_square_button"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/new_potentiometer"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:drawableStart="@drawable/ic_add_slider"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textSize="12sp"
+        tools:ignore="ButtonStyle" />
+
+</LinearLayout>

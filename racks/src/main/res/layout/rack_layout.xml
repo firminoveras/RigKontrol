@@ -33,16 +33,14 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_interior_border"
                 android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:paddingStart="15dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="15dp"
-                android:paddingBottom="10dp">
+                android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".25">
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent">
 
                     <TextView
                         android:id="@+id/Rack_Little_Title"
@@ -109,11 +107,11 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:padding="5dp"
                     android:gravity="center"
                     android:id="@+id/Rack_Container_Layout"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight=".75"
                     android:orientation="horizontal" />
 
             </LinearLayout>

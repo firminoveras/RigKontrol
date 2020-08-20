@@ -8,7 +8,7 @@
     <string name="edit_name">edit name</string>
     <string name="edit_color">edit color</string>
     <string name="midi_config">MIDI CONFIG</string>
-    <string name="add_kontroller">add kontroller</string>
+    <string name="add_kontroller">ADD COMPONENT</string>
     <string name="delete_rack">delete rack</string>
     <string name="rack_color">RACK COLOR</string>
     <string name="background">BACKGROUND</string>
@@ -18,4 +18,6 @@
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="delete_component">Are you sure you want to delete this component? any changes made and unsaved will be lost</string>
+    <string name="new_potentiometer">NEW POTENTIOMETER</string>
+    <string name="new_button">NEW BUTTON</string>
 </resources>

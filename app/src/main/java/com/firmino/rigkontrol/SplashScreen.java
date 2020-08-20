@@ -31,8 +31,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private void checkPermissions() {
         ((TextView) findViewById(R.id.Splash_Version)).setText(String.format("Version: %s", BuildConfig.VERSION_NAME));
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
         } else checkFiles();
     }
@@ -66,10 +65,8 @@ public class SplashScreen extends AppCompatActivity {
 
     private void allDone() {
         mStatus.setText(R.string.loading_sucessfully);
-        new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashScreen.this, MainActivity.class));
-            finish();
-        }, 2000);
+        startActivity(new Intent(SplashScreen.this, MainActivity.class));
+        finish();
     }
 
 

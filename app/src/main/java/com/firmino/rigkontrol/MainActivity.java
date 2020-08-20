@@ -26,9 +26,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.firmino.alerts.ConfirmationAlert;
-import com.firmino.alerts.MessageAlert;
 import com.firmino.racks.Rack;
+import com.firmino.rigalerts.ConfirmationAlert;
+import com.firmino.rigalerts.MessageAlert;
 import com.firmino.rigkontrol.kontrollers.KButton;
 import com.firmino.rigkontrol.kontrollers.KGate;
 import com.firmino.rigkontrol.kontrollers.KSeekBar;

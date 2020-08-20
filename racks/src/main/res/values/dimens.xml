@@ -7,4 +7,6 @@
     <dimen name="rack_config_height">80dp</dimen>
     <dimen name="small_color_circle_size">20dp</dimen>
     <dimen name="big_color_circle_size">25dp</dimen>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="ballon_font_size">10sp</dimen>
 </resources>
