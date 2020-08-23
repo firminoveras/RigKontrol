@@ -39,7 +39,7 @@
                 tools:ignore="LabelFor" />
         </LinearLayout>
 
-        <com.firmino.rigkontrol.kontrollers.KStateButton
+        <com.firmino.rigkontrol.kinterface.views.KStateButton
             android:id="@+id/Options_ShowStatusBar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -48,7 +48,7 @@
             app:k_statebutton_text_off="Hide Status Bar"
             app:k_statebutton_text_on="Show Status Bar" />
 
-        <com.firmino.rigkontrol.kontrollers.KStateButton
+        <com.firmino.rigkontrol.kinterface.views.KStateButton
             android:id="@+id/Options_ExpandButtons"
             android:layout_width="match_parent"
             android:layout_height="40dp"

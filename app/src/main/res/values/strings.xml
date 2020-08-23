@@ -1,20 +1,9 @@
 <resources>
     <string name="app_name">Rig Kontrol</string>
-    <string name="disconnected">DESCONECTADO</string>
-    <string name="pedalanalog">PedalAnalog</string>
-    <string name="separator">Separador</string>
     <string name="salvar">Salvar</string>
-    <string name="in">IN</string>
-    <string name="hold_mode_off">Hold Mode Off</string>
-    <string name="hold_mode_on">Hold Mode On</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
-    <string name="aplicar">apply</string>
-    <string name="kontrol">Kontrol</string>
-    <string name="component_number">COMPONENT NUMBER</string>
     <string name="zero">0</string>
-    <string name="values">VALUES</string>
-    <string name="gate">Gate</string>
     <string name="options">OPTIONS</string>
     <string name="midi_channel">MIDI CHANNEL</string>
     <string name="connect">CONNECT</string>
@@ -24,9 +13,6 @@
     <string name="one">1</string>
     <string name="kontroller">KONTROLLER</string>
     <string name="pedal_sensivity">PEDAL SENSIVITY</string>
-    <string name="warning">WARNING</string>
-    <string name="cancel">NO</string>
-    <string name="confirm">YES</string>
     <string name="close_warning">Exiting the application without saving changes will result in the loss of all unsaved data. Do you really want to close the Rig Kontroller?</string>
     <string name="not_midi_suported">Not Supported</string>
     <string name="online">ONLINE</string>
@@ -35,7 +21,6 @@
     <string name="premission_granted">Permissions Granted</string>
     <string name="check_dirs">Checking Directories</string>
     <string name="preset_rename">PRESET RENAME</string>
-    <string name="rename">RENAME</string>
     <string name="cant_make_preset_directory">Cannot make Preset save directory. Closing in 5 secs.</string>
     <string name="loading_sucessfully">Loading Successfully</string>
     <string name="open_preset">OPEN PRESET</string>
@@ -65,4 +50,42 @@
     <string name="not_connected_up">NOT CONNECTED</string>
     <string name="preset_cleaned">Preset Cleaned</string>
     <string name="set_sensibility">Pedal sensibility set to x</string>
+
+    <string name="gate">Gate</string>
+    <string name="in">IN</string>
+    <string name="warning">WARNING</string>
+    <string name="cancel">NO</string>
+    <string name="confirm">YES</string>
+    <string name="rename">RENAME</string>
+    <string name="rack_name">RACK NAME</string>
+    <string name="new_rack">NEW</string>
+    <string name="rack">RACK</string>
+    <string name="init">INIT</string>
+    <string name="edit_name">edit name</string>
+    <string name="edit_color">edit color</string>
+    <string name="midi_config">MIDI CONFIG</string>
+    <string name="add_kontroller">ADD COMPONENT</string>
+    <string name="delete_rack">delete rack</string>
+    <string name="rack_color">RACK COLOR</string>
+    <string name="background">BACKGROUND</string>
+    <string name="foreground">FOREGROUND</string>
+    <string name="configs">BACK</string>
+    <string name="delete_component">Are you sure you want to delete this component? any changes made and unsaved will be lost</string>
+    <string name="new_potentiometer">NEW POTENTIOMETER</string>
+    <string name="new_button">NEW BUTTON</string>
+
+    <string name="values">VALUES</string>
+    <string name="disconnected">DESCONECTED</string>
+    <string name="aplicar">apply</string>
+    <string name="component_number">COMPONENT NUMBER</string>
+    <string name="hold_mode_off">Hold Mode Off</string>
+    <string name="hold_mode_on">Hold Mode On</string>
+    <string name="kontrol">Kontrol</string>
+
+    <string name="component">COMPONENT</string>
+    <string name="potentiometer_config">POTENTIOMETER CONFIG</string>
+    <string name="knob_style">KNOB STYLE</string>
+    <string name="markers_style">MARKERS STYLE</string>
+    <string name="control_number">CONTROL NUMBER</string>
+    <string name="apply">APPLY</string>
 </resources>

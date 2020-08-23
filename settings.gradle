@@ -1,4 +1,2 @@
-include ':rigalerts'
-include ':racks'
 include ':app'
 rootProject.name = "Rig Kontrol"

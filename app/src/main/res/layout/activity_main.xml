@@ -42,7 +42,7 @@
                 android:textColor="#ffffff"
                 android:textSize="24sp" />
 
-            <com.firmino.rigkontrol.kontrollers.KSeekBar
+            <com.firmino.rigkontrol.kinterface.views.KSeekBar
                 android:id="@+id/Main_VolumeIn"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
@@ -55,7 +55,7 @@
                 app:k_seekbar_max="127"
                 app:k_seekbar_min="0" />
 
-            <com.firmino.rigkontrol.kontrollers.KGate
+            <com.firmino.rigkontrol.kinterface.views.KGate
                 android:id="@+id/Main_Gate"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -64,7 +64,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_weight="0.6" />
 
-            <com.firmino.rigkontrol.kontrollers.KSeekBar
+            <com.firmino.rigkontrol.kinterface.views.KSeekBar
                 android:id="@+id/Main_VolumeOut"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
@@ -77,7 +77,7 @@
                 app:k_seekbar_max="127"
                 app:k_seekbar_min="0" />
 
-            <com.firmino.rigkontrol.kontrollers.KImageButton
+            <com.firmino.rigkontrol.kinterface.views.KImageButton
                 android:id="@+id/Main_Show_Configs"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -91,7 +91,7 @@
                 app:k_is_toggled="true"
                 tools:ignore="ContentDescription" />
 
-            <com.firmino.rigkontrol.kontrollers.KImageButton
+            <com.firmino.rigkontrol.kinterface.views.KImageButton
                 android:id="@+id/Main_Exit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -188,7 +188,7 @@
 
                     </FrameLayout>
 
-                    <com.firmino.rigkontrol.kontrollers.KStateButton
+                    <com.firmino.rigkontrol.kinterface.views.KStateButton
                         android:id="@+id/Tool_KontrollerVisible"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -199,7 +199,7 @@
                         app:k_statebutton_text_off="RACKS"
                         app:k_statebutton_text_on="KONTROLLER" />
 
-                    <com.firmino.rigkontrol.kontrollers.KImageButton
+                    <com.firmino.rigkontrol.kinterface.views.KImageButton
                         android:id="@+id/Tool_Previous_Preset"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -207,10 +207,10 @@
                         android:layout_marginEnd="5dp"
                         android:layout_marginBottom="5dp"
                         android:layout_weight=".2"
-                        android:src="@drawable/ic_left"
+                        android:src="@drawable/ic_arrow_left"
                         tools:ignore="ContentDescription" />
 
-                    <com.firmino.rigkontrol.kontrollers.KImageButton
+                    <com.firmino.rigkontrol.kinterface.views.KImageButton
                         android:id="@+id/Tool_Next_Preset"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -218,10 +218,10 @@
                         android:layout_marginEnd="5dp"
                         android:layout_marginBottom="5dp"
                         android:layout_weight=".2"
-                        android:src="@drawable/ic_right"
+                        android:src="@drawable/ic_arrow_right"
                         tools:ignore="ContentDescription" />
 
-                    <com.firmino.rigkontrol.kontrollers.KImageButton
+                    <com.firmino.rigkontrol.kinterface.views.KImageButton
                         android:id="@+id/Tool_Clear_Preset"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -268,7 +268,7 @@
                         android:background="@drawable/bg_container_intern"
                         android:padding="5dp">
 
-                        <com.firmino.rigkontrol.kontrollers.Kontroller
+                        <com.firmino.rigkontrol.kontroller.Kontroller
                             android:id="@+id/Main_Kontroller"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />

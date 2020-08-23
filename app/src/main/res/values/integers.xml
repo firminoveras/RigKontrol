@@ -2,7 +2,7 @@
 <resources>
     <integer name="cc_prev_preset">121</integer>
     <integer name="cc_next_preset">122</integer>
-    <integer name="cc_gate_on">123</integer>
+	 <integer name="cc_gate_on">123</integer>
     <integer name="cc_gate_knob">124</integer>
     <integer name="cc_vol_in">126</integer>
     <integer name="cc_vol_out">125</integer>

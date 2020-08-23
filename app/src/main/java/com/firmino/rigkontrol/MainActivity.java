@@ -26,17 +26,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.firmino.racks.Rack;
-import com.firmino.rigalerts.ConfirmationAlert;
-import com.firmino.rigalerts.MessageAlert;
-import com.firmino.rigkontrol.kontrollers.KButton;
-import com.firmino.rigkontrol.kontrollers.KGate;
-import com.firmino.rigkontrol.kontrollers.KSeekBar;
-import com.firmino.rigkontrol.kontrollers.KStateButton;
-import com.firmino.rigkontrol.kontrollers.Kontroller;
+import com.firmino.rigkontrol.kinterface.alerts.ConfirmationAlert;
+import com.firmino.rigkontrol.kinterface.alerts.MessageAlert;
+import com.firmino.rigkontrol.kinterface.views.KGate;
+import com.firmino.rigkontrol.kinterface.views.KSeekBar;
+import com.firmino.rigkontrol.kinterface.views.KStateButton;
+import com.firmino.rigkontrol.kontroller.KFootSwitch;
+import com.firmino.rigkontrol.kontroller.Kontroller;
 import com.firmino.rigkontrol.midi.MidiKontroller;
 import com.firmino.rigkontrol.presets.PresetItem;
 import com.firmino.rigkontrol.presets.PresetListAdapter;
+import com.firmino.rigkontrol.racks.Rack;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -121,10 +121,11 @@ public class MainActivity extends AppCompatActivity {
         setupOptionsPanel();
         loadPreferences();
 
-        ((LinearLayout)findViewById(R.id.Main_Racks)).addView(new Rack(this));
-        ((LinearLayout)findViewById(R.id.Main_Racks)).addView(new Rack(this));
-        ((LinearLayout)findViewById(R.id.Main_Racks)).addView(new Rack(this));
-        ((LinearLayout)findViewById(R.id.Main_Racks)).addView(new Rack(this));
+
+        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(new Rack(this));
+        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(new Rack(this));
+        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(new Rack(this));
+        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(new Rack(this));
 
     }
 
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         mTitleVolumeOutSeekBar.setOnKSeekBarValueChangeListener((seekBar, value, controllerNumber) -> mMidi.sendControlChange(controllerNumber, value));
         mKontroller.getButtonPedal().setOnKButtonStateChangeListener((button, valueOn, valueOff, isOn, controllerNumber) -> mMidi.sendControlChange(controllerNumber, isOn ? valueOn : valueOff));
         mKontroller.getSlider().setOnKSliderProgressChangeListener((kSlider, progress, controllerNumber) -> mMidi.sendControlChange(controllerNumber, progress));
-        for (KButton b : mKontroller.getButtons())
+        for (KFootSwitch b : mKontroller.getButtons())
             b.setOnKButtonStateChangeListener((button, valueOn, valueOff, isOn, controllerNumber) -> mMidi.sendControlChange(controllerNumber, isOn ? valueOn : valueOff));
     }
 
@@ -319,12 +320,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, new Handler());
             chDown.setOnClickListener(v -> {
-                if (Integer.parseInt(channel.getText().toString()) > 1)
-                    channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) - 1));
+                if (Integer.parseInt(channel.getText().toString()) > 1) channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) - 1));
             });
             chUp.setOnClickListener(v -> {
-                if (Integer.parseInt(channel.getText().toString()) < 16)
-                    channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) + 1));
+                if (Integer.parseInt(channel.getText().toString()) < 16) channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) + 1));
             });
             connect.setOnClickListener(view -> {
                 if (mMidi.getMidi().getDevices().length > 0 && Integer.parseInt(channel.getText().toString()) >= 1 && Integer.parseInt(channel.getText().toString()) <= 16) {
@@ -354,14 +353,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onConfirmClick() {
                 int buttonIndex = 0;
-                for (KButton button : mKontroller.getButtons()) {
-                    button.setup(
-                            String.valueOf(buttonIndex + 1),
-                            buttonIndex + 1,
-                            MidiKontroller.ON,
-                            MidiKontroller.OFF,
-                            false
-                    );
+                for (KFootSwitch button : mKontroller.getButtons()) {
+                    button.setup(String.valueOf(buttonIndex + 1), buttonIndex + 1, MidiKontroller.ON, MidiKontroller.OFF, false);
                     buttonIndex++;
                 }
                 mKontroller.getSlider().setup("0", 0);
@@ -374,8 +367,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void savePreset() {
         final File outputFile = new File(Environment.getExternalStorageDirectory() + "/Presets/" + mToolPresetName.getText().toString() + ".xml");
-        new ConfirmationAlert(getString(R.string.save_preset_title), outputFile.exists() ? getString(R.string.save_replace) : getString(R.string.save_preset)
-                , this) {
+        new ConfirmationAlert(getString(R.string.save_preset_title), outputFile.exists() ? getString(R.string.save_replace) : getString(R.string.save_preset), this) {
             @Override
             public void onConfirmClick() {
                 XmlSerializer xml = Xml.newSerializer();
@@ -390,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
                     xml.attribute(null, "name", mToolPresetName.getText().toString());
                     xml.attribute(null, "version", BuildConfig.VERSION_NAME);
                     int buttonNumber = 0;
-                    for (KButton button : mKontroller.getButtons()) {
+                    for (KFootSwitch button : mKontroller.getButtons()) {
                         xml.startTag(null, "Button" + buttonNumber);
                         xml.attribute(null, "title", button.getKDescription());
                         xml.attribute(null, "holdmode", String.valueOf(button.isToggle()));
@@ -449,32 +441,17 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (tag.getName().toLowerCase().startsWith("button")) {
-                        KButton button = mKontroller.getButtons()[Integer.parseInt(String.valueOf(tag.getName().charAt(tag.getName().length() - 1)))];
-                        button.setup(
-                                tag.getAttributeValue(null, "title"),
-                                Integer.parseInt(tag.getAttributeValue(null, "cc")),
-                                Integer.parseInt(tag.getAttributeValue(null, "valueOn")),
-                                Integer.parseInt(tag.getAttributeValue(null, "valueOff")),
-                                tag.getAttributeValue(null, "holdmode").toLowerCase().equals("true")
-                        );
+                        KFootSwitch button = mKontroller.getButtons()[Integer.parseInt(String.valueOf(tag.getName().charAt(tag.getName().length() - 1)))];
+                        button.setup(tag.getAttributeValue(null, "title"), Integer.parseInt(tag.getAttributeValue(null, "cc")), Integer.parseInt(tag.getAttributeValue(null, "valueOn")), Integer.parseInt(tag.getAttributeValue(null, "valueOff")), tag.getAttributeValue(null, "holdmode").toLowerCase().equals("true"));
                     }
 
                     if (tag.getName().toLowerCase().equals("pedalswitch")) {
-                        KButton button = mKontroller.getButtonPedal();
-                        button.setup(
-                                tag.getAttributeValue(null, "title"),
-                                Integer.parseInt(tag.getAttributeValue(null, "cc")),
-                                Integer.parseInt(tag.getAttributeValue(null, "valueOn")),
-                                Integer.parseInt(tag.getAttributeValue(null, "valueOff")),
-                                tag.getAttributeValue(null, "holdmode").toLowerCase().equals("true")
-                        );
+                        KFootSwitch button = mKontroller.getButtonPedal();
+                        button.setup(tag.getAttributeValue(null, "title"), Integer.parseInt(tag.getAttributeValue(null, "cc")), Integer.parseInt(tag.getAttributeValue(null, "valueOn")), Integer.parseInt(tag.getAttributeValue(null, "valueOff")), tag.getAttributeValue(null, "holdmode").toLowerCase().equals("true"));
                     }
 
                     if (tag.getName().toLowerCase().equals("pedal")) {
-                        mKontroller.getSlider().setup(
-                                tag.getAttributeValue(null, "title"),
-                                Integer.parseInt(tag.getAttributeValue(null, "cc"))
-                        );
+                        mKontroller.getSlider().setup(tag.getAttributeValue(null, "title"), Integer.parseInt(tag.getAttributeValue(null, "cc")));
                     }
 
                 }

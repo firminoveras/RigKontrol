@@ -1,4 +1,4 @@
-package com.firmino.rigkontrol.kontrollers;
+package com.firmino.rigkontrol.kinterface.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
