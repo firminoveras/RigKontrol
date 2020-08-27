@@ -15,7 +15,7 @@ import com.firmino.rigkontrol.R;
 public class PresetListAdapter extends ArrayAdapter<PresetItem> {
 
     public PresetListAdapter(@NonNull Context context) {
-        super(context, R.layout.view_preset_item);
+        super(context, R.layout.layout_main_dialog_openpreset_item);
     }
 
     private static class ViewHolder {
@@ -28,7 +28,7 @@ public class PresetListAdapter extends ArrayAdapter<PresetItem> {
         final ViewHolder holder;
         if (view == null) {
             holder = new ViewHolder();
-            view = LayoutInflater.from(getContext()).inflate(R.layout.listview_presets, parent, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.layout_main_dialog_openpreset_listview, parent, false);
             holder.layout = view.findViewById(R.id.ListView_Preset);
             view.setTag(holder);
         }else{

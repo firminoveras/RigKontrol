@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Rack_Config_Colors_Background"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#FF6E40"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#FFAB40"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#FFFF00"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#B2FF59"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#B2FF59"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#69F0AE"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#64FFDA"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#40C4FF"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#448AFF"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#536DFE"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#7C4DFF"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#E040FB"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#FF4081"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#FF5252"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#E57373"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#C5C5C5"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#A1A1A1"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#7C7C7C"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:layout_height="@dimen/_20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/bg_rack_button"
+        android:backgroundTint="#333333"
+        tools:ignore="ContentDescription" />
+
+
+</LinearLayout>

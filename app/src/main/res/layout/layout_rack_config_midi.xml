@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <com.firmino.rigkontrol.kinterface.views.KButton
+        android:id="@+id/Rack_Config_Midi_Back"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        android:layout_weight=".25"
+        android:background="@drawable/bg_rack_square_button"
+        android:drawableStart="@drawable/ic_back"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:paddingStart="6dp"
+        android:paddingEnd="10dp"
+        android:text="@string/configs"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        tools:ignore="ButtonStyle" />
+
+    <com.firmino.rigkontrol.kinterface.views.KTitle
+        android:layout_weight=".5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        app:k_icon="@drawable/ic_midi_config_black"
+        app:k_title="@string/midi_config" />
+
+
+    <com.firmino.rigkontrol.kinterface.views.KButton
+        android:id="@+id/Rack_Config_Midi_Minus"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        android:layout_weight=".33"
+        android:background="@drawable/bg_rack_square_button"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="@string/minus"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        tools:ignore="ButtonStyle" />
+
+    <TextView
+        android:id="@+id/Rack_Config_Midi_CC"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        android:layout_weight=".33"
+        android:background="@drawable/bg_rack_square_button_pressed"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:maxLength="3"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:text="@string/zero"
+        android:textColor="@color/bg_gray"
+        tools:ignore="LabelFor" />
+
+    <com.firmino.rigkontrol.kinterface.views.KButton
+        android:id="@+id/Rack_Config_Midi_Plus"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".33"
+        android:background="@drawable/bg_rack_square_button"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="@string/plus"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        tools:ignore="ButtonStyle" />
+
+</LinearLayout>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog"
+    android:backgroundTint="#454545"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/Config_Name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_button_pressed"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxLength="15"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:text="@string/kontrol"
+        android:textColor="@color/bg_black"
+        tools:ignore="LabelFor" />
+
+    <com.firmino.rigkontrol.kinterface.views.KStateButton
+        android:id="@+id/Config_HoldMode"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        app:k_statebutton_text_off="@string/hold_mode_off"
+        app:k_statebutton_text_on="@string/hold_mode_on" />
+
+    <com.firmino.rigkontrol.kinterface.views.KNumberPicker
+        android:id="@+id/Config_CC"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        app:k_number_picker_max_value="127"
+        app:k_number_picker_min_value="0"
+        app:k_number_picker_title="@string/component_number" />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bg_dialog"
+        android:backgroundTint="@color/bg_black"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_left_borderless"
+            android:backgroundTint="@color/dark_foreground"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:text="@string/values"
+            android:textColor="@color/light_foreground"
+            android:textSize="12sp" />
+
+        <com.jaygoo.widget.RangeSeekBar
+            android:id="@+id/Config_Values"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="5dp"
+
+            app:rsb_gravity="bottom"
+            app:rsb_indicator_arrow_size="5dp"
+            app:rsb_indicator_background_color="@color/dark_foreground"
+            app:rsb_indicator_height="15dp"
+
+            app:rsb_indicator_padding_left="5dp"
+            app:rsb_indicator_padding_right="5dp"
+            app:rsb_indicator_radius="2dp"
+            app:rsb_indicator_show_mode="showWhenTouch"
+            app:rsb_indicator_text_color="@color/light_foreground"
+            app:rsb_indicator_text_size="12sp"
+            app:rsb_max="127"
+            app:rsb_min="0"
+            app:rsb_mode="range"
+
+            app:rsb_progress_drawable="@drawable/bg_range_fg"
+            app:rsb_progress_drawable_default="@drawable/bg_range_bg"
+            app:rsb_progress_height="10dp"
+
+            app:rsb_thumb_drawable="@drawable/ic_range_open"
+            app:rsb_thumb_height="10dp"
+            app:rsb_thumb_width="10dp" />
+    </LinearLayout>
+
+    <com.firmino.rigkontrol.kinterface.views.KButton
+        android:id="@+id/Config_OK"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/aplicar"/>
+</LinearLayout>

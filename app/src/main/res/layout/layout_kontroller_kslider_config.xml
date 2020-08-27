@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog"
+    android:backgroundTint="#454545"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/Config_Slide_Name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_button_pressed"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxLength="15"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:text="@string/kontrol"
+        android:textColor="@color/bg_black"
+        tools:ignore="LabelFor" />
+
+    <com.firmino.rigkontrol.kinterface.views.KNumberPicker
+        android:id="@+id/Config_slide_CC"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        app:k_number_picker_max_value="127"
+        app:k_number_picker_min_value="0"
+        app:k_number_picker_title="@string/component_number" />
+
+    <com.firmino.rigkontrol.kinterface.views.KButton
+        android:id="@+id/Config_Slide_OK"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/aplicar" />
+</LinearLayout>

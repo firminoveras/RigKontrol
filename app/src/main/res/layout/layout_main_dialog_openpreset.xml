@@ -9,27 +9,12 @@
     android:orientation="vertical"
     android:padding="5dp">
 
-    <LinearLayout
+    <com.firmino.rigkontrol.kinterface.views.KTitle
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/bg_button_pressed"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:drawablePadding="5dp"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:gravity="center"
-            android:importantForAutofill="no"
-            android:maxLength="15"
-            android:maxLines="1"
-            android:padding="8dp"
-            android:text="@string/open_preset"
-            android:textColor="@color/bg_dark_gray"
-            app:drawableStartCompat="@drawable/ic_folder" />
-    </LinearLayout>
-
+        android:layout_marginBottom="5dp"
+        app:k_icon="@drawable/ic_folder"
+        app:k_title="@string/open_preset" />
 
     <ListView
         android:id="@+id/Open_Preset_ListView"
@@ -38,6 +23,4 @@
         android:background="@drawable/bg_button"
         android:backgroundTint="@color/bg_black"
         android:padding="5dp" />
-
-
 </LinearLayout>

@@ -17,6 +17,11 @@ public class KImageButton extends androidx.appcompat.widget.AppCompatImageView {
     private boolean isPressed;
     private final boolean isToggled;
 
+    public final static int ALIGN_NORMAL = 0;
+    public final static int ALIGN_RIGHT = 1;
+    public final static int ALIGN_LEFT = 2;
+    public final static int ALIGN_NONE = 3;
+
     public KImageButton(Context context) {
         super(context);
         isToggled = false;
@@ -25,15 +30,37 @@ public class KImageButton extends androidx.appcompat.widget.AppCompatImageView {
 
     public KImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray ta = getResources().obtainAttributes(attrs, R.styleable.KImageButton);
-        isToggled = ta.getBoolean(R.styleable.KStateButton_k_statebutton_is_on, false);
-        ta.recycle();
         init();
+        TypedArray ta = getResources().obtainAttributes(attrs, R.styleable.KImageButton);
+        isToggled = ta.getBoolean(R.styleable.KImageButton_k_is_toggled, false);
+        setAlign(ta.getInt(R.styleable.KImageButton_k_align, ALIGN_NORMAL));
+        ta.recycle();
+    }
+
+    public void setAlign(int align) {
+        switch (align) {
+            case ALIGN_LEFT:
+                mDrawableUp = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_left_borderless, null);
+                mDrawableDown = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_left_borderless_pressed, null);
+                break;
+            case ALIGN_RIGHT:
+                mDrawableUp = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_right_borderless, null);
+                mDrawableDown = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_right_borderless_pressed, null);
+                break;
+            case ALIGN_NONE:
+                mDrawableUp = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_center_borderless, null);
+                mDrawableDown = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_center_borderless_pressed, null);
+                break;
+            default:
+                mDrawableUp = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button, null);
+                mDrawableDown = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_pressed, null);
+                break;
+        }
+        refresh();
     }
 
     private void init() {
-        mDrawableUp = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button, null);
-        mDrawableDown = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_pressed, null);
+        setAlign(ALIGN_NORMAL);
         setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.white, null)));
         setBackgroundDrawable(mDrawableUp);
         isPressed = false;

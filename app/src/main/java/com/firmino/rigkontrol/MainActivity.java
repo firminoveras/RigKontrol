@@ -29,6 +29,7 @@ import androidx.core.content.res.ResourcesCompat;
 import com.firmino.rigkontrol.kinterface.alerts.ConfirmationAlert;
 import com.firmino.rigkontrol.kinterface.alerts.MessageAlert;
 import com.firmino.rigkontrol.kinterface.views.KGate;
+import com.firmino.rigkontrol.kinterface.views.KNumberPicker;
 import com.firmino.rigkontrol.kinterface.views.KSeekBar;
 import com.firmino.rigkontrol.kinterface.views.KStateButton;
 import com.firmino.rigkontrol.kontroller.KFootSwitch;
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.layout_activity_main);
         findViewById(R.id.Main_Layout).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         mStatusConnectionText = findViewById(R.id.Main_Connection_Status_Text);
@@ -122,10 +123,9 @@ public class MainActivity extends AppCompatActivity {
         loadPreferences();
 
 
-        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(new Rack(this));
-        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(new Rack(this));
-        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(new Rack(this));
-        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(new Rack(this));
+        Rack rack = new Rack(this);
+        rack.setOnRackMidiListener((controlChange, value) -> mMidi.sendControlChange(controlChange, value));
+        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(rack);
 
     }
 
@@ -237,18 +237,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showExitAppDialog() {
-        new ConfirmationAlert(getString(R.string.warning), getString(R.string.close_warning), MainActivity.this) {
-            @Override
-            public void onConfirmClick() {
-                savePreferences();
-                MainActivity.this.finishAndRemoveTask();
-                System.exit(0);
-            }
-        };
+        new ConfirmationAlert(getString(R.string.warning), getString(R.string.close_warning), MainActivity.this).setOnConfirmationAlertConfirm(() -> {
+            savePreferences();
+            MainActivity.this.finishAndRemoveTask();
+            System.exit(0);
+        });
     }
 
     private void showOpenSetupDialog() {
-        View alertContent = getLayoutInflater().inflate(R.layout.dialog_open_preset, findViewById(R.id.Open_Preset_Main));
+        View alertContent = getLayoutInflater().inflate(R.layout.layout_main_dialog_openpreset, findViewById(R.id.Open_Preset_Main));
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setView(alertContent);
         Dialog dialog = alert.show();
@@ -257,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         PresetListAdapter adapter = new PresetListAdapter(this);
         listView.setAdapter(adapter);
         adapter.clear();
-        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "Presets");
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Presets");
         for (File preset : Objects.requireNonNull(dir.listFiles())) {
             if (preset.getAbsolutePath().endsWith(".xml")) {
                 PresetItem item = new PresetItem(MainActivity.this);
@@ -272,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showEditPresetNameDialog() {
-        View alertContent = getLayoutInflater().inflate(R.layout.dialog_preset_name, findViewById(R.id.Preset_Name_Main));
+        View alertContent = getLayoutInflater().inflate(R.layout.layout_main_dialog_presetname, findViewById(R.id.Preset_Name_Main));
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setView(alertContent);
         Dialog dialog = alert.show();
@@ -292,15 +289,12 @@ public class MainActivity extends AppCompatActivity {
         if (mMidi.isConnected()) {
             disconnect();
         } else {
-            View alertContent = getLayoutInflater().inflate(R.layout.dialog_connect, findViewById(R.id.Connection_Main));
+            View alertContent = getLayoutInflater().inflate(R.layout.layout_main_dialog_connect, findViewById(R.id.Connection_Main));
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setView(alertContent);
             Dialog dialog = alert.show();
             Objects.requireNonNull(dialog.getWindow()).setLayout((int) (300 * getResources().getDisplayMetrics().density), -2);
             TextView usbStatus = alertContent.findViewById(R.id.Connection_USB_Status);
-            TextView channel = alertContent.findViewById(R.id.Connection_Channel);
-            Button chUp = alertContent.findViewById(R.id.Connection_Channel_Up);
-            Button chDown = alertContent.findViewById(R.id.Connection_Channel_Down);
             Button connect = alertContent.findViewById(R.id.Connection_Connect);
             usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? getString(R.string.connected) : getString(R.string.not_connected));
             connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
@@ -319,15 +313,9 @@ public class MainActivity extends AppCompatActivity {
                     connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
                 }
             }, new Handler());
-            chDown.setOnClickListener(v -> {
-                if (Integer.parseInt(channel.getText().toString()) > 1) channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) - 1));
-            });
-            chUp.setOnClickListener(v -> {
-                if (Integer.parseInt(channel.getText().toString()) < 16) channel.setText(String.valueOf(Integer.parseInt(channel.getText().toString()) + 1));
-            });
             connect.setOnClickListener(view -> {
-                if (mMidi.getMidi().getDevices().length > 0 && Integer.parseInt(channel.getText().toString()) >= 1 && Integer.parseInt(channel.getText().toString()) <= 16) {
-                    connect(Integer.parseInt(channel.getText().toString()));
+                if (mMidi.getMidi().getDevices().length > 0) {
+                    connect(((KNumberPicker) alertContent.findViewById(R.id.Connection_Channel)).getValue());
                     dialog.dismiss();
                 }
             });
@@ -349,77 +337,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void clearPreset() {
-        new ConfirmationAlert(getString(R.string.warning), getString(R.string.clear_warning), this) {
-            @Override
-            public void onConfirmClick() {
-                int buttonIndex = 0;
-                for (KFootSwitch button : mKontroller.getButtons()) {
-                    button.setup(String.valueOf(buttonIndex + 1), buttonIndex + 1, MidiKontroller.ON, MidiKontroller.OFF, false);
-                    buttonIndex++;
-                }
-                mKontroller.getSlider().setup("0", 0);
-                mKontroller.getButtonPedal().setup("9", 9, MidiKontroller.ON, MidiKontroller.OFF, false);
-                mToolPresetName.setText(R.string.untitled);
-                MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.preset_cleaned));
+        new ConfirmationAlert(getString(R.string.warning), getString(R.string.clear_warning), this).setOnConfirmationAlertConfirm(() -> {
+            int buttonIndex = 0;
+            for (KFootSwitch button : mKontroller.getButtons()) {
+                button.setup(String.valueOf(buttonIndex + 1), buttonIndex + 1, MidiKontroller.ON, MidiKontroller.OFF, false);
+                buttonIndex++;
             }
-        };
+            mKontroller.getSlider().setup("0", 0);
+            mKontroller.getButtonPedal().setup("9", 9, MidiKontroller.ON, MidiKontroller.OFF, false);
+            mToolPresetName.setText(R.string.untitled);
+            MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.preset_cleaned));
+        });
     }
 
     private void savePreset() {
-        final File outputFile = new File(Environment.getExternalStorageDirectory() + "/Presets/" + mToolPresetName.getText().toString() + ".xml");
-        new ConfirmationAlert(getString(R.string.save_preset_title), outputFile.exists() ? getString(R.string.save_replace) : getString(R.string.save_preset), this) {
-            @Override
-            public void onConfirmClick() {
-                XmlSerializer xml = Xml.newSerializer();
-                StringWriter writer = new StringWriter();
-                try {
-                    FileOutputStream outputStream = new FileOutputStream(outputFile);
-                    xml.setOutput(writer);
-                    xml.startDocument("UTF-8", false);
-                    xml.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+        final File outputFile = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Presets" + File.separator + mToolPresetName.getText().toString() + ".xml");
+        new ConfirmationAlert(getString(R.string.save_preset_title), outputFile.exists() ? getString(R.string.save_replace) : getString(R.string.save_preset), this).setOnConfirmationAlertConfirm(() -> {
+            XmlSerializer xml = Xml.newSerializer();
+            StringWriter writer = new StringWriter();
+            try {
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
+                xml.setOutput(writer);
+                xml.startDocument("UTF-8", false);
+                xml.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 
-                    xml.startTag(null, "Kontroller");
-                    xml.attribute(null, "name", mToolPresetName.getText().toString());
-                    xml.attribute(null, "version", BuildConfig.VERSION_NAME);
-                    int buttonNumber = 0;
-                    for (KFootSwitch button : mKontroller.getButtons()) {
-                        xml.startTag(null, "Button" + buttonNumber);
-                        xml.attribute(null, "title", button.getKDescription());
-                        xml.attribute(null, "holdmode", String.valueOf(button.isToggle()));
-                        xml.attribute(null, "cc", String.valueOf(button.getKControllerNumber()));
-                        xml.attribute(null, "valueOn", String.valueOf(button.getKValueOn()));
-                        xml.attribute(null, "valueOff", String.valueOf(button.getKValueOff()));
-                        xml.endTag(null, "Button" + buttonNumber);
-                        buttonNumber++;
-                    }
-
-                    xml.startTag(null, "PedalSwitch");
-                    xml.attribute(null, "title", mKontroller.getButtonPedal().getKDescription());
-                    xml.attribute(null, "holdmode", String.valueOf(mKontroller.getButtonPedal().isToggle()));
-                    xml.attribute(null, "cc", String.valueOf(mKontroller.getButtonPedal().getKControllerNumber()));
-                    xml.attribute(null, "valueOn", String.valueOf(mKontroller.getButtonPedal().getKValueOn()));
-                    xml.attribute(null, "valueOff", String.valueOf(mKontroller.getButtonPedal().getKValueOff()));
-                    xml.endTag(null, "PedalSwitch");
-
-                    xml.startTag(null, "Pedal");
-                    xml.attribute(null, "title", String.valueOf(mKontroller.getSlider().getDesciption()));
-                    xml.attribute(null, "cc", String.valueOf(mKontroller.getSlider().getControllerNumber()));
-                    xml.endTag(null, "Pedal");
-
-                    xml.endTag(null, "Kontroller");
-
-                    xml.endDocument();
-                    xml.flush();
-                    outputStream.write(writer.toString().getBytes());
-                    outputStream.close();
-                    MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.saved_sucess));
-                } catch (FileNotFoundException ex) {
-                    MessageAlert.create(MainActivity.this, MessageAlert.TYPE_ERRO, getString(R.string.directory_not_found));
-                } catch (IOException ex) {
-                    MessageAlert.create(MainActivity.this, MessageAlert.TYPE_ERRO, getString(R.string.erro_save_preset));
+                xml.startTag(null, "Kontroller");
+                xml.attribute(null, "name", mToolPresetName.getText().toString());
+                xml.attribute(null, "version", BuildConfig.VERSION_NAME);
+                int buttonNumber = 0;
+                for (KFootSwitch button : mKontroller.getButtons()) {
+                    xml.startTag(null, "Button" + buttonNumber);
+                    xml.attribute(null, "title", button.getKDescription());
+                    xml.attribute(null, "holdmode", String.valueOf(button.isToggle()));
+                    xml.attribute(null, "cc", String.valueOf(button.getKControllerNumber()));
+                    xml.attribute(null, "valueOn", String.valueOf(button.getKValueOn()));
+                    xml.attribute(null, "valueOff", String.valueOf(button.getKValueOff()));
+                    xml.endTag(null, "Button" + buttonNumber);
+                    buttonNumber++;
                 }
+
+                xml.startTag(null, "PedalSwitch");
+                xml.attribute(null, "title", mKontroller.getButtonPedal().getKDescription());
+                xml.attribute(null, "holdmode", String.valueOf(mKontroller.getButtonPedal().isToggle()));
+                xml.attribute(null, "cc", String.valueOf(mKontroller.getButtonPedal().getKControllerNumber()));
+                xml.attribute(null, "valueOn", String.valueOf(mKontroller.getButtonPedal().getKValueOn()));
+                xml.attribute(null, "valueOff", String.valueOf(mKontroller.getButtonPedal().getKValueOff()));
+                xml.endTag(null, "PedalSwitch");
+
+                xml.startTag(null, "Pedal");
+                xml.attribute(null, "title", String.valueOf(mKontroller.getSlider().getDesciption()));
+                xml.attribute(null, "cc", String.valueOf(mKontroller.getSlider().getControllerNumber()));
+                xml.endTag(null, "Pedal");
+
+                xml.endTag(null, "Kontroller");
+
+                xml.endDocument();
+                xml.flush();
+                outputStream.write(writer.toString().getBytes());
+                outputStream.close();
+                MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.saved_sucess));
+            } catch (FileNotFoundException ex) {
+                MessageAlert.create(MainActivity.this, MessageAlert.TYPE_ERRO, getString(R.string.directory_not_found));
+            } catch (IOException ex) {
+                MessageAlert.create(MainActivity.this, MessageAlert.TYPE_ERRO, getString(R.string.erro_save_preset));
             }
-        }.setOnConfirmationAlertCancel(() -> MessageAlert.create(MainActivity.this, MessageAlert.TYPE_ALERT, getString(R.string.save_canceled)));
+        }).setOnConfirmationAlertCancel(() -> MessageAlert.create(MainActivity.this, MessageAlert.TYPE_ALERT, getString(R.string.save_canceled)));
     }
 
     private void loadPreset(File loadFile) {

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog"
+    android:backgroundTint="#454545"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <com.firmino.rigkontrol.kinterface.views.KTitle
+        android:id="@+id/Alert_Confirmation_Title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:k_icon="@drawable/ic_warning"
+        app:k_title="@string/warning"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/Alert_Confirmation_Message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_dialog"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_dialog"
+        android:backgroundTint="@color/bg_black"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <Button
+            android:id="@+id/Alert_Confirmation_Cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_left_borderless"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/Alert_Confirmation_Confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_right_borderless"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/confirm"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            tools:ignore="ButtonStyle" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="match_parent"
     android:background="@drawable/bg_options_layout"
@@ -10,6 +9,7 @@
     android:paddingEnd="15dp"
     android:scrollbars="none">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,33 +17,17 @@
         android:paddingTop="10dp"
         android:paddingBottom="30dp">
 
-        <LinearLayout
+        <com.firmino.rigkontrol.kinterface.views.KTitle
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/bg_button_pressed"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:drawablePadding="5dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:gravity="center"
-                android:importantForAutofill="no"
-                android:maxLength="15"
-                android:maxLines="1"
-                android:padding="8dp"
-                android:text="@string/options"
-                android:textColor="@color/bg_dark_gray"
-                app:drawableStartCompat="@drawable/ic_options"
-                tools:ignore="LabelFor" />
-        </LinearLayout>
+            android:layout_marginBottom="5dp"
+            app:k_icon="@drawable/ic_options"
+            app:k_title="@string/options" />
 
         <com.firmino.rigkontrol.kinterface.views.KStateButton
             android:id="@+id/Options_ShowStatusBar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="5dp"
             app:k_statebutton_is_on="true"
             app:k_statebutton_text_off="Hide Status Bar"
             app:k_statebutton_text_on="Show Status Bar" />
@@ -57,65 +41,28 @@
             app:k_statebutton_text_off="Compact Buttons"
             app:k_statebutton_text_on="Extended Buttons" />
 
-        <LinearLayout
+        <com.firmino.rigkontrol.kinterface.views.KTitle
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_button_pressed"
-            android:gravity="center">
+            app:k_icon="@drawable/ic_midi"
+            app:k_title="@string/connection" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:drawablePadding="5dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:gravity="center"
-                android:importantForAutofill="no"
-                android:maxLength="15"
-                android:maxLines="1"
-                android:padding="8dp"
-                android:text="@string/connection"
-                android:textColor="@color/bg_dark_gray"
-                app:drawableStartCompat="@drawable/ic_midi"
-                tools:ignore="LabelFor" />
-        </LinearLayout>
-
-        <Button
+        <com.firmino.rigkontrol.kinterface.views.KButton
             android:id="@+id/Options_Connect"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/bg_button"
-            android:padding="2dp"
-            android:text="@string/offline"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:text="@string/offline" />
 
-        <LinearLayout
+        <com.firmino.rigkontrol.kinterface.views.KTitle
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_button_pressed"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:drawablePadding="5dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:gravity="center"
-                android:importantForAutofill="no"
-                android:maxLength="15"
-                android:maxLines="1"
-                android:padding="8dp"
-                android:text="@string/kontroller"
-                android:textColor="@color/bg_dark_gray"
-                app:drawableStartCompat="@drawable/ic_pedal"
-                tools:ignore="LabelFor" />
-        </LinearLayout>
+            app:k_icon="@drawable/ic_pedal"
+            app:k_title="@string/kontroller" />
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="5dp"

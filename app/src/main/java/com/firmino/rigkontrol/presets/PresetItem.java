@@ -21,7 +21,7 @@ public class PresetItem extends LinearLayout {
 
     public PresetItem(Context context) {
         super(context);
-        inflate(context, R.layout.view_preset_item, this);
+        inflate(context, R.layout.layout_main_dialog_openpreset_item, this);
         mTitle = findViewById(R.id.Preset_Title);
         mDate = findViewById(R.id.Preset_Date);
         mBgUp = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_unicolor , null);

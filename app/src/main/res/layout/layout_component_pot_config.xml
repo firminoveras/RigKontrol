@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Pot_Config_Root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_rack"
+    android:backgroundTint="@color/bg_gray"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <com.firmino.rigkontrol.kinterface.views.KTitle
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        app:k_icon="@drawable/ic_add_pot_black"
+        app:k_title="@string/potentiometer_config" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/bg_rack_square_button_pressed"
+        android:gravity="center"
+        android:padding="8dp">
+
+        <it.beppi.knoblibrary.Knob
+            app:kSelectedStateMarkerColor="@color/bg_black"
+            android:id="@+id/Pot_Config_Knob_Example"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:kBorderWidth="0dp"
+            app:kDefaultState="64"
+            app:kIndicatorRelativeLength="0"
+            app:kKnobDrawable="@drawable/bg_knob1"
+            app:kKnobDrawableRotates="true"
+            app:kMaxAngle="130"
+            app:kMinAngle="-130"
+            app:kNumberOfStates="130" />
+    </LinearLayout>
+
+    <com.firmino.rigkontrol.kinterface.views.KTextEdit
+        android:id="@+id/Pot_Config_Title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        app:k_text_edit_text="COMPONENT"
+        app:k_text_edit_title="TITLE" />
+
+    <com.firmino.rigkontrol.kinterface.views.KListPicker
+        android:id="@+id/Pot_Config_Knob_Style"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        app:k_list_picker_item_list="@array/knob_styles"
+        app:k_list_picker_title="@string/knob_style" />
+
+    <com.firmino.rigkontrol.kinterface.views.KListPicker
+        android:id="@+id/Pot_Config_Markers_Style"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        app:k_list_picker_item_list="@array/knob_markers_styles"
+        app:k_list_picker_title="@string/markers_style" />
+
+    <com.firmino.rigkontrol.kinterface.views.KNumberPicker
+        android:id="@+id/Pot_Config_CC"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        app:k_number_picker_max_value="120"
+        app:k_number_picker_min_value="0"
+        app:k_number_picker_title="CONTROL NUMBER"
+        app:k_number_picker_value="0" />
+
+    <com.firmino.rigkontrol.kinterface.views.KButton
+        android:id="@+id/Pot_Config_Apply_Button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/apply" />
+
+</LinearLayout>

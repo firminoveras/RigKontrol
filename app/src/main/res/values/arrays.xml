@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="emptyArray" />
+    <string-array name="knob_styles">
+        <item>Simple</item>
+        <item>Black</item>
+        <item>Modern</item>
+        <item>Octogonal</item>
+        <item>Basic</item>
+    </string-array>
+
+    <string-array name="knob_markers_styles">
+        <item>Continuous</item>
+        <item>None</item>
+        <item>Three Dots</item>
+        <item>Default</item>
+    </string-array>
+</resources>

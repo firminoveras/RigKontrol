@@ -118,7 +118,7 @@
                 android:layout_height="match_parent"
                 tools:ignore="Suspicious0dp">
 
-                <include layout="@layout/layout_options" />
+                <include layout="@layout/layout_main_options" />
             </LinearLayout>
 
             <LinearLayout

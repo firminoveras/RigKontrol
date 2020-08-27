@@ -10,28 +10,12 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <LinearLayout
+    <com.firmino.rigkontrol.kinterface.views.KTitle
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/bg_button_pressed"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:drawablePadding="5dp"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:gravity="center"
-            android:importantForAutofill="no"
-            android:maxLength="15"
-            android:maxLines="1"
-            android:padding="8dp"
-            android:text="@string/preset_rename"
-            android:textColor="@color/bg_dark_gray"
-            app:drawableStartCompat="@drawable/ic_preset"
-            tools:ignore="LabelFor" />
-    </LinearLayout>
+        app:k_icon="@drawable/ic_preset_black"
+        app:k_title="@string/preset_rename" />
 
     <EditText
         android:id="@+id/Preset_Name"
@@ -47,16 +31,11 @@
         android:textColor="@color/bg_black"
         tools:ignore="LabelFor" />
 
-    <Button
+    <com.firmino.rigkontrol.kinterface.views.KButton
         android:id="@+id/Preset_OK"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/bg_button"
-        android:fontFamily="sans-serif-condensed"
-        android:text="@string/rename"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        tools:ignore="ButtonStyle" />
+        android:text="@string/rename"/>
 
 </LinearLayout>

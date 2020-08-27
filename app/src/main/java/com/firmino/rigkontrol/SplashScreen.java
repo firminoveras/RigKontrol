@@ -23,17 +23,10 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        setContentView(R.layout.layout_activity_splashscreen);
         findViewById(R.id.Splash_Main).setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         mStatus = findViewById(R.id.Splash_Status);
         checkPermissions();
-    }
-
-    private void checkPermissions() {
-        ((TextView) findViewById(R.id.Splash_Version)).setText(String.format("Version: %s", BuildConfig.VERSION_NAME));
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
-        } else checkFiles();
     }
 
     @Override
@@ -50,9 +43,16 @@ public class SplashScreen extends AppCompatActivity {
         }
     }
 
+    private void checkPermissions() {
+        ((TextView) findViewById(R.id.Splash_Version)).setText(String.format("Version: %s", BuildConfig.VERSION_NAME));
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
+        } else checkFiles();
+    }
+
     private void checkFiles() {
         mStatus.setText(R.string.check_dirs);
-        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "Presets");
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Presets");
         System.out.println(dir.getAbsolutePath());
         if (!dir.exists()) {
             if (dir.mkdirs()) allDone();
@@ -68,6 +68,5 @@ public class SplashScreen extends AppCompatActivity {
         startActivity(new Intent(SplashScreen.this, MainActivity.class));
         finish();
     }
-
 
 }
