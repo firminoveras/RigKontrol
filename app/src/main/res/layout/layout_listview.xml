@@ -5,9 +5,9 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ListView_Preset"
+        android:id="@+id/ListView_Item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp"/>
+        android:padding="@dimen/_2dp"/>
 </LinearLayout>

@@ -20,7 +20,6 @@
         android:id="@+id/Open_Preset_ListView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@drawable/bg_button"
-        android:backgroundTint="@color/bg_black"
+        android:background="@drawable/bg_container_intern"
         android:padding="5dp" />
 </LinearLayout>

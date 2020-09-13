@@ -15,4 +15,10 @@
         <item>Three Dots</item>
         <item>Default</item>
     </string-array>
+
+    <string-array name="pushbutton_styles">
+        <item>Interruptor</item>
+        <item>Led</item>
+        <item>Metal</item>
+    </string-array>
 </resources>

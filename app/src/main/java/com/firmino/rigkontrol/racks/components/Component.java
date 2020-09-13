@@ -4,10 +4,11 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -24,10 +25,10 @@ public class Component extends FrameLayout {
     private ImageView mConfigButton, mRemoveButton;
     private TextView mTitle;
     private RelativeLayout mConfigLayout;
-    private LinearLayout mComponentContainer;
+    private FrameLayout mComponentContainer;
     private OnConfigButtonClickedListener onConfigButtonClickedListener = () -> {};
     private OnComponentMidiControlChangeListener onComponentMidiControlChangeListener = (cc, value) -> {};
-    private OnColorChangeListener onColorChangeListener = (color) ->{};
+    private OnColorChangeListener onColorChangeListener = (color) -> {};
     private int mControlChange = 0;
 
     public Component(@NonNull Context context) {
@@ -49,7 +50,7 @@ public class Component extends FrameLayout {
         mRemoveButton = findViewById(R.id.Component_Remove);
         mConfigLayout = findViewById(R.id.Component_Config_Layout);
         mTitle = findViewById(R.id.Component_Title);
-        mComponentContainer = findViewById(R.id.Component_container);
+        mComponentContainer = findViewById(R.id.Component_View);
         setLayoutParams(new TableLayout.LayoutParams((int) getResources().getDimension(R.dimen._0dp), ViewGroup.LayoutParams.MATCH_PARENT, 1));
         mRemoveButton.setOnClickListener(view -> new ConfirmationAlert("Deleting a Component", getContext().getString(R.string.delete_component), mContext).setOnConfirmationAlertConfirm(() -> {
             ((ViewGroup) getParent()).removeView(Component.this);
@@ -57,6 +58,7 @@ public class Component extends FrameLayout {
         mConfigButton.setOnClickListener(view -> onConfigButtonClickedListener.onConfigButtonClickedListener());
         setForegroundColor(ColorStateList.valueOf(Color.BLACK));
     }
+
 
     public ColorStateList getForegroundColor() {
         return mForegroundColor;
@@ -92,8 +94,9 @@ public class Component extends FrameLayout {
         return mTitle.getText().toString();
     }
 
-    public LinearLayout getContainer() {
-        return mComponentContainer;
+    public void setComponentView(View view) {
+        mComponentContainer.removeAllViews();
+        mComponentContainer.addView(view, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     public int getControlChange() {
@@ -128,7 +131,7 @@ public class Component extends FrameLayout {
         void onComponentMidiControlChangeListener(int cc, int value);
     }
 
-    public interface OnColorChangeListener{
+    public interface OnColorChangeListener {
         void onColorChangeListener(ColorStateList color);
     }
 

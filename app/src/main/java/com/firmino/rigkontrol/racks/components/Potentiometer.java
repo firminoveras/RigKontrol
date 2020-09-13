@@ -54,7 +54,7 @@ public class Potentiometer extends Component {
         setMarkersStyle(mKnob, MARKERS_THREE_DOTS);
 
         mKnob.setOnStateChanged(this::setComponentValue);
-        getContainer().addView(mKnob, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        setComponentView(mKnob);
 
         setOnConfigButtonClickedListener(this::showConfigDialog);
         setOnColorChangeListener(this::setKnobColor);
@@ -90,10 +90,10 @@ public class Potentiometer extends Component {
         int markerWidth, markerAccentWidth, periodicity;
         switch (markersStyle) {
             case MARKERS_CONTINUOUS:
-                markerAccentSize = .02f;
-                markerSize = .02f;
-                markerWidth = 4;
-                markerAccentWidth = 4;
+                markerAccentSize = .05f;
+                markerSize = .05f;
+                markerWidth = 1;
+                markerAccentWidth = 1;
                 periodicity = 1;
                 break;
 
@@ -185,8 +185,5 @@ public class Potentiometer extends Component {
             dialog.dismiss();
         });
     }
-
-
-
 
 }

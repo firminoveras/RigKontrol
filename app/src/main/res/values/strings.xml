@@ -91,4 +91,8 @@
     <string name="NUMBER">NUMBER</string>
     <string name="list_picker">LIST PICKER</string>
     <string name="name">Name</string>
+    <string name="message_delete_rack">You want to delete this rack? All no saved changes are lose.</string>
+    <string name="title_delete_rack">Delete Rack</string>
+    <string name="push_button_config">PUSH BUTTON CONFIG</string>
+    <string name="push_button_style">PUSH BUTTON STYLE</string>
 </resources>

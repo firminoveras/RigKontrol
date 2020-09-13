@@ -13,12 +13,12 @@ import android.os.Handler;
 import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -29,6 +29,7 @@ import androidx.core.content.res.ResourcesCompat;
 import com.firmino.rigkontrol.kinterface.alerts.ConfirmationAlert;
 import com.firmino.rigkontrol.kinterface.alerts.MessageAlert;
 import com.firmino.rigkontrol.kinterface.views.KGate;
+import com.firmino.rigkontrol.kinterface.views.KImageButton;
 import com.firmino.rigkontrol.kinterface.views.KNumberPicker;
 import com.firmino.rigkontrol.kinterface.views.KSeekBar;
 import com.firmino.rigkontrol.kinterface.views.KStateButton;
@@ -70,8 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
     //Toolbox
     private TextView mToolPresetName;
-    private ImageView mToolNextPresetButton;
-    private ImageView mToolPrevPresetButton;
+    private KImageButton mToolNextPresetButton;
+    private KImageButton mToolPrevPresetButton;
+    private KImageButton mToolLiveMode;
+    private KImageButton mToolAddRack;
 
     //Status
     private ImageView mStatusImage;
@@ -84,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     private Drawable mDrawableStatusFail;
     private MidiKontroller mMidi;
     private Kontroller mKontroller;
+    private ListView mRacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
         mToolPresetName = findViewById(R.id.Tool_Preset_Title);
         mToolNextPresetButton = findViewById(R.id.Tool_Next_Preset);
         mToolPrevPresetButton = findViewById(R.id.Tool_Previous_Preset);
+        mToolLiveMode = findViewById(R.id.Tool_LiveMode);
+        mToolAddRack = findViewById(R.id.Tool_Add_Rack);
+        mRacks = findViewById(R.id.Container_Racks);
 
         findViewById(R.id.Tool_Clear_Preset).setOnClickListener(v -> clearPreset());
         findViewById(R.id.Main_Exit).setOnClickListener(view -> showExitAppDialog());
@@ -116,17 +123,33 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.Tool_OpenPreset).setOnClickListener(v -> showOpenSetupDialog());
         mToolPresetName.setOnClickListener(v -> showEditPresetNameDialog());
         findViewById(R.id.Tool_Save_Preset_Button).setOnClickListener(v -> savePreset());
-        ((KStateButton) findViewById(R.id.Tool_KontrollerVisible)).setOnKStateButtonChangeListener((kStateButton, isOn) -> setLiveModeOn(isOn));
+        mToolLiveMode.setOnClickListener(view -> setLiveMode(mToolLiveMode.isPressed()));
+        mToolAddRack.setOnClickListener(view -> addRack());
 
         setupMidi();
+        setupRacks();
         setupOptionsPanel();
         loadPreferences();
+    }
 
-
+    private void addRack() {
+        //TODO: Melhorar isso, fazer poder adicionar um salvo previamente
         Rack rack = new Rack(this);
         rack.setOnRackMidiListener((controlChange, value) -> mMidi.sendControlChange(controlChange, value));
-        ((LinearLayout) findViewById(R.id.Main_Racks)).addView(rack);
+        rack.setOnRackDeleteButtonClickListener(() -> new ConfirmationAlert(getString(R.string.title_delete_rack), getString(R.string.message_delete_rack), this).setOnConfirmationAlertConfirm(() -> mRacks.removeFooterView(rack)));
+        mRacks.addFooterView(rack);
+    }
 
+    private void setLiveMode(boolean pressed) {
+        mKontroller.setVisibility(pressed ? View.VISIBLE : View.GONE);
+        mRacks.setVisibility(pressed ? View.GONE : View.VISIBLE);
+    }
+
+    private void setupRacks() {
+        ArrayAdapter<Rack> adapter = new ArrayAdapter<>(this, R.layout.layout_listview);
+        mRacks.setDivider(null);
+        mRacks.setDividerHeight((int) getResources().getDimension(R.dimen._4dp));
+        mRacks.setAdapter(adapter);
     }
 
     @Override
@@ -190,25 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.set_sensibility) + sensivity);
             }
         });
-    }
-
-    private void setLiveModeOn(boolean on) {
-        LinearLayout main = findViewById(R.id.Container_Main);
-        ScrollView racks = findViewById(R.id.Container_Racks);
-        LinearLayout kontroller = findViewById(R.id.Container_Kontroller);
-        int maxHeight = main.getHeight() - (main.getPaddingTop() * 2);
-        int titleHeight = maxHeight - (int) (40 * getResources().getDisplayMetrics().density);
-        ViewGroup.LayoutParams layoutParams = kontroller.getLayoutParams();
-        layoutParams.height = maxHeight;
-        kontroller.setLayoutParams(layoutParams);
-        ValueAnimator anim = ValueAnimator.ofInt(on ? titleHeight : 0, on ? 0 : titleHeight);
-        anim.addUpdateListener(valueAnimator -> {
-            ViewGroup.LayoutParams layoutParamsRacks = racks.getLayoutParams();
-            layoutParamsRacks.height = (int) valueAnimator.getAnimatedValue();
-            racks.setLayoutParams(layoutParamsRacks);
-        });
-        anim.setDuration(300);
-        anim.start();
     }
 
     private void setStatusBarVisible(boolean visible) {

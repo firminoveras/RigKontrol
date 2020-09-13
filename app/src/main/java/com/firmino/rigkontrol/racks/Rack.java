@@ -21,6 +21,7 @@ import com.firmino.rigkontrol.R;
 import com.firmino.rigkontrol.kinterface.views.KRoundImageButton;
 import com.firmino.rigkontrol.racks.components.Component;
 import com.firmino.rigkontrol.racks.components.Potentiometer;
+import com.firmino.rigkontrol.racks.components.PushButton;
 import com.firmino.rigkontrol.racks.frags.ConfigFragmentAdapter;
 import com.firmino.rigkontrol.racks.frags.FragmentAddConfig;
 import com.firmino.rigkontrol.racks.frags.FragmentColorsConfig;
@@ -110,6 +111,7 @@ public class Rack extends RelativeLayout {
 
         mFragAdd.setOnAddBackButtonClickListener(() -> mConfigPager.setCurrentItem(0, true));
         mFragAdd.setOnAddPotButtonClickListener(() -> addNewComponent(new Potentiometer(mContext, mForegroundColor)));
+        mFragAdd.setOnAddButtonButtonClickListener(() -> addNewComponent(new PushButton(mContext, mForegroundColor)));
 
         mPowerButton.setToggle(true);
         mPowerButton.setOnRackButtonClicked((isOn) -> onRackMidiListener.onRackOnListener(mControlChange, isOn ? 127 : 0));
