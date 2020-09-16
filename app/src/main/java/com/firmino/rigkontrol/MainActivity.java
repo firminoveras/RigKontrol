@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.media.midi.MidiDeviceInfo;
 import android.media.midi.MidiManager;
@@ -13,7 +14,6 @@ import android.os.Handler;
 import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,6 +39,9 @@ import com.firmino.rigkontrol.midi.MidiKontroller;
 import com.firmino.rigkontrol.presets.PresetItem;
 import com.firmino.rigkontrol.presets.PresetListAdapter;
 import com.firmino.rigkontrol.racks.Rack;
+import com.firmino.rigkontrol.racks.components.Component;
+import com.firmino.rigkontrol.racks.components.Potentiometer;
+import com.firmino.rigkontrol.racks.components.PushButton;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private Drawable mDrawableStatusFail;
     private MidiKontroller mMidi;
     private Kontroller mKontroller;
-    private ListView mRacks;
+    private LinearLayout mRacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,36 +123,48 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.Tool_Clear_Preset).setOnClickListener(v -> clearPreset());
         findViewById(R.id.Main_Exit).setOnClickListener(view -> showExitAppDialog());
         mTitleShowConfigButton.setOnClickListener(l -> setOptionsVisible());
-        findViewById(R.id.Tool_OpenPreset).setOnClickListener(v -> showOpenSetupDialog());
+        findViewById(R.id.Tool_OpenPreset).setOnClickListener(v -> showOpenPresetDialog());
         mToolPresetName.setOnClickListener(v -> showEditPresetNameDialog());
         findViewById(R.id.Tool_Save_Preset_Button).setOnClickListener(v -> savePreset());
         mToolLiveMode.setOnClickListener(view -> setLiveMode(mToolLiveMode.isPressed()));
-        mToolAddRack.setOnClickListener(view -> addRack());
+        mToolAddRack.setOnClickListener(view -> addNewRack());
 
         setupMidi();
-        setupRacks();
         setupOptionsPanel();
         loadPreferences();
     }
 
-    private void addRack() {
+
+    private void addRack(Rack rack) {
+        if (mRacks.getChildCount() < 15) {
+            rack.setOnRackMidiListener((controlChange, value) -> mMidi.sendControlChange(controlChange, value));
+            rack.setOnRackDeleteButtonClickListener(() -> new ConfirmationAlert(getString(R.string.title_delete_rack), getString(R.string.message_delete_rack), this).setOnConfirmationAlertConfirm(() -> {
+                mRacks.removeView(rack);
+            }));
+            mRacks.addView(rack);
+        } else {
+            MessageAlert.create(this, MessageAlert.TYPE_ALERT, getString(R.string.max_number_racks_reached));
+        }
+    }
+
+
+    private void addNewRack() {
         //TODO: Melhorar isso, fazer poder adicionar um salvo previamente
-        Rack rack = new Rack(this);
-        rack.setOnRackMidiListener((controlChange, value) -> mMidi.sendControlChange(controlChange, value));
-        rack.setOnRackDeleteButtonClickListener(() -> new ConfirmationAlert(getString(R.string.title_delete_rack), getString(R.string.message_delete_rack), this).setOnConfirmationAlertConfirm(() -> mRacks.removeFooterView(rack)));
-        mRacks.addFooterView(rack);
+        if (mRacks.getChildCount() < 15) {
+            Rack rack = new Rack(this);
+            rack.setOnRackMidiListener((controlChange, value) -> mMidi.sendControlChange(controlChange, value));
+            rack.setOnRackDeleteButtonClickListener(() -> new ConfirmationAlert(getString(R.string.title_delete_rack), getString(R.string.message_delete_rack), this).setOnConfirmationAlertConfirm(() -> {
+                mRacks.removeView(rack);
+            }));
+            mRacks.addView(rack);
+        } else {
+            MessageAlert.create(this, MessageAlert.TYPE_ALERT, getString(R.string.max_number_racks_reached));
+        }
     }
 
     private void setLiveMode(boolean pressed) {
         mKontroller.setVisibility(pressed ? View.VISIBLE : View.GONE);
         mRacks.setVisibility(pressed ? View.GONE : View.VISIBLE);
-    }
-
-    private void setupRacks() {
-        ArrayAdapter<Rack> adapter = new ArrayAdapter<>(this, R.layout.layout_listview);
-        mRacks.setDivider(null);
-        mRacks.setDividerHeight((int) getResources().getDimension(R.dimen._4dp));
-        mRacks.setAdapter(adapter);
     }
 
     @Override
@@ -248,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void showOpenSetupDialog() {
+    private void showOpenPresetDialog() {
         View alertContent = getLayoutInflater().inflate(R.layout.layout_main_dialog_openpreset, findViewById(R.id.Open_Preset_Main));
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setView(alertContent);
@@ -350,6 +365,7 @@ public class MainActivity extends AppCompatActivity {
             mKontroller.getSlider().setup("0", 0);
             mKontroller.getButtonPedal().setup("9", 9, MidiKontroller.ON, MidiKontroller.OFF, false);
             mToolPresetName.setText(R.string.untitled);
+            mRacks.removeAllViews();
             MessageAlert.create(MainActivity.this, MessageAlert.TYPE_SUCESS, getString(R.string.preset_cleaned));
         });
     }
@@ -395,6 +411,42 @@ public class MainActivity extends AppCompatActivity {
 
                 xml.endTag(null, "Kontroller");
 
+                for (int rackIndex = 0; rackIndex < mRacks.getChildCount(); rackIndex++) {
+                    Rack rack = (Rack) mRacks.getChildAt(rackIndex);
+                    xml.startTag(null, "rack");
+                    xml.attribute(null, "title", rack.getRackTitle());
+                    xml.attribute(null, "cc", String.valueOf(rack.getControlChange()));
+                    xml.attribute(null, "backgroundColor", String.valueOf(rack.getBackgroundColor().getDefaultColor()));
+                    xml.attribute(null, "foregroundColor", String.valueOf(rack.getForegroundColor().getDefaultColor()));
+                    xml.attribute(null, "version", BuildConfig.VERSION_NAME);
+
+                    for (Component component : rack.getComponents()) {
+                        String type = "";
+                        switch (component.getType()) {
+                            case Component.TYPE_POTENTIOMETER:
+                                type = "potentiometer";
+                                break;
+                            case Component.TYPE_PUSH_BUTTON:
+                                type = "push_button";
+                                break;
+                            case Component.TYPE_SLIDE:
+                                type = "slide";
+                                break;
+                        }
+                        xml.startTag(null, type);
+                        xml.attribute(null, "cc", String.valueOf(component.getControlChange()));
+                        xml.attribute(null, "title", component.getTitle());
+                        if (component.getType() == Component.TYPE_POTENTIOMETER) {
+                            xml.attribute(null, "knob_style", String.valueOf(((Potentiometer) component).getKnobStyle()));
+                            xml.attribute(null, "markers_style", String.valueOf(((Potentiometer) component).getMarkerStyle()));
+                        }
+                        if (component.getType() == Component.TYPE_PUSH_BUTTON) xml.attribute(null, "button_style", String.valueOf(((PushButton) component).getStyle()));
+                        xml.endTag(null, type);
+                    }
+
+                    xml.endTag(null, "rack");
+                }
+
                 xml.endDocument();
                 xml.flush();
                 outputStream.write(writer.toString().getBytes());
@@ -410,15 +462,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadPreset(File loadFile) {
         try {
+            mRacks.removeAllViews();
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser tag = factory.newPullParser();
             InputStream is = new FileInputStream(loadFile);
             tag.setInput(is, null);
-            while (true) {
+            while (tag.getEventType() != XmlPullParser.END_DOCUMENT) {
                 if (tag.getEventType() == XmlPullParser.START_TAG) {
 
-                    if (tag.getName().toLowerCase().equals("kontroller")) {
+                    if (tag.getName().toLowerCase().startsWith("kontroller")) {
                         if (Integer.parseInt(tag.getAttributeValue(null, "version").replace(".", "")) > Integer.parseInt(BuildConfig.VERSION_NAME.replace(".", ""))) {
                             MessageAlert.create(this, MessageAlert.TYPE_ERRO, getString(R.string.requires_version) + tag.getAttributeValue(null, "version"));
                             break;
@@ -440,13 +493,41 @@ public class MainActivity extends AppCompatActivity {
                         mKontroller.getSlider().setup(tag.getAttributeValue(null, "title"), Integer.parseInt(tag.getAttributeValue(null, "cc")));
                     }
 
-                }
-                if (tag.getEventType() == XmlPullParser.END_DOCUMENT) {
-                    MessageAlert.create(this, MessageAlert.TYPE_SUCESS, getString(R.string.load_sucessfull));
-                    break;
+                    if (tag.getName().toLowerCase().equals("rack")) {
+                        Rack newRack = new Rack(this);
+                        newRack.setRackTitle(tag.getAttributeValue(null, "title"));
+                        newRack.setControlChange(Integer.parseInt((tag.getAttributeValue(null, "cc"))));
+                        newRack.setRackBackgroundColor(ColorStateList.valueOf(Integer.parseInt(tag.getAttributeValue(null, "backgroundColor"))));
+                        newRack.setRackForegroundColor(ColorStateList.valueOf(Integer.parseInt(tag.getAttributeValue(null, "foregroundColor"))));
+                        while (true) {
+                            if (tag.getEventType() == XmlPullParser.START_TAG) {
+                                if (tag.getName() != null && tag.getName().toLowerCase().startsWith("potentiometer")) {
+                                    Potentiometer newPot = new Potentiometer(this, newRack.getForegroundColor());
+                                    newPot.setControlChange(Integer.parseInt(tag.getAttributeValue(null, "cc")));
+                                    newPot.setTitle(tag.getAttributeValue(null, "title"));
+                                    newPot.setKnobStyle(null, Integer.parseInt(tag.getAttributeValue(null, "knob_style")));
+                                    newPot.setMarkersStyle(null, Integer.parseInt(tag.getAttributeValue(null, "markers_style")));
+                                    newPot.setConfigModeEnabled(false);
+                                    newRack.addNewComponent(newPot);
+                                }
+                                if (tag.getName() != null && tag.getName().toLowerCase().startsWith("push_button")) {
+                                    PushButton newPushButton = new PushButton(this, newRack.getForegroundColor());
+                                    newPushButton.setControlChange(Integer.parseInt(tag.getAttributeValue(null, "cc")));
+                                    newPushButton.setTitle(tag.getAttributeValue(null, "title"));
+                                    newPushButton.setPushButtonStyle(Integer.parseInt(tag.getAttributeValue(null, "button_style")));
+                                    newPushButton.setConfigModeEnabled(false);
+                                    newRack.addNewComponent(newPushButton);
+                                }
+                            } else if (tag.getEventType() == XmlPullParser.END_TAG && tag.getName() != null && tag.getName().toLowerCase().equals("rack")) break;
+                            tag.next();
+                        }
+                        addRack(newRack);
+                    }
+
                 }
                 tag.next();
             }
+            MessageAlert.create(this, MessageAlert.TYPE_SUCESS, getString(R.string.load_sucessfull));
             is.close();
         } catch (XmlPullParserException e) {
             MessageAlert.create(this, MessageAlert.TYPE_ERRO, getString(R.string.file_corrupt));

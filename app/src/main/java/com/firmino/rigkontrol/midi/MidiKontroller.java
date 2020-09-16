@@ -82,11 +82,7 @@ public class MidiKontroller {
     public void sendControlChange(int control, int value) {
         if (isConnected) {
             try {
-                mMidiPort.send(new byte[]{
-                        (byte) (0xB0 + (mChannel - 1)),
-                        (byte) control,
-                        (byte) value
-                }, 0, 3);
+                mMidiPort.send(new byte[]{(byte) (0xB0 + (mChannel - 1)), (byte) control, (byte) value}, 0, 3);
                 if (mOnMidiMessageSendListener != null) {
                     mOnMidiMessageSendListener.onMidiMessageSendSucess(mChannel, control, value);
                 }
@@ -112,6 +108,10 @@ public class MidiKontroller {
 
     public boolean isConnected() {
         return isConnected;
+    }
+
+    public static int toMidiSignal(boolean isOn) {
+        return isOn ? MidiKontroller.ON : MidiKontroller.OFF;
     }
 
     public interface OnMidiMessageSendListener {

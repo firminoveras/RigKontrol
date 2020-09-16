@@ -38,6 +38,7 @@ public class Potentiometer extends Component {
 
     public Potentiometer(@NonNull Context context, ColorStateList foregroundColor) {
         super(context, foregroundColor);
+        setType(TYPE_POTENTIOMETER);
         mContext = context;
         mForegroundColor = foregroundColor;
         mKnob = new Knob(context);
@@ -62,6 +63,7 @@ public class Potentiometer extends Component {
 
     public void setKnobStyle(Knob target, int knobStyle) {
         int id;
+        if(target == null) target = mKnob;
         switch (knobStyle) {
             case KNOB_SIMPLE:
                 id = R.drawable.bg_knob1;
@@ -86,6 +88,7 @@ public class Potentiometer extends Component {
     }
 
     public void setMarkersStyle(Knob target, int markersStyle) {
+        if(target == null) target = mKnob;
         float markerAccentSize, markerSize;
         int markerWidth, markerAccentWidth, periodicity;
         switch (markersStyle) {

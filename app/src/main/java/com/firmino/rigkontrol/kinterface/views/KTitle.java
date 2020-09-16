@@ -46,6 +46,7 @@ public class KTitle extends LinearLayout {
         mText.setTypeface(Typeface.create("sans-serif-condensed-medium", Typeface.NORMAL));
         mText.setGravity(Gravity.CENTER);
         mText.setMaxLines(1);
+        mText.setAllCaps(true);
         int _8dp = (int) getResources().getDimension(R.dimen._8dp);
         mText.setPadding(_8dp, _8dp, _8dp, _8dp);
         mText.setTextColor(ResourcesCompat.getColor(getResources(), R.color.bg_dark_gray, null));

@@ -264,11 +264,25 @@
                         android:background="@drawable/bg_container_intern"
                         android:padding="5dp">
 
-                        <ListView
-                            android:id="@+id/Container_Racks"
+                        <ScrollView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scrollbars="none"/>
+                            android:scrollbarTrackVertical="@drawable/track"
+                            android:scrollbarAlwaysDrawVerticalTrack="true"
+                            android:scrollbarThumbVertical="@drawable/bg_scrollbar_thumb"
+                            android:scrollbarSize="@dimen/_6dp"
+                            android:fadeScrollbars="false"
+                            android:scrollbars="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/Container_Racks"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingStart="@dimen/_0dp"
+                                android:paddingEnd="@dimen/_10dp" />
+                        </ScrollView>
+
 
                         <com.firmino.rigkontrol.kontroller.Kontroller
                             android:id="@+id/Main_Kontroller"

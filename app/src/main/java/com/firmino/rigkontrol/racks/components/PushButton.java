@@ -34,6 +34,7 @@ public class PushButton extends Component {
 
     public PushButton(@NonNull Context context, ColorStateList foregroundColor) {
         super(context, foregroundColor);
+        setType(TYPE_PUSH_BUTTON);
         mContext = context;
         mButtonImage = new ImageView(context);
         mButtonImage.setOnClickListener(view -> performButtonClick());
@@ -71,6 +72,7 @@ public class PushButton extends Component {
         refresh();
     }
 
+
     private void refresh() {
         mButtonImage.setImageDrawable(isOn ? mDrawableOn : mDrawableOff);
     }
@@ -106,7 +108,7 @@ public class PushButton extends Component {
         });
     }
 
-    private int getStyle() {
+    public int getStyle() {
         return mStyle;
     }
 }

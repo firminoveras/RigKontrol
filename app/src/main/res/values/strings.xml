@@ -28,9 +28,9 @@
     <string name="directory_not_found">Directory not found.</string>
     <string name="erro_save_preset">Can\'t save the setup.</string>
     <string name="save_canceled">Save process canceled.</string>
-    <string name="save_replace">There is already a Preset with this name, do you want to replace it?</string>
-    <string name="save_preset">Save the current Preset?</string>
-    <string name="save_preset_title">Saving a Preset</string>
+    <string name="save_replace">There is already a file with this name, do you want to replace it?</string>
+    <string name="save_preset">Save the current file?</string>
+    <string name="save_preset_title">Saving a New File</string>
     <string name="clear_warning">Are you sure you want clear all Preset tones? Unsaved changes will be discarted.</string>
     <string name="untitled">Untitled</string>
     <string name="status_send"><![CDATA[Enviado: [ CC = %03d | VL = %03d ] -> CH%02d]]></string>
@@ -95,4 +95,8 @@
     <string name="title_delete_rack">Delete Rack</string>
     <string name="push_button_config">PUSH BUTTON CONFIG</string>
     <string name="push_button_style">PUSH BUTTON STYLE</string>
+    <string name="open_rack">Open Rack</string>
+    <string name="save_rack">Save Rack</string>
+    <string name="file_name">FILE NAME</string>
+    <string name="max_number_racks_reached">Maximum number of Racks reached.</string>
 </resources>

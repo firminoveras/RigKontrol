@@ -52,10 +52,10 @@ public class SplashScreen extends AppCompatActivity {
 
     private void checkFiles() {
         mStatus.setText(R.string.check_dirs);
-        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Presets");
-        System.out.println(dir.getAbsolutePath());
-        if (!dir.exists()) {
-            if (dir.mkdirs()) allDone();
+        File dirPresets = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Presets");
+        File dirRacks = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Racks");
+        if (!(dirPresets.exists() && dirRacks.exists())) {
+            if (dirPresets.mkdirs() && dirRacks.mkdirs()) allDone();
             else {
                 mStatus.setText(R.string.cant_make_preset_directory);
                 new Handler().postDelayed(this::finish, 5000);

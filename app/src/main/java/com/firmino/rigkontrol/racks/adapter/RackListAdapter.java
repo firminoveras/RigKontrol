@@ -12,30 +12,34 @@ import androidx.annotation.NonNull;
 import com.firmino.rigkontrol.R;
 import com.firmino.rigkontrol.racks.Rack;
 
+
 public class RackListAdapter extends ArrayAdapter<Rack> {
 
-    public RackListAdapter(@NonNull Context context, int resource) {
-        super(context, resource);
+    public RackListAdapter(@NonNull Context context) {
+        super(context, R.layout.layout_listview);
     }
 
-    private static class ViewHolder {
-        LinearLayout layout;
+    public static class ViewHolder {
+        LinearLayout container;
     }
 
     @NonNull
     @Override
     public View getView(int position, View view, @NonNull ViewGroup parent) {
-        final RackListAdapter.ViewHolder holder;
+        final ViewHolder holder;
         if (view == null) {
-            holder = new RackListAdapter.ViewHolder();
+            holder = new ViewHolder();
             view = LayoutInflater.from(getContext()).inflate(R.layout.layout_listview, parent, false);
-            holder.layout = view.findViewById(R.id.ListView_Item);
+            holder.container = view.findViewById(R.id.ListView_Item);
             view.setTag(holder);
         }else{
-            holder = (RackListAdapter.ViewHolder) view.getTag();
+            holder = (ViewHolder) view.getTag();
         }
-        holder.layout.removeAllViews();
-        holder.layout.addView(getItem(position));
+        holder.container.removeAllViews();
+        holder.container.addView(getItem(position));
         return view;
     }
+
+
+
 }

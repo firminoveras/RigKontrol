@@ -28,7 +28,7 @@
         android:layout_height="@dimen/_20dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/bg_rack_button"
-        android:backgroundTint="#FFFF00"
+        android:backgroundTint="#FFBA0E"
         tools:ignore="ContentDescription" />
 
     <ImageView
@@ -36,7 +36,7 @@
         android:layout_height="@dimen/_20dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/bg_rack_button"
-        android:backgroundTint="#B2FF59"
+        android:backgroundTint="#70A830"
         tools:ignore="ContentDescription" />
 
     <ImageView
@@ -44,7 +44,7 @@
         android:layout_height="@dimen/_20dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/bg_rack_button"
-        android:backgroundTint="#B2FF59"
+        android:backgroundTint="#4EBD87"
         tools:ignore="ContentDescription" />
 
     <ImageView
@@ -52,15 +52,7 @@
         android:layout_height="@dimen/_20dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/bg_rack_button"
-        android:backgroundTint="#69F0AE"
-        tools:ignore="ContentDescription" />
-
-    <ImageView
-        android:layout_width="@dimen/_20dp"
-        android:layout_height="@dimen/_20dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/bg_rack_button"
-        android:backgroundTint="#64FFDA"
+        android:backgroundTint="#23C59D"
         tools:ignore="ContentDescription" />
 
     <ImageView

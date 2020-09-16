@@ -1,24 +1,39 @@
 package com.firmino.rigkontrol.racks;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Environment;
 import android.util.AttributeSet;
+import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.firmino.rigkontrol.BuildConfig;
 import com.firmino.rigkontrol.R;
+import com.firmino.rigkontrol.kinterface.alerts.ConfirmationAlert;
+import com.firmino.rigkontrol.kinterface.alerts.MessageAlert;
+import com.firmino.rigkontrol.kinterface.views.KButton;
 import com.firmino.rigkontrol.kinterface.views.KRoundImageButton;
+import com.firmino.rigkontrol.kinterface.views.KTextEdit;
+import com.firmino.rigkontrol.midi.MidiKontroller;
+import com.firmino.rigkontrol.presets.PresetItem;
+import com.firmino.rigkontrol.presets.PresetListAdapter;
 import com.firmino.rigkontrol.racks.components.Component;
 import com.firmino.rigkontrol.racks.components.Potentiometer;
 import com.firmino.rigkontrol.racks.components.PushButton;
@@ -29,11 +44,25 @@ import com.firmino.rigkontrol.racks.frags.FragmentMainConfig;
 import com.firmino.rigkontrol.racks.frags.FragmentMidiConfig;
 import com.firmino.rigkontrol.racks.frags.FragmentTitleConfig;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.Objects;
+
 public class Rack extends RelativeLayout {
 
     private final Context mContext;
     private KRoundImageButton mPowerButton, mMinimizeButton, mConfigButton;
-    private LinearLayout mContainerLayout;
+    private LinearLayout mComponentsLayout;
     private ViewPager2 mConfigPager;
     private ConfigFragmentAdapter mConfigFragAdapter;
     private FrameLayout mSaveLayout;
@@ -69,7 +98,7 @@ public class Rack extends RelativeLayout {
 
         mConfigPager = findViewById(R.id.Rack_Config_Pager);
         mSaveLayout = findViewById(R.id.Rack_Save_Layout);
-        mContainerLayout = findViewById(R.id.Rack_Container_Layout);
+        mComponentsLayout = findViewById(R.id.Rack_Container_Layout);
         mMinimizeButton = findViewById(R.id.Rack_MinimizeButton);
         mPowerButton = findViewById(R.id.Rack_OnButton);
         mConfigButton = findViewById(R.id.Rack_ConfigButton);
@@ -114,7 +143,7 @@ public class Rack extends RelativeLayout {
         mFragAdd.setOnAddButtonButtonClickListener(() -> addNewComponent(new PushButton(mContext, mForegroundColor)));
 
         mPowerButton.setToggle(true);
-        mPowerButton.setOnRackButtonClicked((isOn) -> onRackMidiListener.onRackOnListener(mControlChange, isOn ? 127 : 0));
+        mPowerButton.setOnRackButtonClicked((isOn) -> onRackMidiListener.onRackOnListener(mControlChange, MidiKontroller.toMidiSignal(isOn)));
 
         mMinimizeButton.setToggle(false);
         mMinimizeButton.setOnRackButtonClicked((isOn) -> {
@@ -123,19 +152,24 @@ public class Rack extends RelativeLayout {
 
         mConfigButton.setToggle(true);
         mConfigButton.setOnRackButtonClicked(this::setConfigModeEnabled);
+
+        mSaveLayout.setOnClickListener(view -> showSaveRackDialog());
+
+        mConfigPager.setVisibility(GONE);
     }
 
-    private void addNewComponent(Component component) {
-        if (mContainerLayout.getChildCount() < 10){
+    public void addNewComponent(Component component) {
+        if (mComponentsLayout.getChildCount() < 10) {
             component.setOnComponentMidiControlChangeListener((cc, value) -> onRackMidiListener.onRackOnListener(cc, value));
-            mContainerLayout.addView(component);
+            mComponentsLayout.addView(component);
         }
     }
 
     public void setConfigModeEnabled(boolean enabled) {
         isConfigModeOn = enabled;
-        for (int index = 0; index < mContainerLayout.getChildCount(); index++) {
-            ((Component) mContainerLayout.getChildAt(index)).setConfigModeEnabled(isConfigModeOn);
+        if (isConfigModeOn) mConfigPager.setVisibility(VISIBLE);
+        for (int index = 0; index < mComponentsLayout.getChildCount(); index++) {
+            ((Component) mComponentsLayout.getChildAt(index)).setConfigModeEnabled(isConfigModeOn);
         }
         int maxH = (int) (getResources().getDimension(R.dimen._80dp));
         ValueAnimator anim = ValueAnimator.ofInt(enabled ? 0 : maxH, enabled ? maxH : 0);
@@ -143,6 +177,16 @@ public class Rack extends RelativeLayout {
             ViewGroup.LayoutParams lay = mConfigPager.getLayoutParams();
             lay.height = (int) valueAnimator.getAnimatedValue();
             mConfigPager.setLayoutParams(lay);
+        });
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (!isConfigModeOn) {
+                    mConfigPager.setVisibility(GONE);
+                    mConfigPager.setCurrentItem(0, false);
+                }
+            }
         });
         anim.setDuration(300);
         anim.start();
@@ -154,7 +198,7 @@ public class Rack extends RelativeLayout {
             mMinimizeButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), enabled ? R.drawable.ic_rack_maximize : R.drawable.ic_rack_minimize, null));
             if (enabled && mConfigButton.isOn()) mConfigButton.performClick();
             mSaveLayout.setVisibility(enabled ? View.GONE : View.VISIBLE);
-            mContainerLayout.setVisibility(enabled ? View.GONE : View.VISIBLE);
+            mComponentsLayout.setVisibility(enabled ? View.GONE : View.VISIBLE);
             mConfigButton.setVisibility(enabled ? View.GONE : View.VISIBLE);
             ViewGroup.LayoutParams lay = findViewById(R.id.Rack_InnerLayout).getLayoutParams();
             lay.height = enabled ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) getResources().getDimension(R.dimen._100dp);
@@ -182,8 +226,8 @@ public class Rack extends RelativeLayout {
         mBigTitle.setTextColor(color);
         mLittleTitle.setTextColor(color);
         findViewById(R.id.Rack_InnerLayout).setBackgroundTintList(color);
-        for (int index = 0; index < mContainerLayout.getChildCount(); index++) {
-            ((Component) mContainerLayout.getChildAt(index)).setForegroundColor(color);
+        for (int index = 0; index < mComponentsLayout.getChildCount(); index++) {
+            ((Component) mComponentsLayout.getChildAt(index)).setForegroundColor(color);
         }
     }
 
@@ -211,6 +255,182 @@ public class Rack extends RelativeLayout {
 
     public boolean isConfigModeOn() {
         return isConfigModeOn;
+    }
+
+    private void showSaveRackDialog() {
+        View alertContent = inflate(mContext, R.layout.layout_rack_dialog_openrack, findViewById(R.id.Open_Preset_Main));
+        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+        alert.setCancelable(false);
+        alert.setView(alertContent);
+        Dialog dialog = alert.show();
+        Objects.requireNonNull(dialog.getWindow()).setLayout((int) (500 * getResources().getDisplayMetrics().density), -2);
+
+        KTextEdit title = alertContent.findViewById(R.id.Open_Save_Rack_Title);
+        KButton saveButton = alertContent.findViewById(R.id.Open_Save_Rack_Button_OK);
+        saveButton.setOnClickListener(view -> {
+            saveRack(title.getText());
+            dialog.dismiss();
+        });
+
+        ListView listView = alertContent.findViewById(R.id.Open_Save_Rack_ListView);
+        PresetListAdapter adapter = new PresetListAdapter(mContext);
+        listView.setAdapter(adapter);
+        adapter.clear();
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Racks");
+        for (File preset : Objects.requireNonNull(dir.listFiles())) {
+            if (preset.getAbsolutePath().endsWith(".xml")) {
+                PresetItem item = new PresetItem(mContext);
+                item.setup(preset);
+                item.setOnClickListener(view -> {
+                    loadRack(((PresetItem) view).getFile());
+                    dialog.dismiss();
+                });
+                adapter.addAll(item);
+            }
+        }
+    }
+
+    private void loadRack(File file) {
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser tag = factory.newPullParser();
+            InputStream is = new FileInputStream(file);
+            tag.setInput(is, null);
+            removeAllComponents();
+            while (true) {
+                if (tag.getEventType() == XmlPullParser.START_TAG) {
+                    if (tag.getName().toLowerCase().equals("rack")) {
+                        if (Integer.parseInt(tag.getAttributeValue(null, "version").replace(".", "")) > Integer.parseInt(BuildConfig.VERSION_NAME.replace(".", ""))) {
+                            MessageAlert.create(mContext, MessageAlert.TYPE_ERRO, mContext.getString(R.string.requires_version) + tag.getAttributeValue(null, "version"));
+                            break;
+                        }
+                        setRackTitle(tag.getAttributeValue(null, "title"));
+                        mControlChange = Integer.parseInt((tag.getAttributeValue(null, "cc")));
+                        setRackBackgroundColor(ColorStateList.valueOf(Integer.parseInt(tag.getAttributeValue(null, "backgroundColor"))));
+                        setRackForegroundColor(ColorStateList.valueOf(Integer.parseInt(tag.getAttributeValue(null, "foregroundColor"))));
+                    }
+                    if (tag.getName().toLowerCase().startsWith("potentiometer")) {
+                        Potentiometer newPot = new Potentiometer(mContext, mForegroundColor);
+                        newPot.setControlChange(Integer.parseInt(tag.getAttributeValue(null, "cc")));
+                        newPot.setTitle(tag.getAttributeValue(null, "title"));
+                        newPot.setKnobStyle(null, Integer.parseInt(tag.getAttributeValue(null, "knob_style")));
+                        newPot.setMarkersStyle(null, Integer.parseInt(tag.getAttributeValue(null, "markers_style")));
+                        newPot.setConfigModeEnabled(isConfigModeOn);
+                        addNewComponent(newPot);
+                    }
+                    if (tag.getName().toLowerCase().startsWith("push_button")) {
+                        PushButton newPushButton = new PushButton(mContext, mForegroundColor);
+                        newPushButton.setControlChange(Integer.parseInt(tag.getAttributeValue(null, "cc")));
+                        newPushButton.setTitle(tag.getAttributeValue(null, "title"));
+                        newPushButton.setPushButtonStyle(Integer.parseInt(tag.getAttributeValue(null, "button_style")));
+                        newPushButton.setConfigModeEnabled(isConfigModeOn);
+                        addNewComponent(newPushButton);
+                    }
+                    //TODO: fazer essa parte do slide
+                }
+                if (tag.getEventType() == XmlPullParser.END_DOCUMENT) {
+                    MessageAlert.create(mContext, MessageAlert.TYPE_SUCESS, mContext.getString(R.string.load_sucessfull));
+                    break;
+                }
+                tag.next();
+            }
+            is.close();
+        } catch (XmlPullParserException e) {
+            MessageAlert.create(mContext, MessageAlert.TYPE_ERRO, mContext.getString(R.string.file_corrupt));
+        } catch (IOException e) {
+            MessageAlert.create(mContext, MessageAlert.TYPE_ERRO, mContext.getString(R.string.unknow_erro));
+        }
+    }
+
+    public void removeAllComponents() {
+        mComponentsLayout.removeAllViews();
+    }
+
+    private void saveRack(String name) {
+        final File outputFile = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Racks" + File.separator + name + ".xml");
+        new ConfirmationAlert(mContext.getString(R.string.save_preset_title), outputFile.exists() ? mContext.getString(R.string.save_replace) : mContext.getString(R.string.save_preset), mContext).setOnConfirmationAlertConfirm(() -> {
+            XmlSerializer xml = Xml.newSerializer();
+            StringWriter writer = new StringWriter();
+            try {
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
+                xml.setOutput(writer);
+                xml.startDocument("UTF-8", false);
+                xml.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+
+                xml.startTag(null, "rack");
+                xml.attribute(null, "title", getRackTitle());
+                xml.attribute(null, "cc", String.valueOf(mControlChange));
+                xml.attribute(null, "backgroundColor", String.valueOf(mBackgroundColor.getDefaultColor()));
+                xml.attribute(null, "foregroundColor", String.valueOf(mForegroundColor.getDefaultColor()));
+                xml.attribute(null, "version", BuildConfig.VERSION_NAME);
+
+                for (int i = 0; i < mComponentsLayout.getChildCount(); i++) {
+                    Component child = (Component) mComponentsLayout.getChildAt(i);
+                    String type = "";
+                    switch (child.getType()) {
+                        case Component.TYPE_POTENTIOMETER:
+                            type = "potentiometer";
+                            break;
+                        case Component.TYPE_PUSH_BUTTON:
+                            type = "push_button";
+                            break;
+                        case Component.TYPE_SLIDE:
+                            type = "slide";
+                            break;
+                    }
+                    xml.startTag(null, type);
+                    xml.attribute(null, "cc", String.valueOf(child.getControlChange()));
+                    xml.attribute(null, "title", child.getTitle());
+                    if (child.getType() == Component.TYPE_POTENTIOMETER) {
+                        xml.attribute(null, "knob_style", String.valueOf(((Potentiometer) child).getKnobStyle()));
+                        xml.attribute(null, "markers_style", String.valueOf(((Potentiometer) child).getMarkerStyle()));
+                    }
+                    if (child.getType() == Component.TYPE_PUSH_BUTTON) xml.attribute(null, "button_style", String.valueOf(((PushButton) child).getStyle()));
+                    xml.endTag(null, type);
+                }
+
+                xml.endTag(null, "rack");
+
+                xml.endDocument();
+                xml.flush();
+                outputStream.write(writer.toString().getBytes());
+                outputStream.close();
+                MessageAlert.create(mContext, MessageAlert.TYPE_SUCESS, mContext.getString(R.string.saved_sucess));
+            } catch (FileNotFoundException ex) {
+                MessageAlert.create(mContext, MessageAlert.TYPE_ERRO, mContext.getString(R.string.directory_not_found));
+            } catch (IOException ex) {
+                MessageAlert.create(mContext, MessageAlert.TYPE_ERRO, mContext.getString(R.string.erro_save_preset));
+            }
+        }).setOnConfirmationAlertCancel(() -> MessageAlert.create(mContext, MessageAlert.TYPE_ALERT, mContext.getString(R.string.save_canceled)));
+    }
+
+    public Component[] getComponents() {
+        Component[] components = new Component[mComponentsLayout.getChildCount()];
+        for (int index = 0; index < mComponentsLayout.getChildCount(); index++) {
+            components[index] = (Component) mComponentsLayout.getChildAt(index);
+        }
+        return components;
+    }
+
+    public int getComponentCount() {
+        return mComponentsLayout.getChildCount();
+    }
+
+    public int getControlChange() {
+        return mControlChange;
+    }
+
+    public void setControlChange(int cc) {
+        mControlChange = cc;
+    }
+
+    public ColorStateList getForegroundColor() {
+        return mForegroundColor;
+    }
+
+    public ColorStateList getBackgroundColor() {
+        return mBackgroundColor;
     }
 
     public void setOnRackMidiListener(OnRackMidiListener onRackMidiListener) {

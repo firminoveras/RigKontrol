@@ -20,6 +20,10 @@ import com.firmino.rigkontrol.kinterface.alerts.ConfirmationAlert;
 
 public class Component extends FrameLayout {
 
+    public final static int TYPE_POTENTIOMETER = 0;
+    public final static int TYPE_PUSH_BUTTON = 1;
+    public final static int TYPE_SLIDE = 2;
+
     private final Context mContext;
     private ColorStateList mForegroundColor;
     private ImageView mConfigButton, mRemoveButton;
@@ -30,6 +34,7 @@ public class Component extends FrameLayout {
     private OnComponentMidiControlChangeListener onComponentMidiControlChangeListener = (cc, value) -> {};
     private OnColorChangeListener onColorChangeListener = (color) -> {};
     private int mControlChange = 0;
+    private int mType = -1;
 
     public Component(@NonNull Context context) {
         super(context);
@@ -87,7 +92,7 @@ public class Component extends FrameLayout {
     }
 
     public void setTitle(String title) {
-        mTitle.setText(title.trim());
+        mTitle.setText(title.trim().toUpperCase());
     }
 
     public String getTitle() {
@@ -121,6 +126,13 @@ public class Component extends FrameLayout {
 
     public void setOnColorChangeListener(OnColorChangeListener onColorChangeListener) {
         this.onColorChangeListener = onColorChangeListener;
+    }
+
+    public int getType() {
+        return mType;
+    }
+    public void setType(int type) {
+        mType = type;
     }
 
     public interface OnConfigButtonClickedListener {

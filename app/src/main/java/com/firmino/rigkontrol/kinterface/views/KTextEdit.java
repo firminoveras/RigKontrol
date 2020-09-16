@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,7 +47,7 @@ public class KTextEdit extends LinearLayout {
 
         titleText = new TextView(context);
         LayoutParams layTitleText = new LayoutParams((int) getResources().getDimension(R.dimen._0dp), LayoutParams.MATCH_PARENT, 1);
-        ((MarginLayoutParams) layTitleText).rightMargin = (int) getResources().getDimension(R.dimen._2dp);
+        layTitleText.rightMargin = (int) getResources().getDimension(R.dimen._2dp);
         titleText.setLayoutParams(layTitleText);
         titleText.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_left_borderless, null));
         titleText.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.dark_foreground, null)));
@@ -55,6 +56,7 @@ public class KTextEdit extends LinearLayout {
         titleText.setTextColor(ResourcesCompat.getColor(getResources(), R.color.light_foreground, null));
         titleText.setTextSize(12);
         titleText.setText(R.string.name);
+        titleText.setAllCaps(true);
 
         textEdit = new EditText(context);
         textEdit.setLayoutParams(new LayoutParams((int) getResources().getDimension(R.dimen._0dp), LayoutParams.MATCH_PARENT, 1));
@@ -65,6 +67,8 @@ public class KTextEdit extends LinearLayout {
         textEdit.setTextSize(12);
         textEdit.setText(R.string.component);
         textEdit.setMaxLines(1);
+        textEdit.setAllCaps(true);
+        textEdit.setInputType(EditorInfo.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
 
         addView(titleText);
         addView(textEdit);
