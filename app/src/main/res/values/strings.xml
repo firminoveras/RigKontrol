@@ -10,7 +10,6 @@
     <string name="offline">Offline</string>
     <string name="connection">CONNECTION</string>
     <string name="usb_status">USB STATUS</string>
-    <string name="one">1</string>
     <string name="kontroller">KONTROLLER</string>
     <string name="pedal_sensivity">PEDAL SENSIVITY</string>
     <string name="close_warning">Exiting the application without saving changes will result in the loss of all unsaved data. Do you really want to close the Rig Kontroller?</string>
@@ -86,7 +85,6 @@
     <string name="potentiometer_config">POTENTIOMETER CONFIG</string>
     <string name="knob_style">KNOB STYLE</string>
     <string name="markers_style">MARKERS STYLE</string>
-    <string name="control_number">CONTROL NUMBER</string>
     <string name="apply">APPLY</string>
     <string name="NUMBER">NUMBER</string>
     <string name="list_picker">LIST PICKER</string>
@@ -99,4 +97,6 @@
     <string name="save_rack">Save Rack</string>
     <string name="file_name">FILE NAME</string>
     <string name="max_number_racks_reached">Maximum number of Racks reached.</string>
+    <string name="add_rack">ADD RACK</string>
+    <string name="new_empty_rack">NEW EMPTY RACK</string>
 </resources>

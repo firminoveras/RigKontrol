@@ -246,7 +246,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/Container_Main"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"

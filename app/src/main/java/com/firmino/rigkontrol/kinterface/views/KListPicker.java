@@ -22,8 +22,8 @@ public class KListPicker extends LinearLayout {
 
     private static final int FIRST = 0;
     private TextView mTitle, mTextValue;
-    private KImageButton mNextButton;
-    private Context mContext;
+    private KImageButton mNextButton, mPreviousButton;
+    private final Context mContext;
     private List<String> mList;
     private int mSelectedItem = 0;
     OnKListPikerItemSelectedListener onKListPikerItemSelectedListener = (index, item) -> {};
@@ -54,7 +54,7 @@ public class KListPicker extends LinearLayout {
         setOrientation(HORIZONTAL);
 
         mTitle = new TextView(mContext);
-        LayoutParams layTitleText = new LayoutParams((int) getResources().getDimension(R.dimen._0dp), LayoutParams.MATCH_PARENT, 3);
+        LayoutParams layTitleText = new LayoutParams((int) getResources().getDimension(R.dimen._0dp), LayoutParams.MATCH_PARENT, 5);
         layTitleText.rightMargin = (int) getResources().getDimension(R.dimen._2dp);
         mTitle.setLayoutParams(layTitleText);
         mTitle.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_left_borderless, null));
@@ -65,8 +65,14 @@ public class KListPicker extends LinearLayout {
         mTitle.setTextSize(12);
         mTitle.setText(R.string.list_picker);
 
+        mPreviousButton = new KImageButton(mContext);
+        mPreviousButton.setLayoutParams(new LayoutParams((int) getResources().getDimension(R.dimen._0dp), LayoutParams.MATCH_PARENT, 1));
+        mPreviousButton.setAlign(KImageButton.ALIGN_NONE);
+        mPreviousButton.setImageResource(R.drawable.ic_arrow_left);
+        mPreviousButton.setOnClickListener(view -> selectPreviousItem());
+
         mTextValue = new TextView(mContext);
-        mTextValue.setLayoutParams(new LayoutParams((int) getResources().getDimension(R.dimen._0dp), LayoutParams.MATCH_PARENT, 2));
+        mTextValue.setLayoutParams(new LayoutParams((int) getResources().getDimension(R.dimen._0dp), LayoutParams.MATCH_PARENT, 3));
         mTextValue.setGravity(Gravity.CENTER);
         mTextValue.setTextColor(ResourcesCompat.getColor(getResources(), R.color.foreground, null));
         mTextValue.setTextSize(12);
@@ -80,6 +86,7 @@ public class KListPicker extends LinearLayout {
         setSelectedItem(FIRST);
 
         addView(mTitle);
+        addView(mPreviousButton);
         addView(mTextValue);
         addView(mNextButton);
     }
@@ -90,7 +97,14 @@ public class KListPicker extends LinearLayout {
         } else {
             setSelectedItem((getSelectedItemIndex() + 1));
         }
+    }
 
+    private void selectPreviousItem() {
+        if ((getSelectedItemIndex() - 1) < 0) {
+            setSelectedItem(lenght() - 1);
+        } else {
+            setSelectedItem((getSelectedItemIndex() - 1));
+        }
     }
 
     public void addItem(String item) {

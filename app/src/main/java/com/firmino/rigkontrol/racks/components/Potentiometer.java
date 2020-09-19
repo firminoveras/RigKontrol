@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -31,17 +31,28 @@ public class Potentiometer extends Component {
     private static final int MARKERS_THREE_DOTS = 2;
     private static final int MARKERS_DEFAULT = 3;
 
-    private final Knob mKnob;
+    private Knob mKnob;
     private final Context mContext;
     private int mKnobStyle = 1, mMarkerStyle = 1;
-    private ColorStateList mForegroundColor;
+    private final ColorStateList mForegroundColor;
+
+    public Potentiometer(Context context) {
+        super(context);
+        mContext = context;
+        mForegroundColor = ColorStateList.valueOf(Color.BLACK);
+    }
 
     public Potentiometer(@NonNull Context context, ColorStateList foregroundColor) {
         super(context, foregroundColor);
-        setType(TYPE_POTENTIOMETER);
         mContext = context;
         mForegroundColor = foregroundColor;
-        mKnob = new Knob(context);
+        initPot();
+    }
+
+    private void initPot() {
+        setType(TYPE_POTENTIOMETER);
+
+        mKnob = new Knob(mContext);
         mKnob.setNumberOfStates(130);
         mKnob.setMinAngle(-130);
         mKnob.setMaxAngle(130);
@@ -63,7 +74,7 @@ public class Potentiometer extends Component {
 
     public void setKnobStyle(Knob target, int knobStyle) {
         int id;
-        if(target == null) target = mKnob;
+        if (target == null) target = mKnob;
         switch (knobStyle) {
             case KNOB_SIMPLE:
                 id = R.drawable.bg_knob1;
@@ -88,7 +99,7 @@ public class Potentiometer extends Component {
     }
 
     public void setMarkersStyle(Knob target, int markersStyle) {
-        if(target == null) target = mKnob;
+        if (target == null) target = mKnob;
         float markerAccentSize, markerSize;
         int markerWidth, markerAccentWidth, periodicity;
         switch (markersStyle) {

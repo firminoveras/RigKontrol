@@ -18,7 +18,7 @@ import com.firmino.rigkontrol.R;
 public class KTitle extends LinearLayout {
 
     private TextView mText;
-    private Context mContext;
+    private final Context mContext;
 
     public KTitle(Context context) {
         super(context);

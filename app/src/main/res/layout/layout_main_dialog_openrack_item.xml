@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/OpenRack_Main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_button_unicolor"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:id="@+id/OpenRack_Background"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:background="@drawable/bg_rack"
+        android:backgroundTint="@color/foreground"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/OpenRack_Small_Title"
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:gravity="bottom"
+                android:lines="1"
+                android:maxLines="1"
+                android:textAllCaps="true"
+                android:textColor="@color/bg_black"
+                android:textSize="12sp"
+                android:typeface="monospace" />
+
+            <TextView
+                android:id="@+id/OpenRack_Big_Title"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:gravity="top"
+                android:lines="1"
+                android:maxLines="1"
+                android:textAllCaps="true"
+                android:textColor="@color/bg_black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/OpenRack_Container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_rack"
+        android:backgroundTint="@color/bg_black"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/OpenRack_Category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/OpenRack_Date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@color/light_foreground"
+            android:textSize="14sp"
+            android:typeface="monospace"
+            app:drawableStartCompat="@drawable/ic_separator" />
+    </LinearLayout>
+
+</LinearLayout>

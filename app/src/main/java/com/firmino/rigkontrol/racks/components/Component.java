@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -54,16 +53,13 @@ public class Component extends FrameLayout {
         mConfigButton = findViewById(R.id.Component_Config);
         mRemoveButton = findViewById(R.id.Component_Remove);
         mConfigLayout = findViewById(R.id.Component_Config_Layout);
-        mTitle = findViewById(R.id.Component_Title);
         mComponentContainer = findViewById(R.id.Component_View);
+        mTitle = findViewById(R.id.Component_Title);
         setLayoutParams(new TableLayout.LayoutParams((int) getResources().getDimension(R.dimen._0dp), ViewGroup.LayoutParams.MATCH_PARENT, 1));
-        mRemoveButton.setOnClickListener(view -> new ConfirmationAlert("Deleting a Component", getContext().getString(R.string.delete_component), mContext).setOnConfirmationAlertConfirm(() -> {
-            ((ViewGroup) getParent()).removeView(Component.this);
-        }));
+        mRemoveButton.setOnClickListener(view -> new ConfirmationAlert("Deleting a Component", getContext().getString(R.string.delete_component), mContext).setOnConfirmationAlertConfirm(() -> ((ViewGroup) getParent()).removeView(Component.this)));
         mConfigButton.setOnClickListener(view -> onConfigButtonClickedListener.onConfigButtonClickedListener());
         setForegroundColor(ColorStateList.valueOf(Color.BLACK));
     }
-
 
     public ColorStateList getForegroundColor() {
         return mForegroundColor;
@@ -79,10 +75,11 @@ public class Component extends FrameLayout {
         mConfigLayout.setEnabled(enabled);
         mConfigButton.setEnabled(enabled);
         mRemoveButton.setEnabled(enabled);
-        ValueAnimator anim = ValueAnimator.ofFloat(enabled ? 0 : 1.0f, enabled ? 1.0f : 0);
+        ValueAnimator anim = ValueAnimator.ofFloat(enabled ? 0 : .8f, enabled ? .8f : 0);
         anim.addUpdateListener(valueAnimator -> mConfigLayout.setAlpha((Float) valueAnimator.getAnimatedValue()));
-        anim.setDuration(500);
+        anim.setDuration(300);
         anim.start();
+
     }
 
     public void setComponentValue(int value) {
@@ -116,6 +113,14 @@ public class Component extends FrameLayout {
         mTitle.setText(title);
     }
 
+    public int getType() {
+        return mType;
+    }
+
+    public void setType(int type) {
+        mType = type;
+    }
+
     public void setOnConfigButtonClickedListener(OnConfigButtonClickedListener onConfigButtonClickedListener) {
         this.onConfigButtonClickedListener = onConfigButtonClickedListener;
     }
@@ -126,13 +131,6 @@ public class Component extends FrameLayout {
 
     public void setOnColorChangeListener(OnColorChangeListener onColorChangeListener) {
         this.onColorChangeListener = onColorChangeListener;
-    }
-
-    public int getType() {
-        return mType;
-    }
-    public void setType(int type) {
-        mType = type;
     }
 
     public interface OnConfigButtonClickedListener {

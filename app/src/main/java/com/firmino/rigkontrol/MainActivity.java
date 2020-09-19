@@ -30,6 +30,7 @@ import com.firmino.rigkontrol.kinterface.alerts.ConfirmationAlert;
 import com.firmino.rigkontrol.kinterface.alerts.MessageAlert;
 import com.firmino.rigkontrol.kinterface.views.KGate;
 import com.firmino.rigkontrol.kinterface.views.KImageButton;
+import com.firmino.rigkontrol.kinterface.views.KListPicker;
 import com.firmino.rigkontrol.kinterface.views.KNumberPicker;
 import com.firmino.rigkontrol.kinterface.views.KSeekBar;
 import com.firmino.rigkontrol.kinterface.views.KStateButton;
@@ -39,6 +40,8 @@ import com.firmino.rigkontrol.midi.MidiKontroller;
 import com.firmino.rigkontrol.presets.PresetItem;
 import com.firmino.rigkontrol.presets.PresetListAdapter;
 import com.firmino.rigkontrol.racks.Rack;
+import com.firmino.rigkontrol.racks.RackItem;
+import com.firmino.rigkontrol.racks.adapter.RackListAdapter;
 import com.firmino.rigkontrol.racks.components.Component;
 import com.firmino.rigkontrol.racks.components.Potentiometer;
 import com.firmino.rigkontrol.racks.components.PushButton;
@@ -127,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         mToolPresetName.setOnClickListener(v -> showEditPresetNameDialog());
         findViewById(R.id.Tool_Save_Preset_Button).setOnClickListener(v -> savePreset());
         mToolLiveMode.setOnClickListener(view -> setLiveMode(mToolLiveMode.isPressed()));
-        mToolAddRack.setOnClickListener(view -> addNewRack());
+        mToolAddRack.setOnClickListener(view -> showNewRackDialog());
 
         setupMidi();
         setupOptionsPanel();
@@ -138,24 +141,19 @@ public class MainActivity extends AppCompatActivity {
     private void addRack(Rack rack) {
         if (mRacks.getChildCount() < 15) {
             rack.setOnRackMidiListener((controlChange, value) -> mMidi.sendControlChange(controlChange, value));
-            rack.setOnRackDeleteButtonClickListener(() -> new ConfirmationAlert(getString(R.string.title_delete_rack), getString(R.string.message_delete_rack), this).setOnConfirmationAlertConfirm(() -> {
-                mRacks.removeView(rack);
-            }));
+            rack.setOnRackDeleteButtonClickListener(() -> new ConfirmationAlert(getString(R.string.title_delete_rack), getString(R.string.message_delete_rack), this).setOnConfirmationAlertConfirm(() -> mRacks.removeView(rack)));
             mRacks.addView(rack);
         } else {
             MessageAlert.create(this, MessageAlert.TYPE_ALERT, getString(R.string.max_number_racks_reached));
         }
     }
 
-
     private void addNewRack() {
         //TODO: Melhorar isso, fazer poder adicionar um salvo previamente
         if (mRacks.getChildCount() < 15) {
             Rack rack = new Rack(this);
             rack.setOnRackMidiListener((controlChange, value) -> mMidi.sendControlChange(controlChange, value));
-            rack.setOnRackDeleteButtonClickListener(() -> new ConfirmationAlert(getString(R.string.title_delete_rack), getString(R.string.message_delete_rack), this).setOnConfirmationAlertConfirm(() -> {
-                mRacks.removeView(rack);
-            }));
+            rack.setOnRackDeleteButtonClickListener(() -> new ConfirmationAlert(getString(R.string.title_delete_rack), getString(R.string.message_delete_rack), this).setOnConfirmationAlertConfirm(() -> mRacks.removeView(rack)));
             mRacks.addView(rack);
         } else {
             MessageAlert.create(this, MessageAlert.TYPE_ALERT, getString(R.string.max_number_racks_reached));
@@ -263,6 +261,46 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void showNewRackDialog() {
+        View alertContent = getLayoutInflater().inflate(R.layout.layout_main_dialog_newrack, findViewById(R.id.New_Rack_Main));
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setCancelable(true);
+        alert.setView(alertContent);
+        Dialog dialog = alert.show();
+        Objects.requireNonNull(dialog.getWindow()).setLayout((int) (500 * getResources().getDisplayMetrics().density), -2);
+        ListView listView = alertContent.findViewById(R.id.New_Rack_ListView);
+        KListPicker filter = alertContent.findViewById(R.id.New_Rack_Category_Filter);
+        RackListAdapter adapter = new RackListAdapter(this);
+        listView.setAdapter(adapter);
+        listView.setDivider(null);
+        listView.setDividerHeight((int) getResources().getDimension(R.dimen._4dp));
+        adapter.clear();
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Racks");
+        filter.setOnKListPikerItemSelectedListener((index, item) -> {
+            adapter.clear();
+            for (File preset : Objects.requireNonNull(dir.listFiles())) {
+                if (preset.getAbsolutePath().endsWith(".xml")) {
+                    RackItem rackFiltered = new RackItem(this);
+                    rackFiltered.setup(preset);
+                    if (rackFiltered.getCategory().equals(item) || item.equals(getResources().getStringArray(R.array.rack_categories)[0])) {
+                        rackFiltered.setOnClickListener(view -> {
+                            Rack newRack = new Rack(this);
+                            newRack.loadRack(((RackItem) view).getFile());
+                            addRack(newRack);
+                            dialog.dismiss();
+                        });
+                        adapter.addAll(rackFiltered);
+                    }
+                }
+            }
+        });
+        filter.setSelectedItem(0);
+        alertContent.findViewById(R.id.New_Rack_Add_Button).setOnClickListener(v -> {
+            addNewRack();
+            dialog.dismiss();
+        });
+    }
+
     private void showOpenPresetDialog() {
         View alertContent = getLayoutInflater().inflate(R.layout.layout_main_dialog_openpreset, findViewById(R.id.Open_Preset_Main));
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -271,6 +309,8 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(dialog.getWindow()).setLayout((int) (500 * getResources().getDisplayMetrics().density), -2);
         ListView listView = alertContent.findViewById(R.id.Open_Preset_ListView);
         PresetListAdapter adapter = new PresetListAdapter(this);
+        listView.setDivider(null);
+        listView.setDividerHeight((int) getResources().getDimension(R.dimen._2dp));
         listView.setAdapter(adapter);
         adapter.clear();
         File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "Rig Kontrol" + File.separator + "Presets");

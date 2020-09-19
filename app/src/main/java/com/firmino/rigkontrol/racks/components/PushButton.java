@@ -18,11 +18,9 @@ import com.firmino.rigkontrol.kinterface.views.KNumberPicker;
 import com.firmino.rigkontrol.kinterface.views.KTextEdit;
 import com.firmino.rigkontrol.midi.MidiKontroller;
 
-import it.beppi.knoblibrary.Knob;
-
 public class PushButton extends Component {
 
-    private Context mContext;
+    private final Context mContext;
     private ImageView mButtonImage;
     private boolean isOn = false;
     private Drawable mDrawableOn, mDrawableOff;
@@ -34,9 +32,19 @@ public class PushButton extends Component {
 
     public PushButton(@NonNull Context context, ColorStateList foregroundColor) {
         super(context, foregroundColor);
-        setType(TYPE_PUSH_BUTTON);
         mContext = context;
-        mButtonImage = new ImageView(context);
+        initButton();
+    }
+
+    public PushButton(Context context) {
+        super(context);
+        mContext = context;
+        initButton();
+    }
+
+    private void initButton() {
+        setType(TYPE_PUSH_BUTTON);
+        mButtonImage = new ImageView(mContext);
         mButtonImage.setOnClickListener(view -> performButtonClick());
         setPushButtonStyle(PUSH_BUTTON_INTERRUPTOR);
         setOnConfigButtonClickedListener(this::showConfigDialog);

@@ -1,28 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/Open_Save_Rack_Main"
+    android:id="@+id/Save_Preset_Main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_button"
     android:backgroundTint="@color/bg_dark_gray"
     android:orientation="vertical"
     android:padding="@dimen/padding">
-
-    <com.firmino.rigkontrol.kinterface.views.KTitle
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height"
-        android:layout_marginBottom="5dp"
-        app:k_icon="@drawable/ic_folder"
-        app:k_title="@string/open_rack" />
-
-    <ListView
-        android:id="@+id/Open_Save_Rack_ListView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:background="@drawable/bg_container_intern"
-        android:padding="@dimen/padding" />
 
     <com.firmino.rigkontrol.kinterface.views.KTitle
         android:layout_width="match_parent"
@@ -38,6 +23,15 @@
         android:layout_marginBottom="@dimen/margin_small"
         app:k_text_edit_text="@string/rack"
         app:k_text_edit_title="@string/file_name" />
+
+    <com.firmino.rigkontrol.kinterface.views.KListPicker
+        android:id="@+id/Open_Save_Rack_Category"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40dp"
+        android:layout_marginBottom="@dimen/margin_small"
+        app:k_list_picker_title="CATEGORY"
+        app:k_list_picker_item_list="@array/rack_categories"
+        />
 
     <com.firmino.rigkontrol.kinterface.views.KButton
         android:id="@+id/Open_Save_Rack_Button_OK"

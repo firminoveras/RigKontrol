@@ -65,7 +65,7 @@ public class KNumberPicker extends LinearLayout {
 
         titleText = new TextView(context);
         LayoutParams layTitleText = new LayoutParams((int) getResources().getDimension(R.dimen._0dp), LayoutParams.MATCH_PARENT, 3);
-        ((MarginLayoutParams) layTitleText).rightMargin = (int) getResources().getDimension(R.dimen._2dp);
+        layTitleText.rightMargin = (int) getResources().getDimension(R.dimen._2dp);
         titleText.setLayoutParams(layTitleText);
         titleText.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_left_borderless, null));
         titleText.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.dark_foreground, null)));

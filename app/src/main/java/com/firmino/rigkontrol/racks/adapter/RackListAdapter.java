@@ -10,36 +10,33 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 
 import com.firmino.rigkontrol.R;
-import com.firmino.rigkontrol.racks.Rack;
+import com.firmino.rigkontrol.racks.RackItem;
 
 
-public class RackListAdapter extends ArrayAdapter<Rack> {
+public class RackListAdapter extends ArrayAdapter<RackItem> {
 
     public RackListAdapter(@NonNull Context context) {
-        super(context, R.layout.layout_listview);
+        super(context, R.layout.layout_main_dialog_openrack_item);
     }
 
-    public static class ViewHolder {
-        LinearLayout container;
+    private static class ViewHolder {
+        LinearLayout layout;
     }
 
     @NonNull
     @Override
     public View getView(int position, View view, @NonNull ViewGroup parent) {
-        final ViewHolder holder;
+        final RackListAdapter.ViewHolder holder;
         if (view == null) {
-            holder = new ViewHolder();
+            holder = new RackListAdapter.ViewHolder();
             view = LayoutInflater.from(getContext()).inflate(R.layout.layout_listview, parent, false);
-            holder.container = view.findViewById(R.id.ListView_Item);
+            holder.layout = view.findViewById(R.id.ListView_Item);
             view.setTag(holder);
         }else{
-            holder = (ViewHolder) view.getTag();
+            holder = (RackListAdapter.ViewHolder) view.getTag();
         }
-        holder.container.removeAllViews();
-        holder.container.addView(getItem(position));
+        holder.layout.removeAllViews();
+        holder.layout.addView(getItem(position));
         return view;
     }
-
-
-
 }

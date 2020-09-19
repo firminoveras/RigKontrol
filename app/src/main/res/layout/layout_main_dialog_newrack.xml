@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/New_Rack_Main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_button"
+    android:backgroundTint="@color/bg_dark_gray"
+    android:orientation="vertical"
+    android:padding="@dimen/padding">
+
+    <com.firmino.rigkontrol.kinterface.views.KTitle
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height"
+        android:layout_marginBottom="@dimen/margin_small"
+        app:k_icon="@drawable/ic_add_simple_black"
+        app:k_title="@string/add_rack" />
+
+    <com.firmino.rigkontrol.kinterface.views.KButton
+        android:id="@+id/New_Rack_Add_Button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:text="@string/new_empty_rack" />
+
+    <com.firmino.rigkontrol.kinterface.views.KListPicker
+        android:id="@+id/New_Rack_Category_Filter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40dp"
+        android:layout_marginBottom="@dimen/margin_small"
+        app:k_list_picker_item_list="@array/rack_categories"
+        app:k_list_picker_title="CATEGORY FILTER" />
+
+    <ListView
+        android:id="@+id/New_Rack_ListView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/bg_rack"
+        android:backgroundTint="@color/bg_black"
+        android:padding="@dimen/padding"
+        android:scrollbars="none" />
+</LinearLayout>

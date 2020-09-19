@@ -21,4 +21,23 @@
         <item>Led</item>
         <item>Metal</item>
     </string-array>
+
+    <string-array name="rack_categories">
+        <item>Generic/All</item>
+        <item>Amplifies</item>
+        <item>Cabinets</item>
+        <item>Delay/Echo</item>
+        <item>Distortion</item>
+        <item>Dynamics</item>
+        <item>EQ</item>
+        <item>Filters</item>
+        <item>Modifier</item>
+        <item>Modulation</item>
+        <item>Pitch</item>
+        <item>Reverb</item>
+        <item>Special FX</item>
+        <item>Tools</item>
+        <item>Legacy</item>
+    </string-array>
+
 </resources>
