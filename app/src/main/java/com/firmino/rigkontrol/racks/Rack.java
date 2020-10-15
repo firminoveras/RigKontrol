@@ -36,6 +36,7 @@ import com.firmino.rigkontrol.racks.adapter.RackListAdapter;
 import com.firmino.rigkontrol.racks.components.Component;
 import com.firmino.rigkontrol.racks.components.Potentiometer;
 import com.firmino.rigkontrol.racks.components.PushButton;
+import com.firmino.rigkontrol.racks.components.Slider;
 import com.firmino.rigkontrol.racks.frags.ConfigFragmentAdapter;
 import com.firmino.rigkontrol.racks.frags.FragmentAddConfig;
 import com.firmino.rigkontrol.racks.frags.FragmentColorsConfig;
@@ -142,6 +143,7 @@ public class Rack extends RelativeLayout {
         mFragAdd.setOnAddBackButtonClickListener(() -> mConfigPager.setCurrentItem(0, true));
         mFragAdd.setOnAddPotButtonClickListener(() -> addNewComponent(new Potentiometer(mContext, mForegroundColor)));
         mFragAdd.setOnAddButtonButtonClickListener(() -> addNewComponent(new PushButton(mContext, mForegroundColor)));
+        mFragAdd.setOnAddSliderButtonClickListener(() -> addNewComponent(new Slider(mContext, mForegroundColor)));
 
         mPowerButton.setToggle(true);
         mPowerButton.setOnRackButtonClicked((isOn) -> onRackMidiListener.onRackOnListener(mControlChange, MidiKontroller.toMidiSignal(isOn)));
@@ -369,7 +371,6 @@ public class Rack extends RelativeLayout {
                         newPot.setTitle(tag.getAttributeValue(null, "title"));
                         newPot.setKnobStyle(null, Integer.parseInt(tag.getAttributeValue(null, "knob_style")));
                         newPot.setMarkersStyle(null, Integer.parseInt(tag.getAttributeValue(null, "markers_style")));
-                        newPot.setConfigModeEnabled(isConfigModeOn);
                         addNewComponent(newPot);
                     }
                     if (tag.getName().toLowerCase().startsWith("push_button")) {
@@ -377,7 +378,6 @@ public class Rack extends RelativeLayout {
                         newPushButton.setControlChange(Integer.parseInt(tag.getAttributeValue(null, "cc")));
                         newPushButton.setTitle(tag.getAttributeValue(null, "title"));
                         newPushButton.setPushButtonStyle(Integer.parseInt(tag.getAttributeValue(null, "button_style")));
-                        newPushButton.setConfigModeEnabled(isConfigModeOn);
                         addNewComponent(newPushButton);
                     }
                     //TODO: fazer essa parte do slide
@@ -401,6 +401,7 @@ public class Rack extends RelativeLayout {
     public void addNewComponent(Component component) {
         if (mComponentsLayout.getChildCount() < 10) {
             component.setOnComponentMidiControlChangeListener((cc, value) -> onRackMidiListener.onRackOnListener(cc, value));
+            component.setConfigModeEnabled(isConfigModeOn);
             mComponentsLayout.addView(component);
         }
     }

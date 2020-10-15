@@ -4,7 +4,7 @@
     android:id="@+id/OpenRack_Main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_button_unicolor"
+    android:background="@drawable/bg_rack"
     android:baselineAligned="false"
     android:orientation="vertical"
     android:padding="5dp">
@@ -13,18 +13,18 @@
         android:id="@+id/OpenRack_Background"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginBottom="@dimen/margin_small"
         android:background="@drawable/bg_rack"
         android:backgroundTint="@color/foreground"
         android:baselineAligned="false"
+        android:elevation="@dimen/_4dp"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="@dimen/padding">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_weight="3"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -67,7 +67,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@drawable/bg_rack"
+        android:layout_marginStart="@dimen/_5dp"
+        android:layout_marginEnd="@dimen/_5dp"
+        android:background="@drawable/bg_component_buttons_outline"
         android:backgroundTint="@color/bg_black"
         android:orientation="horizontal"
         android:padding="4dp">

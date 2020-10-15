@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.jaygoo.widget.RangeSeekBar
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+        app:rsb_max="127"
+        app:rsb_min="0"
+
+        app:rsb_gravity="center"
+
+        app:rsb_mode="single"
+
+        app:rsb_thumb_drawable="@drawable/bg_button"
+
+        app:rsb_progress_drawable_default="@drawable/bg_dialog"
+        app:rsb_progress_height="40dp"
+
+
+
+
+
+        />
+
+</FrameLayout>

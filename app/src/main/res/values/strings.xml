@@ -99,4 +99,5 @@
     <string name="max_number_racks_reached">Maximum number of Racks reached.</string>
     <string name="add_rack">ADD RACK</string>
     <string name="new_empty_rack">NEW EMPTY RACK</string>
+    <string name="new_slider">NEW SLIDER</string>
 </resources>

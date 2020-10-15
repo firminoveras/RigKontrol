@@ -34,6 +34,7 @@ public class Component extends FrameLayout {
     private OnColorChangeListener onColorChangeListener = (color) -> {};
     private int mControlChange = 0;
     private int mType = -1;
+    private boolean isConfigModeEnabled = false;
 
     public Component(@NonNull Context context) {
         super(context);
@@ -71,15 +72,17 @@ public class Component extends FrameLayout {
         onColorChangeListener.onColorChangeListener(mForegroundColor);
     }
 
-    public void setConfigModeEnabled(boolean enabled) {
-        mConfigLayout.setEnabled(enabled);
-        mConfigButton.setEnabled(enabled);
-        mRemoveButton.setEnabled(enabled);
-        ValueAnimator anim = ValueAnimator.ofFloat(enabled ? 0 : .8f, enabled ? .8f : 0);
-        anim.addUpdateListener(valueAnimator -> mConfigLayout.setAlpha((Float) valueAnimator.getAnimatedValue()));
-        anim.setDuration(300);
-        anim.start();
-
+    public void setConfigModeEnabled(boolean configModeEnabled) {
+        if (configModeEnabled != isConfigModeEnabled) {
+            isConfigModeEnabled = configModeEnabled;
+            mConfigLayout.setEnabled(configModeEnabled);
+            mConfigButton.setEnabled(configModeEnabled);
+            mRemoveButton.setEnabled(configModeEnabled);
+            ValueAnimator anim = ValueAnimator.ofFloat(configModeEnabled ? 0 : .8f, configModeEnabled ? .8f : 0);
+            anim.addUpdateListener(valueAnimator -> mConfigLayout.setAlpha((Float) valueAnimator.getAnimatedValue()));
+            anim.setDuration(300);
+            anim.start();
+        }
     }
 
     public void setComponentValue(int value) {
@@ -90,6 +93,7 @@ public class Component extends FrameLayout {
 
     public void setTitle(String title) {
         mTitle.setText(title.trim().toUpperCase());
+        mTitle.setVisibility(title.length() == 0 ? GONE : VISIBLE);
     }
 
     public String getTitle() {

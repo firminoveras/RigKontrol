@@ -137,6 +137,11 @@ public class MainActivity extends AppCompatActivity {
         loadPreferences();
     }
 
+    @Override
+    public void onBackPressed() {
+        showExitAppDialog();
+    }
+
 
     private void addRack(Rack rack) {
         if (mRacks.getChildCount() < 15) {
@@ -163,11 +168,6 @@ public class MainActivity extends AppCompatActivity {
     private void setLiveMode(boolean pressed) {
         mKontroller.setVisibility(pressed ? View.VISIBLE : View.GONE);
         mRacks.setVisibility(pressed ? View.GONE : View.VISIBLE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        showExitAppDialog();
     }
 
     private void setupMidi() {
@@ -547,7 +547,6 @@ public class MainActivity extends AppCompatActivity {
                                     newPot.setTitle(tag.getAttributeValue(null, "title"));
                                     newPot.setKnobStyle(null, Integer.parseInt(tag.getAttributeValue(null, "knob_style")));
                                     newPot.setMarkersStyle(null, Integer.parseInt(tag.getAttributeValue(null, "markers_style")));
-                                    newPot.setConfigModeEnabled(false);
                                     newRack.addNewComponent(newPot);
                                 }
                                 if (tag.getName() != null && tag.getName().toLowerCase().startsWith("push_button")) {
@@ -555,7 +554,6 @@ public class MainActivity extends AppCompatActivity {
                                     newPushButton.setControlChange(Integer.parseInt(tag.getAttributeValue(null, "cc")));
                                     newPushButton.setTitle(tag.getAttributeValue(null, "title"));
                                     newPushButton.setPushButtonStyle(Integer.parseInt(tag.getAttributeValue(null, "button_style")));
-                                    newPushButton.setConfigModeEnabled(false);
                                     newRack.addNewComponent(newPushButton);
                                 }
                             } else if (tag.getEventType() == XmlPullParser.END_TAG && tag.getName() != null && tag.getName().toLowerCase().equals("rack")) break;

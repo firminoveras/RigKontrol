@@ -75,7 +75,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_rack_square_button"
         android:fontFamily="sans-serif-condensed"
-        android:text="@string/new_potentiometer"
+        android:text="@string/new_slider"
         android:textColor="#FFFFFF"
         android:gravity="center"
         android:drawableStart="@drawable/ic_add_slider"

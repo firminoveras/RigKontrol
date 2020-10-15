@@ -29,7 +29,7 @@
     <RelativeLayout
         android:id="@+id/Component_Config_Layout"
         android:layout_width="match_parent"
-        android:alpha=".8"
+        android:alpha="0"
         android:layout_height="match_parent"
         android:background="@drawable/bg_component_outline"
         android:orientation="vertical">
