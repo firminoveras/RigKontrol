@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Rig Kontrol</string>
-    <string name="salvar">SAVE</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="zero">0</string>

@@ -27,7 +27,7 @@
         android:gravity="center"
         android:importantForAutofill="no"
         android:padding="8dp"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:textSize="14sp" />
 
 
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/bg_dialog"
-        android:backgroundTint="@color/bg_black"
+        android:backgroundTint="@android:color/black"
         android:orientation="horizontal"
         android:padding="2dp">
 
@@ -48,7 +48,7 @@
             android:background="@drawable/bg_button_left_borderless"
             android:fontFamily="sans-serif-black"
             android:text="@string/cancel"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="ButtonStyle" />
 
@@ -60,7 +60,7 @@
             android:background="@drawable/bg_button_right_borderless"
             android:fontFamily="sans-serif-black"
             android:text="@string/confirm"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="14sp"
             tools:ignore="ButtonStyle" />
 

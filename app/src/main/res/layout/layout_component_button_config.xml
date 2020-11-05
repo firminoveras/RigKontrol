@@ -5,8 +5,7 @@
     android:id="@+id/PushButton_Config_Root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_rack"
-    android:backgroundTint="@color/bg_gray"
+    android:background="@color/background_dialog"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -65,6 +64,7 @@
         android:id="@+id/PushButton_Config_Apply_Button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        app:k_color_scheme="light"
         android:text="@string/apply" />
 
 </LinearLayout>

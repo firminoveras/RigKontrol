@@ -19,13 +19,18 @@
         <attr name="k_statebutton_text_off" format="string" />
     </declare-styleable>
 
-    <declare-styleable name="KImageButton">
+   <declare-styleable name="KButton">
         <attr name="k_is_toggled" format="boolean" />
         <attr name="k_align" format="enum">
             <enum name="normal" value="0" />
             <enum name="rigth" value="1" />
             <enum name="left" value="2" />
             <enum name="none" value="3" />
+        </attr><attr name="k_color_scheme" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="orange" value="1" />
+            <enum name="light" value="2" />
+            <enum name="no_background" value="3" />
         </attr>
     </declare-styleable>
 

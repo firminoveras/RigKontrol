@@ -49,7 +49,7 @@ public class KNumberPicker extends LinearLayout {
         changeTextSizeRunnable = () -> numberText.setTextSize(12);
 
         setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_dialog, null));
-        setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.bg_black, null)));
+        setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), android.R.color.black, null)));
         setOrientation(HORIZONTAL);
         int innerPadding = (int) getResources().getDimension(R.dimen._2dp);
         setPadding(innerPadding, innerPadding, innerPadding, innerPadding);
@@ -60,7 +60,7 @@ public class KNumberPicker extends LinearLayout {
         numberText.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         numberText.setGravity(Gravity.CENTER);
         numberText.setText(R.string.zero);
-        numberText.setTextColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
+        numberText.setTextColor(ResourcesCompat.getColor(getResources(), android.R.color.white, null));
         numberText.setTextSize(12);
 
         titleText = new TextView(context);
@@ -71,7 +71,7 @@ public class KNumberPicker extends LinearLayout {
         titleText.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.dark_foreground, null)));
         titleText.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         titleText.setGravity(Gravity.CENTER);
-        titleText.setTextColor(ResourcesCompat.getColor(getResources(), R.color.light_foreground, null));
+        titleText.setTextColor(ResourcesCompat.getColor(getResources(), R.color.foreground, null));
         titleText.setTextSize(12);
         titleText.setText(R.string.NUMBER);
 

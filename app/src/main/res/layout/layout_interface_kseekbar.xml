@@ -2,26 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_toolbar_item"
-    android:backgroundTint="#303030"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:gravity="center">
 
     <TextView
         android:id="@+id/K_Seek_Name"
         android:layout_width="0dp"
-        android:layout_weight=".3"
+        android:layout_weight=".5"
         android:layout_height="match_parent"
-        android:layout_marginStart="4dp"
         android:fontFamily="sans-serif-condensed-medium"
-        android:textAlignment="center"
-        android:gravity="center"
+        android:textAlignment="textEnd"
+        android:gravity="end|center_vertical"
+        android:paddingEnd="2dp"
+        android:paddingStart="0dp"
         android:text="@string/in"
-        android:textColor="#FFFFFF"
+        android:textColor="@android:color/white"
         android:textSize="12sp"
         android:maxLines="1"
         android:typeface="monospace" />
 
+    <com.jaygoo.widget.RangeSeekBar
+        android:id="@+id/K_Seek_Seekbar"
+        android:layout_width="0dp"
+        android:layout_weight="1.5"
+        android:layout_height="match_parent"
+        app:rsb_gravity="center"
+        app:rsb_mode="single"
+        app:rsb_thumb_drawable="@drawable/ic_seekbar_thumb"
+        app:rsb_thumb_width="10dp"
+        app:rsb_thumb_height="30dp"
+        app:rsb_progress_drawable_default="@drawable/bg_seekbar_off"
+        app:rsb_progress_drawable="@drawable/bg_seekbar_on"
+        app:rsb_progress_height="30dp"
+        app:rsb_indicator_height="0dp"
+        />
+    <!--
     <SeekBar
         android:id="@+id/K_Seek_Seekbar"
         android:layout_width="0dp"
@@ -34,7 +50,7 @@
         android:paddingEnd="4dp"
         android:progress="0"
         android:progressDrawable="@drawable/bg_seek_progress"
-        android:thumb="@drawable/ic_seek_indicator"
-        android:thumbOffset="0dp"/>
+        android:thumb="@drawable/ic_seekbar_thumb"
+        android:thumbOffset="0dp"/>-->
 
 </LinearLayout>

@@ -36,7 +36,7 @@
             app:kMaxAngle="130"
             app:kMinAngle="-130"
             app:kNumberOfStates="130"
-            app:kSelectedStateMarkerColor="@color/bg_black"
+            app:kSelectedStateMarkerColor="@android:color/black"
             app:kStateMarkersColor="@android:color/transparent"
             android:layout_gravity="center"
             android:foregroundGravity="bottom"

@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="300dp"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_options_layout"
+    android:background="@color/background"
     android:overScrollMode="always"
     android:paddingStart="10dp"
     android:paddingEnd="15dp"
     android:scrollbars="none">
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,7 +66,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/bg_dialog"
-            android:backgroundTint="@color/bg_black"
+            android:backgroundTint="@android:color/black"
             android:orientation="horizontal"
             android:padding="2dp">
 
@@ -81,7 +80,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:gravity="center"
                 android:text="@string/pedal_sensivity"
-                android:textColor="@color/light_foreground"
+                android:textColor="@color/foreground"
                 android:textSize="12sp" />
 
             <SeekBar
@@ -92,11 +91,10 @@
                 android:max="200"
                 android:progress="100"
                 android:progressBackgroundTint="@color/disabled_foreground"
-                android:progressTint="@color/light_foreground" />
+                android:progressTint="@color/foreground" />
         </LinearLayout>
 
     </LinearLayout>
-
 
 </ScrollView>
 

@@ -1,9 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/bg_dark_gray</item>
-        <item name="colorPrimaryDark">@color/bg_light_gray</item>
-        <item name="colorAccent">@color/light_foreground</item>
+        <item name="colorPrimary">@color/background_dark</item>
+        <item name="colorPrimaryDark">@color/background</item>
+        <item name="colorAccent">@color/foreground</item>
         <item name="android:windowFullscreen">true</item>
     </style>
 

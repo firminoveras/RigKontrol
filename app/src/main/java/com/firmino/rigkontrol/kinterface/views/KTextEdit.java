@@ -40,7 +40,7 @@ public class KTextEdit extends LinearLayout {
 
     private void init() {
         setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_dialog, null));
-        setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.bg_black, null)));
+        setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), android.R.color.black, null)));
         setOrientation(HORIZONTAL);
         int innerPadding = (int) getResources().getDimension(R.dimen._2dp);
         setPadding(innerPadding, innerPadding, innerPadding, innerPadding);
@@ -53,7 +53,7 @@ public class KTextEdit extends LinearLayout {
         titleText.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), R.color.dark_foreground, null)));
         titleText.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         titleText.setGravity(Gravity.CENTER);
-        titleText.setTextColor(ResourcesCompat.getColor(getResources(), R.color.light_foreground, null));
+        titleText.setTextColor(ResourcesCompat.getColor(getResources(), R.color.foreground, null));
         titleText.setTextSize(12);
         titleText.setText(R.string.name);
         titleText.setAllCaps(true);
@@ -63,7 +63,7 @@ public class KTextEdit extends LinearLayout {
         textEdit.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_right_borderless_pressed, null));
         textEdit.setTypeface(Typeface.create("sans-serif-condensed", Typeface.ITALIC));
         textEdit.setGravity(Gravity.CENTER);
-        textEdit.setTextColor(ResourcesCompat.getColor(getResources(), R.color.bg_black, null));
+        textEdit.setTextColor(ResourcesCompat.getColor(getResources(), android.R.color.black, null));
         textEdit.setTextSize(12);
         textEdit.setText(R.string.component);
         textEdit.setMaxLines(1);

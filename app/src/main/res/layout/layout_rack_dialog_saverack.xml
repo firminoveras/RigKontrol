@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_button"
-    android:backgroundTint="@color/bg_dark_gray"
+    android:backgroundTint="@color/background_dark"
     android:orientation="vertical"
     android:padding="@dimen/padding">
 

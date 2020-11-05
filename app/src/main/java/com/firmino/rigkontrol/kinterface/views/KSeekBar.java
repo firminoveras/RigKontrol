@@ -2,20 +2,20 @@ package com.firmino.rigkontrol.kinterface.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.firmino.rigkontrol.R;
+import com.jaygoo.widget.OnRangeChangedListener;
+import com.jaygoo.widget.RangeSeekBar;
 
 public class KSeekBar extends LinearLayout {
 
-    private TextView mDescription;
-    private SeekBar mSeekBar;
-    private int mControlNumber;
-    private OnKSeekBarValueChangeListener mChangeValueListener;
+    TextView mDescription;
+    RangeSeekBar mSeekBar;
+    int mControlNumber;
+    OnKSeekBarValueChangeListener mChangeValueListener;
 
     public KSeekBar(Context context) {
         super(context);
@@ -37,26 +37,26 @@ public class KSeekBar extends LinearLayout {
         ta.recycle();
     }
 
-    private void init() {
+    void init() {
         inflate(this.getContext(), R.layout.layout_interface_kseekbar, this);
         mDescription = findViewById(R.id.K_Seek_Name);
         mSeekBar = findViewById(R.id.K_Seek_Seekbar);
         mChangeValueListener = (seekBar, value, c) -> {
         };
 
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mSeekBar.setOnRangeChangedListener(new OnRangeChangedListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mChangeValueListener.onKSeekBarValueChangeListener(KSeekBar.this, progress, mControlNumber);
+            public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
+                mChangeValueListener.onKSeekBarValueChangeListener(KSeekBar.this, (int) leftValue, mControlNumber);
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onStartTrackingTouch(RangeSeekBar view, boolean isLeft) {
 
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onStopTrackingTouch(RangeSeekBar view, boolean isLeft) {
 
             }
         });
@@ -64,8 +64,7 @@ public class KSeekBar extends LinearLayout {
 
     public void kontrollerSetup(String description, int controlNumber, int min, int max, int progress) {
         mDescription.setText(description);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) mSeekBar.setMin(min);
-        mSeekBar.setMax(max);
+        mSeekBar.setRange(min,max);
         mSeekBar.setProgress(progress);
         mControlNumber = controlNumber;
     }
@@ -75,7 +74,7 @@ public class KSeekBar extends LinearLayout {
     }
 
     public int getValue() {
-        return mSeekBar.getProgress();
+        return mSeekBar.getProgressLeft();
     }
 
     public void setOnKSeekBarValueChangeListener(OnKSeekBarValueChangeListener l) {

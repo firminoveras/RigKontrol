@@ -34,7 +34,7 @@ public class KRoundImageButton extends androidx.appcompat.widget.AppCompatImageB
     public boolean performClick() {
         isOn = !isOn;
         onClicked.onKRoundButtonClickedListener(isOn);
-        setImageTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), isOn ? R.color.light_foreground : android.R.color.white, null)));
+        setImageTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(), isOn ? R.color.foreground : android.R.color.white, null)));
         return super.performClick();
     }
 

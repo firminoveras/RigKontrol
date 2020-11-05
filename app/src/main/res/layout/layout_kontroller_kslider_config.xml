@@ -21,7 +21,7 @@
         android:maxLines="1"
         android:padding="8dp"
         android:text="@string/kontrol"
-        android:textColor="@color/bg_black"
+        android:textColor="@android:color/black"
         tools:ignore="LabelFor" />
 
     <com.firmino.rigkontrol.kinterface.views.KNumberPicker

@@ -19,7 +19,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/bg_dialog"
-        android:backgroundTint="@color/bg_black"
+        android:backgroundTint="@android:color/black"
         android:orientation="horizontal"
         android:padding="2dp">
 
@@ -33,7 +33,7 @@
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
             android:text="@string/usb_status"
-            android:textColor="@color/light_foreground"
+            android:textColor="@color/foreground"
             android:textSize="12sp" />
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="12sp" />
 
     </LinearLayout>

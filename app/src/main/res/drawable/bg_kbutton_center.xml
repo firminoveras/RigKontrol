@@ -2,12 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-
-            <gradient
-                android:angle="270"
-                android:startColor="#5A5A5A"
-                android:endColor="#414141" />
-
+            <solid
+                android:color="@color/background_bt_off"/>
         </shape>
     </item>
 </layer-list>

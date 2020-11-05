@@ -60,7 +60,7 @@
             android:padding="15dp"
             android:src="@drawable/ic_config"
             android:visibility="gone"
-            app:tint="@color/light_foreground"
+            app:tint="@color/foreground"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="monospace"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="12sp" />
 
     </LinearLayout>

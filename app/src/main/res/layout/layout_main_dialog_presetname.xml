@@ -28,7 +28,7 @@
         android:maxLength="24"
         android:maxLines="1"
         android:padding="8dp"
-        android:textColor="@color/bg_black"
+        android:textColor="@android:color/black"
         tools:ignore="LabelFor" />
 
     <com.firmino.rigkontrol.kinterface.views.KButton

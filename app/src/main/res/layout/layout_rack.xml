@@ -1,176 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_rack"
-    android:orientation="vertical"
-    android:layout_marginBottom="@dimen/_4dp">
+    android:layout_marginBottom="@dimen/_4dp"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/Rack_Background"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/bg_rack_inner_back">
+        android:layout_weight="1"
+        android:background="#C5C5C5"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_rack_inner_front"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/Rack_InnerLayout"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_100dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="40dp"
-                android:layout_marginBottom="10dp"
-                android:paddingTop="@dimen/_6dp"
-                android:paddingBottom="@dimen/_6dp"
-                android:paddingStart="@dimen/_20dp"
-                android:paddingEnd="@dimen/_6dp"
-                android:background="@drawable/bg_interior_border"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="0dp"
+                android:paddingBottom="10dp">
 
-                <RelativeLayout
-                    android:layout_width="200dp"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/Rack_Little_Title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:fontFamily="sans-serif-condensed-medium"
-                        android:gravity="bottom"
-                        android:text="@string/new_rack"
-                        android:textAllCaps="true"
-                        android:textColor="#232323"
-                        android:textSize="16sp"
-                        android:typeface="monospace" />
-
-                    <TextView
-                        android:id="@+id/Rack_Big_Title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/Rack_Little_Title"
-                        android:fontFamily="sans-serif-black"
-                        android:gravity="top"
-                        android:text="@string/rack"
-                        android:textAllCaps="true"
-                        android:textColor="#232323"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:typeface="monospace" />
-
-                    <FrameLayout
-                        android:id="@+id/Rack_Save_Load_Layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/bg_rack_load"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/Rack_Save_Layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="10dp"
-                            android:gravity="center_vertical"
-                            android:layout_marginEnd="26dp"
-                            android:text="@string/init"
-                            android:textColor="@color/foreground" />
-
-                        <ImageView
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="end"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginEnd="25dp"
-                            android:layout_marginBottom="2dp"
-                            android:src="@drawable/bg_rack_separator"
-                            tools:ignore="ContentDescription" />
-
-                        <ImageView
-                            android:id="@+id/Rack_Load_Layout"
-                            android:layout_width="25dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="end"
-                            android:src="@drawable/ic_arrow_down"
-                            tools:ignore="ContentDescription" />
-                    </FrameLayout>
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:gravity="center"
-                    android:id="@+id/Rack_Container_Layout"
+                <TextView
+                    android:id="@+id/Rack_Little_Title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:gravity="bottom"
+                    android:text="@string/new_rack"
+                    android:textAllCaps="true"
+                    android:textColor="#232323"
+                    android:textSize="16sp"
+                    android:typeface="monospace" />
 
+                <TextView
+                    android:id="@+id/Rack_Big_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="top"
+                    android:text="@string/rack"
+                    android:textAllCaps="true"
+                    android:textColor="#232323"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:typeface="monospace" />
+
+                <FrameLayout
+                    android:id="@+id/Rack_Save_Load_Layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_rack_load"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/Rack_Save_Layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="26dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/init"
+                        android:textColor="@color/foreground" />
+
+                    <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginBottom="2dp"
+                        android:src="@drawable/bg_rack_separator"
+                        tools:ignore="ContentDescription" />
+
+                    <ImageView
+                        android:id="@+id/Rack_Load_Layout"
+                        android:layout_width="25dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:src="@drawable/ic_arrow_down"
+                        tools:ignore="ContentDescription" />
+                </FrameLayout>
             </LinearLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/Rack_Config_Pager"
+            <LinearLayout
+                android:id="@+id/Rack_Container_Layout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginEnd="50dp"
-                android:background="@drawable/bg_rack_config"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingStart="15dp"
-                android:paddingTop="15dp"
-                android:paddingEnd="15dp"
-                android:paddingBottom="25dp"/>
-
+                android:orientation="horizontal" />
         </LinearLayout>
 
-    </FrameLayout>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/Rack_Config_Pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#55000000"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/_10dp" />
 
-    <LinearLayout
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <com.firmino.rigkontrol.kinterface.views.KRoundImageButton
-            android:id="@+id/Rack_OnButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_rack_button"
-            android:src="@drawable/ic_rack_power"
-            tools:ignore="ContentDescription" />
-
-        <com.firmino.rigkontrol.kinterface.views.KRoundImageButton
-            android:id="@+id/Rack_MinimizeButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/bg_rack_button"
-            android:src="@drawable/ic_rack_minimize"
-            tools:ignore="ContentDescription" />
-
-        <com.firmino.rigkontrol.kinterface.views.KRoundImageButton
-            android:id="@+id/Rack_ConfigButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/bg_rack_button"
-            android:src="@drawable/ic_rack_config"
-            tools:ignore="ContentDescription" />
     </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="35dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="2dp"
+        android:background="@color/background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <com.firmino.rigkontrol.kinterface.views.KImageButton
+            android:id="@+id/Rack_OnButton"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_rack_power"
+            app:k_color_scheme="no_background"
+            app:k_is_toggled="true" />
+
+        <com.firmino.rigkontrol.kinterface.views.KImageButton
+            android:id="@+id/Rack_MinimizeButton"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_rack_minimize"
+            app:k_color_scheme="no_background"
+            app:k_is_toggled="false" />
+
+        <com.firmino.rigkontrol.kinterface.views.KImageButton
+            android:id="@+id/Rack_ConfigButton"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_rack_config"
+            app:k_color_scheme="no_background"
+            app:k_is_toggled="true" />
+    </LinearLayout>
+
+</LinearLayout>

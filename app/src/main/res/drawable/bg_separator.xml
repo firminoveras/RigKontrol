@@ -16,7 +16,7 @@
         <shape
             android:shape="oval"
             android:useLevel="false">
-            <solid android:color="@color/bg_black" />
+            <solid android:color="@android:color/black" />
         </shape>
     </item>
     <item
@@ -26,7 +26,7 @@
         <shape
             android:shape="oval"
             android:useLevel="false">
-            <solid android:color="@color/bg_black" />
+            <solid android:color="@android:color/black" />
         </shape>
     </item>
 </layer-list>

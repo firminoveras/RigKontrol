@@ -64,7 +64,7 @@
             android:layout_height="match_parent"
             android:padding="15dp"
             android:src="@drawable/ic_config"
-            app:tint="@color/light_foreground"
+            app:tint="@color/foreground"
             android:visibility="gone"
             tools:ignore="ContentDescription" />
 
@@ -75,7 +75,7 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="monospace"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="12sp" />
     </LinearLayout>
 

@@ -28,8 +28,8 @@ import com.firmino.rigkontrol.R;
 import com.firmino.rigkontrol.kinterface.alerts.ConfirmationAlert;
 import com.firmino.rigkontrol.kinterface.alerts.MessageAlert;
 import com.firmino.rigkontrol.kinterface.views.KButton;
+import com.firmino.rigkontrol.kinterface.views.KImageButton;
 import com.firmino.rigkontrol.kinterface.views.KListPicker;
-import com.firmino.rigkontrol.kinterface.views.KRoundImageButton;
 import com.firmino.rigkontrol.kinterface.views.KTextEdit;
 import com.firmino.rigkontrol.midi.MidiKontroller;
 import com.firmino.rigkontrol.racks.adapter.RackListAdapter;
@@ -61,7 +61,7 @@ import java.util.Objects;
 public class Rack extends RelativeLayout {
 
     private final Context mContext;
-    private KRoundImageButton mPowerButton, mMinimizeButton, mConfigButton;
+    private KImageButton mPowerButton, mMinimizeButton, mConfigButton;
     private LinearLayout mComponentsLayout;
     private ViewPager2 mConfigPager;
     private ConfigFragmentAdapter mConfigFragAdapter;
@@ -145,16 +145,13 @@ public class Rack extends RelativeLayout {
         mFragAdd.setOnAddButtonButtonClickListener(() -> addNewComponent(new PushButton(mContext, mForegroundColor)));
         mFragAdd.setOnAddSliderButtonClickListener(() -> addNewComponent(new Slider(mContext, mForegroundColor)));
 
-        mPowerButton.setToggle(true);
-        mPowerButton.setOnRackButtonClicked((isOn) -> onRackMidiListener.onRackOnListener(mControlChange, MidiKontroller.toMidiSignal(isOn)));
+        mPowerButton.setOnKImageButtonListener((isOn) -> onRackMidiListener.onRackOnListener(mControlChange, MidiKontroller.toMidiSignal(isOn)));
 
-        mMinimizeButton.setToggle(false);
-        mMinimizeButton.setOnRackButtonClicked((isOn) -> {
+        mMinimizeButton.setOnKImageButtonListener((isOn) -> {
             if (isOn) setMinimizedMode(!isMinimized);
         });
 
-        mConfigButton.setToggle(true);
-        mConfigButton.setOnRackButtonClicked(this::setConfigModeEnabled);
+        mConfigButton.setOnKImageButtonListener(this::setConfigModeEnabled);
 
         mSaveButton.setOnClickListener(view -> showSaveRackDialog());
         mLoadButton.setOnClickListener(v -> showLoadRackDialog());
@@ -165,11 +162,12 @@ public class Rack extends RelativeLayout {
 
     public void setConfigModeEnabled(boolean enabled) {
         isConfigModeOn = enabled;
+        if(mConfigButton.isOn() != isConfigModeOn)mConfigButton.setOn(enabled);
         if (isConfigModeOn) mConfigPager.setVisibility(VISIBLE);
         for (int index = 0; index < mComponentsLayout.getChildCount(); index++) {
             ((Component) mComponentsLayout.getChildAt(index)).setConfigModeEnabled(isConfigModeOn);
         }
-        int maxH = (int) (getResources().getDimension(R.dimen._80dp));
+        int maxH = (int) (getResources().getDimension(R.dimen._60dp));
         ValueAnimator anim = ValueAnimator.ofInt(enabled ? 0 : maxH, enabled ? maxH : 0);
         anim.addUpdateListener(valueAnimator -> {
             ViewGroup.LayoutParams lay = mConfigPager.getLayoutParams();
@@ -196,6 +194,7 @@ public class Rack extends RelativeLayout {
 
 
     public void setMinimizedMode(boolean enabled) {
+        setConfigModeEnabled(false);
         if (isMinimized != enabled) {
             isMinimized = enabled;
             mMinimizeButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), enabled ? R.drawable.ic_rack_maximize : R.drawable.ic_rack_minimize, null));
@@ -203,9 +202,6 @@ public class Rack extends RelativeLayout {
             mSaveLoadLayout.setVisibility(enabled ? View.GONE : View.VISIBLE);
             mComponentsLayout.setVisibility(enabled ? View.GONE : View.VISIBLE);
             mConfigButton.setVisibility(enabled ? View.GONE : View.VISIBLE);
-            ViewGroup.LayoutParams lay = findViewById(R.id.Rack_InnerLayout).getLayoutParams();
-            lay.height = enabled ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) getResources().getDimension(R.dimen._100dp);
-            findViewById(R.id.Rack_InnerLayout).setLayoutParams(lay);
         }
     }
 
@@ -436,7 +432,6 @@ public class Rack extends RelativeLayout {
         findViewById(R.id.Rack_Background).setBackgroundTintList(ColorStateList.valueOf(backgroundColor));
         mBigTitle.setTextColor(foregroundColor);
         mLittleTitle.setTextColor(foregroundColor);
-        findViewById(R.id.Rack_InnerLayout).setBackgroundTintList(ColorStateList.valueOf(foregroundColor));
     }
 
     public void setRackBackgroundColor(ColorStateList color) {
@@ -452,7 +447,6 @@ public class Rack extends RelativeLayout {
         mForegroundColor = color;
         mBigTitle.setTextColor(color);
         mLittleTitle.setTextColor(color);
-        findViewById(R.id.Rack_InnerLayout).setBackgroundTintList(color);
         for (int index = 0; index < mComponentsLayout.getChildCount(); index++) {
             ((Component) mComponentsLayout.getChildAt(index)).setForegroundColor(color);
         }

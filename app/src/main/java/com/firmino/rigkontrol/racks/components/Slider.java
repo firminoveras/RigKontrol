@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 public class Slider extends Component {
 
     private SeekBar mSlider;
-    private Context mContext;
+    private final Context mContext;
 
     public Slider(@NonNull Context context) {
         super(context);

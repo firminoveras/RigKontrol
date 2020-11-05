@@ -3,17 +3,16 @@ package com.firmino.rigkontrol.kinterface.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 
 import com.firmino.rigkontrol.R;
 
 public class KStateButton extends LinearLayout {
 
-    private Button mButtonOff, mButtonOn;
+    private KButton mButtonLeft, mButtonRigth;
     private boolean isOn;
     private OnKStateButtonChangeListener onKStateButtonChangeListener;
 
@@ -26,41 +25,59 @@ public class KStateButton extends LinearLayout {
         super(context, attrs);
         init();
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.KStateButton, 0, 0);
-        mButtonOn.setText(ta.getString(R.styleable.KStateButton_k_statebutton_text_on));
-        mButtonOff.setText(ta.getString(R.styleable.KStateButton_k_statebutton_text_off));
+        mButtonRigth.setText(ta.getString(R.styleable.KStateButton_k_statebutton_text_on));
+        mButtonLeft.setText(ta.getString(R.styleable.KStateButton_k_statebutton_text_off));
         isOn = ta.getBoolean(R.styleable.KStateButton_k_statebutton_is_on, false);
         ta.recycle();
         refresh();
     }
 
     private void init() {
-        inflate(getContext(), R.layout.layout_interface_kstatebutton, this);
-        mButtonOff = findViewById(R.id.KStateButton_Off);
-        mButtonOn = findViewById(R.id.KStateButton_On);
+        setOrientation(HORIZONTAL);
+        mButtonLeft = new KButton(getContext());
+        mButtonRigth = new KButton(getContext());
+
+        LayoutParams buttonsLayLeft = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+        buttonsLayLeft.rightMargin = (int) getResources().getDimension(R.dimen._2dp);
+        mButtonLeft.setAlign(KButton.ALIGN_LEFT);
+        mButtonLeft.setToggle(true);
+        mButtonLeft.setColorScheme(KButton.COLOR_SCHEME_ORANGE);
+        mButtonLeft.setLayoutParams(buttonsLayLeft);
+
+
+        LayoutParams buttonsLayRigth = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+        buttonsLayLeft.leftMargin = (int) getResources().getDimension(R.dimen._2dp);
+        mButtonRigth.setAlign(KButton.ALIGN_RIGHT);
+        mButtonRigth.setToggle(true);
+        mButtonRigth.setColorScheme(KButton.COLOR_SCHEME_ORANGE);
+        mButtonRigth.setLayoutParams(buttonsLayRigth);
+
+
         onKStateButtonChangeListener = (kStateButton, isOn) -> {
 
         };
-        mButtonOn.setOnClickListener(l -> {
+        mButtonRigth.setOnClickListener(l -> {
             if (!isOn) {
                 isOn = true;
                 onKStateButtonChangeListener.onKStateButtonChangeListener(this, true);
                 refresh();
             }
         });
-        mButtonOff.setOnClickListener(l -> {
+        mButtonLeft.setOnClickListener(l -> {
             if (isOn) {
                 isOn = false;
                 onKStateButtonChangeListener.onKStateButtonChangeListener(this, false);
                 refresh();
             }
         });
+        addView(mButtonLeft);
+        addView(mButtonRigth);
     }
 
     private void refresh() {
-        mButtonOn.setBackground(ResourcesCompat.getDrawable(getResources(), isOn ? R.drawable.bg_button_right_borderless_pressed : R.drawable.bg_button_right_borderless, null));
-        mButtonOff.setBackground(ResourcesCompat.getDrawable(getResources(), isOn ? R.drawable.bg_button_left_borderless : R.drawable.bg_button_left_borderless_pressed, null));
-        mButtonOn.setTextColor(getResources().getColor(isOn ? R.color.bg_dark_gray : R.color.white, null));
-        mButtonOff.setTextColor(getResources().getColor(isOn ? R.color.white : R.color.bg_dark_gray, null));
+        mButtonRigth.setOn(isOn);
+        mButtonLeft.setOn(!isOn);
+
     }
 
     public void setOnKStateButtonChangeListener(OnKStateButtonChangeListener onKStateButtonChangeListener) {

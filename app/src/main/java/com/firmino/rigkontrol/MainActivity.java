@@ -1,5 +1,7 @@
 package com.firmino.rigkontrol;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
@@ -28,7 +30,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.firmino.rigkontrol.kinterface.alerts.ConfirmationAlert;
 import com.firmino.rigkontrol.kinterface.alerts.MessageAlert;
-import com.firmino.rigkontrol.kinterface.views.KGate;
+import com.firmino.rigkontrol.kinterface.views.KButton;
 import com.firmino.rigkontrol.kinterface.views.KImageButton;
 import com.firmino.rigkontrol.kinterface.views.KListPicker;
 import com.firmino.rigkontrol.kinterface.views.KNumberPicker;
@@ -64,8 +66,8 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     //Title
-    private KGate mTitleGateKnob;
-    private ImageView mTitleShowConfigButton;
+    private KButton mTitleGateButton;
+    private KImageButton mTitleShowConfigButton;
     private KSeekBar mTitleVolumeOutSeekBar;
     private KSeekBar mTitleVolumeInSeekBar;
 
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         mTitleShowConfigButton = findViewById(R.id.Main_Show_Configs);
         mTitleVolumeInSeekBar = findViewById(R.id.Main_VolumeIn);
         mTitleVolumeOutSeekBar = findViewById(R.id.Main_VolumeOut);
-        mTitleGateKnob = findViewById(R.id.Main_Gate);
+        mTitleGateButton = findViewById(R.id.Main_Gate);
         mOptionsConnectButton = findViewById(R.id.Options_Connect);
         mOptionsShowExtendedButtons = findViewById(R.id.Options_ExpandButtons);
         mOptionsShowStatusBar = findViewById(R.id.Options_ShowStatusBar);
@@ -125,11 +127,11 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.Tool_Clear_Preset).setOnClickListener(v -> clearPreset());
         findViewById(R.id.Main_Exit).setOnClickListener(view -> showExitAppDialog());
-        mTitleShowConfigButton.setOnClickListener(l -> setOptionsVisible());
+        mTitleShowConfigButton.setOnKImageButtonListener(this::setOptionsVisible);
         findViewById(R.id.Tool_OpenPreset).setOnClickListener(v -> showOpenPresetDialog());
         mToolPresetName.setOnClickListener(v -> showEditPresetNameDialog());
         findViewById(R.id.Tool_Save_Preset_Button).setOnClickListener(v -> savePreset());
-        mToolLiveMode.setOnClickListener(view -> setLiveMode(mToolLiveMode.isPressed()));
+        mToolLiveMode.setOnKImageButtonListener(this::setLiveMode);
         mToolAddRack.setOnClickListener(view -> showNewRackDialog());
 
         setupMidi();
@@ -154,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addNewRack() {
-        //TODO: Melhorar isso, fazer poder adicionar um salvo previamente
         if (mRacks.getChildCount() < 15) {
             Rack rack = new Rack(this);
             rack.setOnRackMidiListener((controlChange, value) -> mMidi.sendControlChange(controlChange, value));
@@ -192,8 +193,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mOptionsConnectButton.setText(R.string.not_midi_suported);
         }
-        mTitleGateKnob.setOnKGateEnabledListener((isOn, controllerNumber) -> mMidi.sendControlChange(controllerNumber, isOn ? MidiKontroller.ON : MidiKontroller.OFF));
-        mTitleGateKnob.setOnKGateValueChangeListener((progress, controllerNumber) -> mMidi.sendControlChange(controllerNumber, progress));
+        mTitleGateButton.setOnKButtonListener((isOn) -> mMidi.sendControlChange(getResources().getInteger(R.integer.cc_gate_on), isOn ? MidiKontroller.ON : MidiKontroller.OFF));
         mToolNextPresetButton.setOnClickListener(v -> mMidi.sendControlChange(getResources().getInteger(R.integer.cc_next_preset), MidiKontroller.ON));
         mToolPrevPresetButton.setOnClickListener(v -> mMidi.sendControlChange(getResources().getInteger(R.integer.cc_prev_preset), MidiKontroller.ON));
         mTitleVolumeInSeekBar.setOnKSeekBarValueChangeListener((seekBar, value, controllerNumber) -> mMidi.sendControlChange(controllerNumber, value));
@@ -230,20 +230,32 @@ public class MainActivity extends AppCompatActivity {
 
     private void setStatusBarVisible(boolean visible) {
         int max = (int) (20 * getResources().getDisplayMetrics().density);
-        ValueAnimator anim = ValueAnimator.ofInt(visible ? 0 : max, visible ? max : 0);
+        ValueAnimator anim = ValueAnimator.ofInt(visible ? 1 : max, visible ? max : 1);
         anim.setDuration(getResources().getInteger(R.integer.animation_duration_options));
         anim.addUpdateListener(animation -> {
             ViewGroup.LayoutParams l = mStatusBarLayout.getLayoutParams();
             l.height = (int) animation.getAnimatedValue();
             mStatusBarLayout.setLayoutParams(l);
         });
+        if(visible){
+            mStatusBarLayout.setVisibility(View.VISIBLE);
+        }else{
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    mStatusBarLayout.setVisibility(View.GONE);
+                }
+            });
+        }
+
         anim.start();
     }
 
-    private void setOptionsVisible() {
-        mKontroller.setPedalVisible(!mTitleShowConfigButton.isPressed());
+    private void setOptionsVisible(boolean visible) {
+        mKontroller.setPedalVisible(!visible);
         int max = (int) (300 * getResources().getDisplayMetrics().density);
-        ValueAnimator anim = ValueAnimator.ofInt(mTitleShowConfigButton.isPressed() ? 0 : max, mTitleShowConfigButton.isPressed() ? max : 0);
+        ValueAnimator anim = ValueAnimator.ofInt(visible ? 0 : max, visible ? max : 0);
         anim.setDuration(300);
         anim.addUpdateListener(animation -> {
             ViewGroup.LayoutParams l = mOptionsLayout.getLayoutParams();
@@ -356,20 +368,20 @@ public class MainActivity extends AppCompatActivity {
             TextView usbStatus = alertContent.findViewById(R.id.Connection_USB_Status);
             Button connect = alertContent.findViewById(R.id.Connection_Connect);
             usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? getString(R.string.connected) : getString(R.string.not_connected));
-            connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+            connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? android.R.color.white : android.R.color.holo_red_light));
             mMidi.getMidi().registerDeviceCallback(new MidiManager.DeviceCallback() {
                 @Override
                 public void onDeviceAdded(MidiDeviceInfo device) {
                     super.onDeviceAdded(device);
                     usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? getString(R.string.connected) : getString(R.string.not_connected));
-                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? android.R.color.white : android.R.color.holo_red_light));
                 }
 
                 @Override
                 public void onDeviceRemoved(MidiDeviceInfo device) {
                     super.onDeviceRemoved(device);
                     usbStatus.setText(mMidi.getMidi().getDevices().length > 0 ? getString(R.string.connected) : getString(R.string.not_connected));
-                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? R.color.white : android.R.color.holo_red_light));
+                    connect.setTextColor(getColor(mMidi.getMidi().getDevices().length > 0 ? android.R.color.white : android.R.color.holo_red_light));
                 }
             }, new Handler());
             connect.setOnClickListener(view -> {
@@ -384,15 +396,13 @@ public class MainActivity extends AppCompatActivity {
     private void savePreferences() {
         getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("inVolume", mTitleVolumeInSeekBar.getValue()).apply();
         getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("outVolume", mTitleVolumeOutSeekBar.getValue()).apply();
-        getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("gateLevel", mTitleGateKnob.getValue()).apply();
-        getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putBoolean("gateOn", mTitleGateKnob.isOn()).apply();
+        getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putBoolean("gateOn", mTitleGateButton.isOn()).apply();
     }
 
     private void loadPreferences() {
         mTitleVolumeInSeekBar.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("inVolume", 100));
         mTitleVolumeOutSeekBar.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("outVolume", 100));
-        mTitleGateKnob.setValue(getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("gateLevel", 100));
-        mTitleGateKnob.setOn(getSharedPreferences("prefs", Context.MODE_PRIVATE).getBoolean("gateOn", false));
+        mTitleGateButton.setOn(getSharedPreferences("prefs", Context.MODE_PRIVATE).getBoolean("gateOn", false));
     }
 
     private void clearPreset() {
@@ -578,7 +588,7 @@ public class MainActivity extends AppCompatActivity {
         if (mMidi.connect(channel)) {
             mOptionsConnectButton.setText(R.string.online);
             mOptionsConnectButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button_pressed, null));
-            mOptionsConnectButton.setTextColor(getColor(R.color.bg_dark_gray));
+            mOptionsConnectButton.setTextColor(getColor(R.color.background_dark));
             mMidi.getMidi().registerDeviceCallback(new MidiManager.DeviceCallback() {
                 @Override
                 public void onDeviceRemoved(MidiDeviceInfo device) {
@@ -595,7 +605,7 @@ public class MainActivity extends AppCompatActivity {
         mMidi.disconnect();
         mOptionsConnectButton.setText(R.string.offline);
         mOptionsConnectButton.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.bg_button, null));
-        mOptionsConnectButton.setTextColor(getColor(R.color.white));
+        mOptionsConnectButton.setTextColor(getColor(android.R.color.white));
     }
 
     private void connectionChanged(boolean isConnected, int flag) {
